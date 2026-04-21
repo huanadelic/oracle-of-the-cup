@@ -1,0 +1,2024 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Oracle of the Cup · 2026 Champion Prophecy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* === Oracle of the Cup — styles === */
+:root {
+  --ink: #0a0a1a;
+  --ink-2: #0f0f22;
+  --night: #141432;
+  --vellum: #f4ebd3;
+  --vellum-2: #ebe0c0;
+  --parchment: #e8dcb8;
+  --gold: #c8a14a;
+  --gold-bright: #e3bf6a;
+  --gold-dim: #8a6d2d;
+  --wine: #5a1f2e;
+  --smoke: rgba(244, 235, 211, 0.55);
+  --smoke-dim: rgba(244, 235, 211, 0.32);
+  --rule: rgba(200, 161, 74, 0.35);
+  --serif: "Cormorant Garamond", "Cormorant", "Playfair Display", Georgia, serif;
+  --sans: "Inter", -apple-system, "Helvetica Neue", sans-serif;
+  --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--vellum);
+  font-family: var(--sans);
+  font-size: 16px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Starfield background */
+.stage {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200, 161, 74, 0.08), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(90, 31, 46, 0.25), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(20, 20, 50, 0.6), var(--ink) 75%);
+  overflow: hidden;
+}
+
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+.starfield::before,
+.starfield::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 27% 44%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 41% 12%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 59% 73%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 73% 28%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 87% 61%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 8% 88%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 93% 14%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 33% 67%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 66% 92%, #fff 50%, transparent),
+    radial-gradient(1.5px 1.5px at 48% 33%, #e3bf6a 50%, transparent),
+    radial-gradient(1.5px 1.5px at 17% 57%, #e3bf6a 50%, transparent),
+    radial-gradient(1.5px 1.5px at 79% 8%, #e3bf6a 50%, transparent);
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+.starfield::after {
+  background-image:
+    radial-gradient(1px 1px at 23% 36%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 55% 5%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 71% 51%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 38% 81%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 92% 37%, #fff 50%, transparent),
+    radial-gradient(1px 1px at 5% 25%, #fff 50%, transparent);
+  animation-delay: 3s;
+  opacity: 0.5;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Shared header wisp */
+.brand-wisp {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+/* Headline ceremonial type */
+.headline {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--vellum);
+}
+
+.rule-ornate {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--gold);
+}
+.rule-ornate::before,
+.rule-ornate::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rule), transparent);
+}
+.rule-ornate .glyph {
+  font-family: var(--serif);
+  font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 200ms ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  color: var(--ink);
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 1px rgba(227, 191, 106, 0.3), 0 10px 40px -10px rgba(227, 191, 106, 0.5);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(227, 191, 106, 0.5), 0 15px 50px -10px rgba(227, 191, 106, 0.7);
+}
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--vellum);
+  border-color: var(--rule);
+}
+.btn-ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold-bright);
+}
+
+.btn-quiet {
+  background: transparent;
+  color: var(--smoke);
+  border: none;
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+.btn-quiet:hover { color: var(--gold); }
+
+/* ========== SECTION 1 — HOME ========== */
+.home-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 80px;
+}
+
+.home-header {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+.home-inner {
+  max-width: 720px;
+  width: 100%;
+  text-align: center;
+}
+
+.home-eye {
+  margin: 0 auto 28px;
+}
+
+.home-eye svg {
+  width: 72px;
+  height: 72px;
+  color: var(--gold);
+  filter: drop-shadow(0 0 20px rgba(227, 191, 106, 0.4));
+}
+
+.home-title {
+  font-size: clamp(52px, 8vw, 104px);
+  margin: 0 0 24px;
+}
+.home-title .em {
+  display: block;
+  font-style: italic;
+  color: var(--gold-bright);
+}
+
+.home-sub {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--smoke);
+  max-width: 540px;
+  margin: 0 auto 44px;
+  font-style: italic;
+  font-weight: 400;
+}
+.home-sub .tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* Countdown */
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 0 auto 52px;
+  padding: 28px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  max-width: 580px;
+}
+.countdown .unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+  position: relative;
+}
+.countdown .unit + .unit::before {
+  content: "·";
+  position: absolute;
+  left: -14px;
+  top: 8px;
+  color: var(--gold);
+  font-size: 20px;
+}
+.countdown .num {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--vellum);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.countdown .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+.countdown-caption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--smoke-dim);
+  text-transform: uppercase;
+  margin-top: -36px;
+  margin-bottom: 52px;
+  text-align: center;
+}
+
+/* Input */
+.name-field {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto 28px;
+  position: relative;
+}
+.name-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.name-field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 12px 16px;
+  color: var(--vellum);
+  font-family: var(--serif);
+  font-size: 26px;
+  font-style: italic;
+  text-align: center;
+  outline: none;
+  transition: border-color 200ms;
+}
+.name-field input::placeholder {
+  color: var(--smoke-dim);
+  font-style: italic;
+}
+.name-field input:focus {
+  border-bottom-color: var(--gold);
+}
+
+.footer-wisp {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--smoke-dim);
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ========== SECTION 2 — PICK TEAM ========== */
+.pick-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 32px 24px 140px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pick-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.pick-title-block {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+.pick-title {
+  font-size: clamp(36px, 5vw, 60px);
+  margin: 12px 0 16px;
+}
+.pick-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--smoke);
+  line-height: 1.5;
+}
+
+.pick-controls {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.chip {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--smoke);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.chip:hover {
+  border-color: var(--gold);
+  color: var(--vellum);
+}
+.chip.active {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.team-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(244, 235, 211, 0.03), rgba(244, 235, 211, 0.01));
+  border: 1px solid rgba(244, 235, 211, 0.08);
+  border-radius: 3px;
+  padding: 18px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  text-align: left;
+  color: var(--vellum);
+  font-family: inherit;
+}
+.team-card:hover {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(227, 191, 106, 0.08), rgba(227, 191, 106, 0.02));
+  transform: translateY(-1px);
+}
+.team-card.selected {
+  border-color: var(--gold-bright);
+  background: linear-gradient(180deg, rgba(227, 191, 106, 0.18), rgba(227, 191, 106, 0.05));
+  box-shadow: 0 0 0 1px var(--gold-bright), 0 0 30px -5px rgba(227, 191, 106, 0.4);
+}
+.team-card .flag {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+.team-card .t-name {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.team-card .t-confed {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--smoke-dim);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+.team-card.selected .check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  color: var(--ink);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Floating confirm bar */
+.pick-confirm {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent, var(--ink) 40%);
+  padding: 60px 24px 28px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.pick-confirm-inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 14px 16px 14px 22px;
+  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.8);
+  max-width: 560px;
+  width: 100%;
+}
+.pick-confirm-inner .picked {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pick-confirm-inner .picked .flag { font-size: 28px; }
+.pick-confirm-inner .picked .txt {
+  display: flex;
+  flex-direction: column;
+}
+.pick-confirm-inner .picked .eyebrow { margin-bottom: 2px; }
+.pick-confirm-inner .picked .n {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--vellum);
+}
+
+/* ========== SECTION 3 — RESULT ========== */
+.result-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.result-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.result-hero .eyebrow { margin-bottom: 16px; }
+.result-hero h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 500;
+  margin: 0 0 14px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--vellum);
+}
+.result-hero .lede {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--smoke);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* Certificate */
+.certificate-frame {
+  position: relative;
+  margin: 0 auto 56px;
+  max-width: 720px;
+  perspective: 1200px;
+}
+.certificate {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(227, 191, 106, 0.15), transparent 70%),
+    linear-gradient(175deg, #f5ecd4 0%, #ebe0c0 50%, #e0d3a8 100%);
+  color: #2a1f0a;
+  padding: 56px 56px 48px;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgba(200, 161, 74, 0.5),
+    0 0 0 8px #0f0f22,
+    0 0 0 9px var(--gold),
+    0 40px 80px -20px rgba(0, 0, 0, 0.6),
+    0 0 120px -20px rgba(227, 191, 106, 0.4);
+  overflow: hidden;
+}
+.certificate::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(138, 109, 45, 0.4);
+  pointer-events: none;
+}
+.certificate::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(138, 109, 45, 0.25);
+  pointer-events: none;
+}
+.cert-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  color: var(--gold-dim);
+  opacity: 0.7;
+}
+.cert-corner.tl { top: 26px; left: 26px; }
+.cert-corner.tr { top: 26px; right: 26px; transform: scaleX(-1); }
+.cert-corner.bl { bottom: 26px; left: 26px; transform: scaleY(-1); }
+.cert-corner.br { bottom: 26px; right: 26px; transform: scale(-1, -1); }
+
+.cert-inner {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+.cert-seal {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.cert-seal svg {
+  width: 52px;
+  height: 52px;
+  color: var(--gold-dim);
+}
+
+.cert-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--wine);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.cert-title-main {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 40px;
+  color: #2a1f0a;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.cert-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px auto 22px;
+  color: var(--gold-dim);
+  max-width: 320px;
+}
+.cert-divider::before,
+.cert-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+}
+
+.cert-preamble {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  color: #4a3a1a;
+  line-height: 1.5;
+  max-width: 440px;
+  margin: 0 auto 16px;
+}
+
+.cert-name {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-style: italic;
+  color: #2a1f0a;
+  line-height: 1.1;
+  font-weight: 500;
+  margin: 8px 0 4px;
+  border-bottom: 1px solid rgba(138, 109, 45, 0.3);
+  padding-bottom: 10px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cert-midtext {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  color: #4a3a1a;
+  margin: 18px 0 8px;
+}
+
+.cert-team {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--wine);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 4px 0 6px;
+}
+.cert-team .flag { font-size: 44px; }
+
+.cert-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed rgba(138, 109, 45, 0.4);
+  gap: 24px;
+}
+.cert-foot-item {
+  text-align: left;
+  flex: 1;
+}
+.cert-foot-item:last-child { text-align: right; }
+.cert-foot-item .k {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cert-foot-item .v {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: #2a1f0a;
+  font-style: italic;
+}
+.cert-foot-sig {
+  flex: 1;
+  text-align: center;
+}
+.cert-foot-sig .sigline {
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: 24px;
+  color: var(--wine);
+  font-style: italic;
+  margin-bottom: 2px;
+}
+
+/* Distribution */
+.section-card {
+  border-top: 1px solid var(--rule);
+  padding-top: 40px;
+  margin-bottom: 40px;
+}
+.section-hdr {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.section-hdr .eyebrow { margin-bottom: 10px; }
+.section-hdr h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 36px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: var(--vellum);
+}
+
+.dist {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dist-row {
+  display: grid;
+  grid-template-columns: 28px 28px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 2px;
+  transition: background 150ms;
+}
+.dist-row .rk {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--smoke-dim);
+  text-align: right;
+}
+.dist-row .fl { font-size: 20px; }
+.dist-row .bar-wrap {
+  position: relative;
+  height: 28px;
+  background: rgba(244, 235, 211, 0.04);
+  border-radius: 1px;
+  overflow: hidden;
+}
+.dist-row .bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, rgba(244, 235, 211, 0.2), rgba(244, 235, 211, 0.35));
+  border-right: 1px solid rgba(244, 235, 211, 0.4);
+}
+.dist-row .label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--vellum);
+  z-index: 1;
+}
+.dist-row .pct {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--smoke);
+  letter-spacing: 0.05em;
+  min-width: 56px;
+  text-align: right;
+}
+.dist-row.you {
+  background: linear-gradient(90deg, rgba(227, 191, 106, 0.12), rgba(227, 191, 106, 0.02));
+  border-left: 2px solid var(--gold-bright);
+  padding-left: 12px;
+}
+.dist-row.you .rk { color: var(--gold-bright); }
+.dist-row.you .bar {
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  border-right-color: var(--gold-bright);
+}
+.dist-row.you .pct { color: var(--gold-bright); }
+.dist-row.you .you-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--ink);
+  background: var(--gold-bright);
+  padding: 2px 6px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  border-radius: 1px;
+}
+
+.dist-fold {
+  text-align: center;
+  margin-top: 14px;
+}
+
+/* Omen / prophecy text */
+.omen {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 36px 44px;
+  background: linear-gradient(180deg, rgba(244, 235, 211, 0.03), transparent);
+  max-width: 720px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+.omen::before, .omen::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--gold);
+}
+.omen::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.omen::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+.omen-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.omen-line {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+}
+.omen-line .marker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  min-width: 48px;
+  padding-top: 6px;
+  text-transform: uppercase;
+}
+.omen-line .text {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--vellum);
+  font-style: italic;
+  flex: 1;
+}
+.omen-line .text .hi {
+  color: var(--gold-bright);
+  font-weight: 500;
+  font-style: normal;
+  font-family: var(--serif);
+}
+.omen-line .text .num {
+  font-family: var(--mono);
+  font-style: normal;
+  color: var(--gold-bright);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* CTAs */
+.result-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+/* Tweaks panel */
+.tweaks {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 260px;
+  background: rgba(10, 10, 26, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 16px;
+  z-index: 1000;
+  font-family: var(--sans);
+  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.7);
+}
+.tweaks h4 {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+}
+.tweaks .tw-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tweaks .tw-row label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--smoke);
+  text-transform: uppercase;
+}
+.tweaks .tw-opts {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.tweaks .tw-opt {
+  flex: 1;
+  min-width: 60px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--smoke);
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 150ms;
+}
+.tweaks .tw-opt:hover { color: var(--vellum); }
+.tweaks .tw-opt.on {
+  background: var(--gold);
+  color: var(--ink);
+  border-color: var(--gold);
+}
+
+/* ========== INTERLUDE — DIVINING (minimal) ========== */
+.divine-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 56px;
+}
+
+.divine-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  border-top-color: var(--gold-bright);
+  animation: d-spin 2.4s linear infinite;
+}
+.d-ring.locked {
+  border-color: var(--gold-bright);
+  animation: none;
+  box-shadow: 0 0 24px rgba(227, 191, 106, 0.35);
+}
+@keyframes d-spin { to { transform: rotate(360deg); } }
+
+.d-crystal {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(244, 235, 211, 0.25), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(20, 20, 50, 0.9), rgba(10, 10, 26, 0.98));
+  box-shadow:
+    inset 0 -16px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(227, 191, 106, 0.25),
+    0 0 40px rgba(227, 191, 106, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 400ms ease;
+}
+.d-crystal.locked {
+  box-shadow:
+    inset 0 -16px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(227, 191, 106, 0.5),
+    0 0 60px rgba(227, 191, 106, 0.4);
+}
+
+.d-flag {
+  font-size: 64px;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(227, 191, 106, 0.5));
+  transition: font-size 400ms ease;
+}
+.d-flag.locked {
+  animation: d-lock 600ms cubic-bezier(0.2, 1.4, 0.3, 1) both;
+  font-size: 80px;
+}
+@keyframes d-lock {
+  0% { transform: scale(0.5); opacity: 0; filter: blur(6px); }
+  60% { transform: scale(1.12); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.divine-copy {
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+.divine-copy .eyebrow { margin-bottom: 14px; }
+.divine-title {
+  font-size: clamp(30px, 4vw, 42px);
+  margin: 0 0 18px;
+}
+.divine-phase {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--smoke);
+  min-height: 28px;
+  margin-bottom: 28px;
+  animation: fadeInPhase 400ms ease both;
+}
+@keyframes fadeInPhase {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.divine-meter {
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.divine-meter-bar {
+  height: 1px;
+  background: var(--gold-bright);
+  transition: width 80ms linear;
+  box-shadow: 0 0 6px rgba(227, 191, 106, 0.6);
+}
+.divine-meter::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 1px;
+  background: rgba(244, 235, 211, 0.1);
+}
+.divine-meter-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--smoke-dim);
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .divine-stage { width: 180px; height: 180px; }
+  .d-crystal { width: 120px; height: 120px; }
+  .d-flag { font-size: 48px; }
+  .d-flag.locked { font-size: 60px; }
+}
+
+/* Transitions between sections */
+.fade-in {
+  animation: fadeIn 500ms ease both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.flicker {
+  animation: flicker 200ms ease;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .home-header { margin-bottom: 40px; }
+  .countdown { gap: 10px; padding: 20px 0; }
+  .countdown .unit { min-width: 52px; }
+  .countdown .num { font-size: 32px; }
+  .certificate { padding: 36px 24px 28px; }
+  .cert-name { font-size: 36px; }
+  .cert-team { font-size: 26px; }
+  .cert-team .flag { font-size: 32px; }
+  .cert-foot { flex-direction: column; gap: 16px; text-align: center; }
+  .cert-foot-item, .cert-foot-item:last-child { text-align: center; }
+  .omen { padding: 24px 20px; }
+  .omen-line { flex-direction: column; gap: 4px; }
+  .omen-line .text { font-size: 18px; }
+  .team-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script>
+// 48 teams qualified for FIFA World Cup 2026 (using ISO flag emojis)
+window.WC_TEAMS = [
+  // Hosts
+  { code: "CAN", name: "Canada", flag: "🇨🇦", confed: "CONCACAF" },
+  { code: "MEX", name: "Mexico", flag: "🇲🇽", confed: "CONCACAF" },
+  { code: "USA", name: "United States", flag: "🇺🇸", confed: "CONCACAF" },
+  // AFC
+  { code: "AUS", name: "Australia", flag: "🇦🇺", confed: "AFC" },
+  { code: "IRN", name: "Iran", flag: "🇮🇷", confed: "AFC" },
+  { code: "JPN", name: "Japan", flag: "🇯🇵", confed: "AFC" },
+  { code: "JOR", name: "Jordan", flag: "🇯🇴", confed: "AFC" },
+  { code: "KOR", name: "South Korea", flag: "🇰🇷", confed: "AFC" },
+  { code: "UZB", name: "Uzbekistan", flag: "🇺🇿", confed: "AFC" },
+  { code: "QAT", name: "Qatar", flag: "🇶🇦", confed: "AFC" },
+  { code: "KSA", name: "Saudi Arabia", flag: "🇸🇦", confed: "AFC" },
+  { code: "IRQ", name: "Iraq", flag: "🇮🇶", confed: "AFC" },
+  // CAF
+  { code: "MAR", name: "Morocco", flag: "🇲🇦", confed: "CAF" },
+  { code: "TUN", name: "Tunisia", flag: "🇹🇳", confed: "CAF" },
+  { code: "EGY", name: "Egypt", flag: "🇪🇬", confed: "CAF" },
+  { code: "ALG", name: "Algeria", flag: "🇩🇿", confed: "CAF" },
+  { code: "GHA", name: "Ghana", flag: "🇬🇭", confed: "CAF" },
+  { code: "SEN", name: "Senegal", flag: "🇸🇳", confed: "CAF" },
+  { code: "CIV", name: "Côte d'Ivoire", flag: "🇨🇮", confed: "CAF" },
+  { code: "CMR", name: "Cameroon", flag: "🇨🇲", confed: "CAF" },
+  { code: "NGA", name: "Nigeria", flag: "🇳🇬", confed: "CAF" },
+  // CONCACAF
+  { code: "PAN", name: "Panama", flag: "🇵🇦", confed: "CONCACAF" },
+  { code: "CRC", name: "Costa Rica", flag: "🇨🇷", confed: "CONCACAF" },
+  { code: "JAM", name: "Jamaica", flag: "🇯🇲", confed: "CONCACAF" },
+  // CONMEBOL
+  { code: "ARG", name: "Argentina", flag: "🇦🇷", confed: "CONMEBOL" },
+  { code: "BRA", name: "Brazil", flag: "🇧🇷", confed: "CONMEBOL" },
+  { code: "URU", name: "Uruguay", flag: "🇺🇾", confed: "CONMEBOL" },
+  { code: "COL", name: "Colombia", flag: "🇨🇴", confed: "CONMEBOL" },
+  { code: "ECU", name: "Ecuador", flag: "🇪🇨", confed: "CONMEBOL" },
+  { code: "PAR", name: "Paraguay", flag: "🇵🇾", confed: "CONMEBOL" },
+  { code: "PER", name: "Peru", flag: "🇵🇪", confed: "CONMEBOL" },
+  // OFC
+  { code: "NZL", name: "New Zealand", flag: "🇳🇿", confed: "OFC" },
+  // UEFA
+  { code: "ENG", name: "England", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", confed: "UEFA" },
+  { code: "FRA", name: "France", flag: "🇫🇷", confed: "UEFA" },
+  { code: "GER", name: "Germany", flag: "🇩🇪", confed: "UEFA" },
+  { code: "ESP", name: "Spain", flag: "🇪🇸", confed: "UEFA" },
+  { code: "ITA", name: "Italy", flag: "🇮🇹", confed: "UEFA" },
+  { code: "POR", name: "Portugal", flag: "🇵🇹", confed: "UEFA" },
+  { code: "NED", name: "Netherlands", flag: "🇳🇱", confed: "UEFA" },
+  { code: "BEL", name: "Belgium", flag: "🇧🇪", confed: "UEFA" },
+  { code: "CRO", name: "Croatia", flag: "🇭🇷", confed: "UEFA" },
+  { code: "SUI", name: "Switzerland", flag: "🇨🇭", confed: "UEFA" },
+  { code: "DEN", name: "Denmark", flag: "🇩🇰", confed: "UEFA" },
+  { code: "AUT", name: "Austria", flag: "🇦🇹", confed: "UEFA" },
+  { code: "POL", name: "Poland", flag: "🇵🇱", confed: "UEFA" },
+  { code: "NOR", name: "Norway", flag: "🇳🇴", confed: "UEFA" },
+  { code: "SCO", name: "Scotland", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", confed: "UEFA" },
+  { code: "TUR", name: "Türkiye", flag: "🇹🇷", confed: "UEFA" },
+];
+
+// Distribution weights for mock "everyone else's picks" — heavier on favorites
+window.WC_WEIGHTS = {
+  ARG: 18420, BRA: 17890, FRA: 14230, ESP: 12340, ENG: 11560, GER: 9870,
+  POR: 8420, NED: 5430, ITA: 4920, BEL: 3210, URU: 2980, CRO: 2340,
+  COL: 1890, MAR: 1720, USA: 1680, MEX: 1420, JPN: 1210, SUI: 890,
+  KOR: 780, DEN: 650, POL: 540, SEN: 430, AUT: 380, NOR: 340, TUR: 310,
+  ECU: 290, CAN: 270, AUS: 240, NGA: 220, EGY: 190, GHA: 170, CIV: 160,
+  CMR: 140, TUN: 130, ALG: 120, IRN: 110, PAR: 100, PER: 95, SCO: 90,
+  JOR: 72, UZB: 68, QAT: 61, KSA: 58, IRQ: 44, PAN: 39, CRC: 36,
+  JAM: 28, NZL: 21,
+};
+
+</script>
+<script type="text/babel" data-presets="react">
+// ============ SECTION 1: HOME (Oracle invocation) ============
+const { useState, useEffect, useMemo, useRef } = React;
+
+function Countdown({ targetDate, label }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const diff = Math.max(0, targetDate - now);
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+  const pad = (n) => String(n).padStart(2, "0");
+  return (
+    <>
+      <div className="countdown">
+        <div className="unit"><div className="num">{days}</div><div className="lbl">Days</div></div>
+        <div className="unit"><div className="num">{pad(hours)}</div><div className="lbl">Hours</div></div>
+        <div className="unit"><div className="num">{pad(mins)}</div><div className="lbl">Minutes</div></div>
+        <div className="unit"><div className="num">{pad(secs)}</div><div className="lbl">Seconds</div></div>
+      </div>
+      <div className="countdown-caption">{label}</div>
+    </>
+  );
+}
+
+function OracleEye() {
+  return (
+    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2">
+      <circle cx="50" cy="50" r="48" strokeDasharray="2 3" opacity="0.6" />
+      <circle cx="50" cy="50" r="38" />
+      <path d="M10,50 Q50,15 90,50 Q50,85 10,50 Z" />
+      <circle cx="50" cy="50" r="12" fill="currentColor" />
+      <circle cx="50" cy="50" r="4" fill="#0a0a1a" />
+      <path d="M50,6 L50,14 M50,86 L50,94 M6,50 L14,50 M86,50 L94,50" strokeWidth="0.8" />
+      <path d="M22,22 L28,28 M72,72 L78,78 M22,78 L28,72 M72,28 L78,22" strokeWidth="0.8" />
+    </svg>
+  );
+}
+
+function HomeSection({ countdownMode, onBegin, name, setName }) {
+  const WC_FINAL = new Date("2026-07-19T20:00:00-05:00").getTime();
+  const WC_OPEN = new Date("2026-06-11T19:00:00-06:00").getTime();
+  const target = countdownMode === "final" ? WC_FINAL : WC_OPEN;
+  const caption = countdownMode === "final"
+    ? "Until the Final Whistle · Estadio Azteca · Mexico City"
+    : "Until the Opening Whistle · Estadio Azteca · Mexico City";
+
+  return (
+    <div className="home-wrap fade-in">
+      <div className="home-header">
+        <div className="brand-wisp">◈ Oracle of the Cup</div>
+        <div className="brand-wisp" style={{color: "var(--smoke-dim)"}}>MMXXVI</div>
+      </div>
+
+      <div className="home-inner">
+        <div className="home-eye"><OracleEye /></div>
+
+        <div className="eyebrow" style={{marginBottom: 18}}>— An Augury in Three Acts —</div>
+
+        <h1 className="home-title headline">
+          Foretell the
+          <span className="em">Champion.</span>
+        </h1>
+
+        <p className="home-sub">
+          <span className="tag">Est. by the Council of Pundits · 2026</span>
+          Tea leaves are read. Stars are aligned. Long before the first whistle,
+          the oracle demands a name and a nation. Declare yours — and let the
+          record show you were right all along.
+        </p>
+
+        <Countdown targetDate={target} label={caption} />
+
+        <div className="name-field">
+          <label htmlFor="oracle-name">Inscribe Thy Name into the Ledger</label>
+          <input
+            id="oracle-name"
+            type="text"
+            maxLength={32}
+            placeholder="e.g. Seer of Suburbia"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter" && name.trim()) onBegin(); }}
+          />
+        </div>
+
+        <button
+          className="btn btn-primary"
+          disabled={!name.trim()}
+          onClick={onBegin}
+        >
+          ◈ Begin the Prophecy
+        </button>
+
+        <div style={{marginTop: 28, fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.3em", color: "var(--smoke-dim)", textTransform: "uppercase"}}>
+          No login · No refunds · Results non-binding with reality
+        </div>
+      </div>
+
+      <div className="footer-wisp">✦ 48 nations · 1 trophy · 104 matches · ∞ opinions ✦</div>
+    </div>
+  );
+}
+
+window.HomeSection = HomeSection;
+
+</script>
+<script type="text/babel" data-presets="react">
+// ============ SECTION 2: PICK TEAM ============
+function PickSection({ name, selected, setSelected, onConfirm, onBack }) {
+  const [filter, setFilter] = React.useState("ALL");
+  const [query, setQuery] = React.useState("");
+
+  const confeds = ["ALL", "UEFA", "CONMEBOL", "CONCACAF", "AFC", "CAF", "OFC"];
+  const filtered = React.useMemo(() => {
+    return window.WC_TEAMS.filter(t => {
+      if (filter !== "ALL" && t.confed !== filter) return false;
+      if (query && !t.name.toLowerCase().includes(query.toLowerCase())) return false;
+      return true;
+    });
+  }, [filter, query]);
+
+  const picked = selected ? window.WC_TEAMS.find(t => t.code === selected) : null;
+
+  return (
+    <div className="pick-wrap fade-in">
+      <div className="pick-top">
+        <button className="btn-quiet" onClick={onBack}>← Back to the threshold</button>
+        <div className="brand-wisp">◈ Act II · The Choosing</div>
+        <div style={{fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.3em", color: "var(--smoke)"}}>
+          {name ? `SEER: ${name.toUpperCase()}` : ""}
+        </div>
+      </div>
+
+      <div className="pick-title-block">
+        <div className="eyebrow">— Choose One Nation —</div>
+        <h1 className="pick-title headline">Upon whom shall the <span style={{color: "var(--gold-bright)", fontStyle: "italic"}}>trophy</span> fall?</h1>
+        <p className="pick-sub">
+          Forty-eight flags flutter in the metaphysical breeze. The oracle will record
+          but one. Trust the pattern, the pang of instinct, the sudden conviction —
+          or whichever nation your uncle insists upon at dinner.
+        </p>
+      </div>
+
+      <div className="pick-controls">
+        {confeds.map(c => (
+          <button
+            key={c}
+            className={`chip ${filter === c ? "active" : ""}`}
+            onClick={() => setFilter(c)}
+          >
+            {c === "ALL" ? `All · 48` : c}
+          </button>
+        ))}
+      </div>
+
+      <div style={{display: "flex", justifyContent: "center", marginBottom: 20}}>
+        <input
+          type="text"
+          placeholder="⌕  search a nation..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={{
+            background: "transparent",
+            border: "1px solid var(--rule)",
+            borderRadius: 2,
+            padding: "10px 16px",
+            color: "var(--vellum)",
+            fontFamily: "var(--mono)",
+            fontSize: 12,
+            letterSpacing: "0.1em",
+            width: 260,
+            outline: "none",
+            textAlign: "center"
+          }}
+        />
+      </div>
+
+      <div className="team-grid">
+        {filtered.map(t => (
+          <button
+            key={t.code}
+            className={`team-card ${selected === t.code ? "selected" : ""}`}
+            onClick={() => setSelected(t.code)}
+          >
+            {selected === t.code && <div className="check">✓</div>}
+            <div className="flag">{t.flag}</div>
+            <div>
+              <div className="t-name">{t.name}</div>
+              <div className="t-confed">{t.confed}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 && (
+        <div style={{textAlign: "center", padding: 40, fontFamily: "var(--serif)", fontStyle: "italic", color: "var(--smoke)"}}>
+          No nation found. The oracle is perplexed.
+        </div>
+      )}
+
+      {picked && (
+        <div className="pick-confirm">
+          <div className="pick-confirm-inner">
+            <div className="picked">
+              <div className="flag">{picked.flag}</div>
+              <div className="txt">
+                <div className="eyebrow">Your Prophecy</div>
+                <div className="n">{picked.name} lifts the trophy</div>
+              </div>
+            </div>
+            <button className="btn btn-primary" onClick={onConfirm} style={{padding: "14px 20px"}}>
+              Seal it ◈
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+window.PickSection = PickSection;
+
+</script>
+<script type="text/babel" data-presets="react">
+// ============ INTERLUDE: DIVINING (between Act II and Act III) ============
+function DivineSection({ name, teamCode, onComplete }) {
+  const team = window.WC_TEAMS.find(t => t.code === teamCode);
+  const [progress, setProgress] = React.useState(0);
+  const [phaseIdx, setPhaseIdx] = React.useState(0);
+  const [done, setDone] = React.useState(false);
+  const DURATION = 4200;
+
+  const phases = React.useMemo(() => ([
+    "Consulting the council…",
+    "Shuffling the deck of destiny…",
+    `Reading the vibes of ${team?.name ?? "the chosen"}…`,
+    "Sealing the prophecy in wax…",
+  ]), [team]);
+
+  React.useEffect(() => {
+    const start = performance.now();
+    let raf;
+    const tick = (now) => {
+      const elapsed = now - start;
+      const p = Math.min(1, elapsed / DURATION);
+      setProgress(p);
+      setPhaseIdx(Math.min(phases.length - 1, Math.floor(p * phases.length)));
+      if (p < 1) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        setDone(true);
+        setTimeout(onComplete, 700);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // Wandering flag preview
+  const [flicker, setFlicker] = React.useState(team.flag);
+  React.useEffect(() => {
+    if (done) { setFlicker(team.flag); return; }
+    const pool = window.WC_TEAMS.filter(t => t.code !== teamCode);
+    const id = setInterval(() => {
+      setFlicker(pool[Math.floor(Math.random() * pool.length)].flag);
+    }, 140);
+    return () => clearInterval(id);
+  }, [done, teamCode, team.flag]);
+
+  return (
+    <div className="divine-wrap fade-in" data-screen-label="02b Divining — The Interlude">
+      <div className="divine-stage">
+        <div className={`d-ring ${done ? "locked" : ""}`}></div>
+        <div className={`d-crystal ${done ? "locked" : ""}`}>
+          <div className={`d-flag ${done ? "locked" : ""}`} key={done ? "lock" : "w"}>
+            {flicker}
+          </div>
+        </div>
+      </div>
+
+      <div className="divine-copy">
+        <div className="eyebrow">— The Oracle Deliberates —</div>
+        <h2 className="divine-title headline">
+          {done ? "It is seen." : "The vision sharpens…"}
+        </h2>
+        <div className="divine-phase" key={phaseIdx}>
+          {done ? "Inscribing your certificate…" : phases[phaseIdx]}
+        </div>
+        <div className="divine-meter">
+          <div className="divine-meter-bar" style={{width: `${progress * 100}%`}}></div>
+          <div className="divine-meter-label">
+            <span>{String(Math.floor(progress * 100)).padStart(3, "0")}%</span>
+            <span>{name || "Anon"} · {team?.name}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+window.DivineSection = DivineSection;
+
+</script>
+<script type="text/babel" data-presets="react">
+// ============ SECTION 3: RESULT ============
+function Certificate({ name, team, date, ordinal, certStyle }) {
+  const dateStr = date.toLocaleDateString("en-US", {
+    year: "numeric", month: "long", day: "numeric"
+  });
+  return (
+    <div className="certificate-frame fade-in">
+      <div className="certificate" style={certStyle === "noir" ? {
+        background: "radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.15), transparent 70%), linear-gradient(175deg, #1a1838 0%, #0f0f22 100%)",
+        color: "#f4ebd3"
+      } : {}}>
+        {/* corners */}
+        <svg className="cert-corner tl" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="0.8">
+          <path d="M1,20 Q1,1 20,1 M1,12 Q1,5 12,5 M8,20 Q8,8 20,8" />
+          <circle cx="6" cy="6" r="1.5" fill="currentColor" />
+        </svg>
+        <svg className="cert-corner tr" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="0.8">
+          <path d="M1,20 Q1,1 20,1 M1,12 Q1,5 12,5 M8,20 Q8,8 20,8" />
+          <circle cx="6" cy="6" r="1.5" fill="currentColor" />
+        </svg>
+        <svg className="cert-corner bl" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="0.8">
+          <path d="M1,20 Q1,1 20,1 M1,12 Q1,5 12,5 M8,20 Q8,8 20,8" />
+          <circle cx="6" cy="6" r="1.5" fill="currentColor" />
+        </svg>
+        <svg className="cert-corner br" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="0.8">
+          <path d="M1,20 Q1,1 20,1 M1,12 Q1,5 12,5 M8,20 Q8,8 20,8" />
+          <circle cx="6" cy="6" r="1.5" fill="currentColor" />
+        </svg>
+
+        <div className="cert-inner">
+          <div className="cert-seal">
+            <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="1">
+              <circle cx="30" cy="30" r="28" strokeDasharray="1.5 2" />
+              <circle cx="30" cy="30" r="22" />
+              <circle cx="30" cy="30" r="14" />
+              <path d="M30,18 L32,26 L40,26 L34,30 L36,38 L30,33 L24,38 L26,30 L20,26 L28,26 Z" fill="currentColor" opacity="0.6"/>
+              <path d="M8,30 L2,30 M52,30 L58,30 M30,2 L30,8 M30,52 L30,58" strokeWidth="0.6"/>
+            </svg>
+          </div>
+          <div className="cert-title">The Oracle Bears Witness</div>
+          <div className="cert-title-main">Prophecy of a Champion</div>
+
+          <div className="cert-divider">
+            <span style={{fontFamily: "var(--serif)", fontSize: 12}}>✦ ANNO MMXXVI ✦</span>
+          </div>
+
+          <div className="cert-preamble">
+            Let it be known, on this day and henceforth forevermore, that the following seer did in solemn ceremony declare —
+          </div>
+
+          <div className="cert-name">{name || "An Anonymous Seer"}</div>
+
+          <div className="cert-midtext">— doth foretell that the World Cup shall be lifted by —</div>
+
+          <div className="cert-team">
+            <span className="flag">{team.flag}</span>
+            <span>{team.name}</span>
+          </div>
+
+          <div style={{fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 13, color: certStyle === "noir" ? "var(--smoke)" : "#4a3a1a", marginTop: 6}}>
+            on the fields of North America, summer of 2026.
+          </div>
+
+          <div className="cert-foot">
+            <div className="cert-foot-item">
+              <div className="k">Inscribed</div>
+              <div className="v">{dateStr}</div>
+            </div>
+            <div className="cert-foot-sig">
+              <div className="sigline">~ Oracle of the Cup ~</div>
+              <div className="k">Countersigned</div>
+            </div>
+            <div className="cert-foot-item">
+              <div className="k">Ledger № </div>
+              <div className="v">{String(ordinal).padStart(6, "0")}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Distribution({ weights, selectedCode, expanded, onToggle }) {
+  const sorted = React.useMemo(() => {
+    const arr = window.WC_TEAMS.map(t => ({
+      ...t,
+      count: weights[t.code] || 10
+    }));
+    arr.sort((a, b) => b.count - a.count);
+    const total = arr.reduce((s, x) => s + x.count, 0);
+    return { arr, total };
+  }, [weights]);
+
+  const max = sorted.arr[0]?.count || 1;
+  const selectedIdx = sorted.arr.findIndex(t => t.code === selectedCode);
+  const topN = expanded ? sorted.arr : sorted.arr.slice(0, 10);
+
+  const rows = [...topN];
+  if (!expanded && selectedIdx >= 10) {
+    rows.push(sorted.arr[selectedIdx]);
+  }
+
+  return (
+    <div className="section-card">
+      <div className="section-hdr">
+        <div className="eyebrow">— The Collective Augury —</div>
+        <h2>How the council has cast its lots</h2>
+      </div>
+
+      <div className="dist">
+        {rows.map((t, i) => {
+          const realIdx = sorted.arr.findIndex(x => x.code === t.code);
+          const pct = (t.count / sorted.total) * 100;
+          const barPct = (t.count / max) * 100;
+          const isYou = t.code === selectedCode;
+          return (
+            <div key={t.code} className={`dist-row ${isYou ? "you" : ""}`}>
+              <div className="rk">{realIdx + 1}</div>
+              <div className="fl">{t.flag}</div>
+              <div className="bar-wrap">
+                <div className="bar" style={{width: `${barPct}%`}}></div>
+                <div className="label">
+                  {t.name}
+                  {isYou && <span className="you-tag">You</span>}
+                </div>
+              </div>
+              <div className="pct">{pct.toFixed(1)}%</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="dist-fold">
+        <button className="btn-quiet" onClick={onToggle}>
+          {expanded ? "↑ Fold the scroll" : `↓ Reveal all 48 nations`}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ResultSection({ name, teamCode, onRestart, onEvent, certStyle }) {
+  const team = window.WC_TEAMS.find(t => t.code === teamCode);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const { ordinal, daysToFinal } = React.useMemo(() => {
+    // Stable pseudo-ordinal based on team's existing weight + a small jitter from name hash
+    const base = (window.WC_WEIGHTS[teamCode] || 100);
+    const hash = (name || "").split("").reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7);
+    const ordinal = base + (Math.abs(hash) % 73) + 1;
+    const WC_FINAL = new Date("2026-07-19T20:00:00-05:00").getTime();
+    const days = Math.max(0, Math.ceil((WC_FINAL - Date.now()) / 86400000));
+    return { ordinal, daysToFinal: days };
+  }, [teamCode, name]);
+
+  const teamShort = team.name.length > 18 ? team.code : team.name;
+
+  // Pick a flavor omen based on team ranking
+  const rank = React.useMemo(() => {
+    const arr = window.WC_TEAMS.map(t => ({ code: t.code, count: window.WC_WEIGHTS[t.code] || 10 }))
+      .sort((a, b) => b.count - a.count);
+    return arr.findIndex(x => x.code === teamCode) + 1;
+  }, [teamCode]);
+
+  const flavor = rank <= 3
+    ? "A safe harbor, chosen by many. Your vision aligns with the multitudes — comforting, or suspicious, depending on temperament."
+    : rank <= 8
+    ? "A respectable augury. The tea leaves bend toward possibility; the bookmakers cautiously nod."
+    : rank <= 20
+    ? "A bold reading. Should this come to pass, songs will be written and uncles will grumble."
+    : "A prophecy of the highest order — the kind whispered in back rooms by those who refuse to be ordinary. History rewards the audacious.";
+
+  return (
+    <div className="result-wrap fade-in">
+      <div className="result-top">
+        <div className="brand-wisp">◈ Act III · The Ledger</div>
+        <div style={{fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.3em", color: "var(--smoke)"}}>
+          SEALED · {new Date().toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}).toUpperCase()}
+        </div>
+      </div>
+
+      <div className="result-hero">
+        <div className="eyebrow">— The Prophecy is Cast —</div>
+        <h1>It is written.</h1>
+        <div className="lede">
+          The oracle has sealed your vision in wax and parchment. Below lies your
+          certificate, your standing among the faithful, and the reading of the leaves.
+        </div>
+      </div>
+
+      <Certificate
+        name={name}
+        team={team}
+        date={new Date()}
+        ordinal={ordinal}
+        certStyle={certStyle}
+      />
+
+      <div className="omen">
+        <div className="omen-lines">
+          <div className="omen-line">
+            <div className="marker">I.</div>
+            <div className="text">
+              Thou art the <span className="num">{ordinal.toLocaleString()}ᵗʰ</span> seer
+              to foretell a <span className="hi">{team.name}</span> triumph in the Year of the Cup.
+            </div>
+          </div>
+          <div className="omen-line">
+            <div className="marker">II.</div>
+            <div className="text">
+              Thy prophecy was inscribed <span className="num">{daysToFinal}</span> days
+              before the final whistle at the Estadio Azteca.
+            </div>
+          </div>
+          <div className="omen-line">
+            <div className="marker">III.</div>
+            <div className="text">{flavor}</div>
+          </div>
+          <div className="omen-line">
+            <div className="marker">◈</div>
+            <div className="text" style={{color: "var(--gold-bright)", fontStyle: "normal", fontFamily: "var(--serif)", fontSize: 18, letterSpacing: "0.05em"}}>
+              Should it come to pass, remember: you saw it first.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Distribution
+        weights={window.WC_WEIGHTS}
+        selectedCode={teamCode}
+        expanded={expanded}
+        onToggle={() => setExpanded(e => !e)}
+      />
+
+      <div className="result-ctas">
+        <button className="btn btn-ghost" onClick={onRestart}>↺ Prophesy Again</button>
+        <a className="btn btn-primary" href="#event-site" onClick={onEvent}>
+          Enter the Event Site →
+        </a>
+      </div>
+
+      <div style={{textAlign: "center", marginTop: 28, fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.3em", color: "var(--smoke-dim)"}}>
+        ✦ SHARE THY PROPHECY · #ORACLEOFTHECUP ✦
+      </div>
+    </div>
+  );
+}
+
+window.ResultSection = ResultSection;
+
+</script>
+<script type="text/babel" data-presets="react">
+// ============ APP SHELL ============
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "countdownMode": "final",
+  "certStyle": "parchment"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [step, setStep] = React.useState(() => {
+    try { return localStorage.getItem("oracle.step") || "home"; } catch { return "home"; }
+  });
+  const [name, setName] = React.useState(() => {
+    try { return localStorage.getItem("oracle.name") || ""; } catch { return ""; }
+  });
+  const [selected, setSelected] = React.useState(() => {
+    try { return localStorage.getItem("oracle.team") || null; } catch { return null; }
+  });
+
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [editMode, setEditMode] = React.useState(false);
+
+  // Persist state
+  React.useEffect(() => { try { localStorage.setItem("oracle.step", step); } catch {} }, [step]);
+  React.useEffect(() => { try { localStorage.setItem("oracle.name", name); } catch {} }, [name]);
+  React.useEffect(() => { try { if (selected) localStorage.setItem("oracle.team", selected); } catch {} }, [selected]);
+
+  // Edit mode protocol
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const d = e.data;
+      if (!d || typeof d !== "object") return;
+      if (d.type === "__activate_edit_mode") setEditMode(true);
+      if (d.type === "__deactivate_edit_mode") setEditMode(false);
+    };
+    window.addEventListener("message", onMsg);
+    window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
+  const updateTweak = (k, v) => {
+    setTweaks(prev => {
+      const next = { ...prev, [k]: v };
+      window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
+      return next;
+    });
+  };
+
+  const handleRestart = () => {
+    setStep("home");
+    setSelected(null);
+    try { localStorage.removeItem("oracle.team"); } catch {}
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleEvent = (e) => {
+    e.preventDefault();
+    // Simulated event site redirect
+    const ok = confirm("About to depart the oracle's chamber for the Event Site.\n\n[This is a prototype — the real redirect would take you to the World Cup event page.]\n\nContinue?");
+    if (ok) {
+      // window.location.href = "https://example.com/world-cup-event";
+    }
+  };
+
+  return (
+    <div className="stage" data-screen-label={
+      step === "home" ? "01 Home — Invocation" :
+      step === "pick" ? "02 Pick — The Choosing" :
+      step === "divine" ? "02b Divining — Interlude" :
+      "03 Result — The Ledger"
+    }>
+      <div className="starfield"></div>
+
+      {step === "home" && (
+        <HomeSection
+          countdownMode={tweaks.countdownMode}
+          name={name}
+          setName={setName}
+          onBegin={() => {
+            setStep("pick");
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }}
+        />
+      )}
+
+      {step === "pick" && (
+        <PickSection
+          name={name}
+          selected={selected}
+          setSelected={setSelected}
+          onConfirm={() => {
+            setStep("divine");
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }}
+          onBack={() => setStep("home")}
+        />
+      )}
+
+      {step === "divine" && selected && (
+        <DivineSection
+          name={name}
+          teamCode={selected}
+          onComplete={() => {
+            setStep("result");
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }}
+        />
+      )}
+
+      {step === "result" && selected && (
+        <ResultSection
+          name={name}
+          teamCode={selected}
+          onRestart={handleRestart}
+          onEvent={handleEvent}
+          certStyle={tweaks.certStyle}
+        />
+      )}
+
+      {editMode && (
+        <div className="tweaks">
+          <h4>
+            <span>◈ Tweaks</span>
+            <span style={{color: "var(--smoke-dim)"}}>v1</span>
+          </h4>
+          <div className="tw-row">
+            <label>Countdown target</label>
+            <div className="tw-opts">
+              <button
+                className={`tw-opt ${tweaks.countdownMode === "opening" ? "on" : ""}`}
+                onClick={() => updateTweak("countdownMode", "opening")}
+              >Opener</button>
+              <button
+                className={`tw-opt ${tweaks.countdownMode === "final" ? "on" : ""}`}
+                onClick={() => updateTweak("countdownMode", "final")}
+              >Final</button>
+            </div>
+          </div>
+          <div className="tw-row">
+            <label>Certificate style</label>
+            <div className="tw-opts">
+              <button
+                className={`tw-opt ${tweaks.certStyle === "parchment" ? "on" : ""}`}
+                onClick={() => updateTweak("certStyle", "parchment")}
+              >Parchment</button>
+              <button
+                className={`tw-opt ${tweaks.certStyle === "noir" ? "on" : ""}`}
+                onClick={() => updateTweak("certStyle", "noir")}
+              >Midnight</button>
+            </div>
+          </div>
+          <div className="tw-row">
+            <label>Jump to section</label>
+            <div className="tw-opts">
+              <button className={`tw-opt ${step === "home" ? "on" : ""}`} onClick={() => setStep("home")}>1</button>
+              <button
+                className={`tw-opt ${step === "pick" ? "on" : ""}`}
+                onClick={() => { if (!name) setName("Seer of Taipei"); setStep("pick"); }}
+              >2</button>
+              <button
+                className={`tw-opt ${step === "divine" ? "on" : ""}`}
+                onClick={() => {
+                  if (!name) setName("Seer of Taipei");
+                  if (!selected) setSelected("ARG");
+                  setStep("divine");
+                }}
+              >⚯</button>
+              <button
+                className={`tw-opt ${step === "result" ? "on" : ""}`}
+                onClick={() => {
+                  if (!name) setName("Seer of Taipei");
+                  if (!selected) setSelected("ARG");
+                  setStep("result");
+                }}
+              >3</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>

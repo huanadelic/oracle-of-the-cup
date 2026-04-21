@@ -1,0 +1,14 @@
+{
+  "name": "oracle-of-the-cup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./style.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./style.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.3",
+    "tailwindcss": "^4.1.0"
+  }
+}

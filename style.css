@@ -1,0 +1,1247 @@
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS — 全專案顏色、字型設計系統
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  /* 主色 */
+  --color-ink:         #0a0a1a;
+  --color-ink-2:       #0f0f22;
+  --color-night:       #141432;
+  --color-vellum:      #f4ebd3;
+  --color-vellum-2:    #ebe0c0;
+  --color-parchment:   #e8dcb8;
+  --color-gold:        #c8a14a;
+  --color-gold-bright: #e3bf6a;
+  --color-gold-dim:    #8a6d2d;
+  --color-wine:        #5a1f2e;
+  /* 半透明色 */
+  --color-smoke:       rgba(244, 235, 211, 0.55);
+  --color-smoke-dim:   rgba(244, 235, 211, 0.28);
+  --color-rule:        rgba(200, 161, 74, 0.35);
+
+  /* 字型 */
+  --font-serif: "Shippori Mincho B1", "Noto Serif TC", "Cormorant Garamond", Georgia, serif;
+  --font-sans:  "Noto Sans TC", "Inter", -apple-system, sans-serif;
+  --font-mono:  "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--color-ink);
+}
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--color-ink);
+  color: var(--color-vellum);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+
+.hidden { display: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: var(--color-ink); }
+::-webkit-scrollbar-thumb  { background: var(--color-gold-dim); border-radius: 2px; }
+
+/* 頁首品牌標記 */
+.brand-wisp {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  color: var(--color-gold);
+  text-transform: uppercase;
+}
+
+/* Eyebrow 小標（全域共用） */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--color-gold);
+  text-transform: uppercase;
+}
+
+/* 儀式性大標（serif italic，高字重） */
+.headline {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-vellum);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes eyePulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.05); }
+}
+@keyframes starDrift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.fade-in { animation: fadeIn 0.6s ease both; }
+
+/* ═══════════════════════════════════════════════════════════
+   STAGE & STARFIELD
+   ═══════════════════════════════════════════════════════════ */
+#stage {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(20,20,50,0.6),    var(--color-ink) 75%);
+}
+
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.65;
+}
+/* 兩層星點，速度不同產生視差感 */
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  background-image:
+    radial-gradient(1px   1px   at 10% 15%,  rgba(244,235,211,0.70) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 25% 70%,  rgba(244,235,211,0.50) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40%  8%,  rgba(200,161,74, 0.60) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 60% 45%,  rgba(244,235,211,0.40) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 75% 80%,  rgba(244,235,211,0.60) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 88% 20%,  rgba(244,235,211,0.35) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at  3% 55%,  rgba(200,161,74, 0.40) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 50% 90%,  rgba(244,235,211,0.50) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 18% 38%,  rgba(244,235,211,0.40) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 92% 60%,  rgba(244,235,211,0.30) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 35% 50%,  rgba(200,161,74, 0.30) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 70% 25%,  rgba(244,235,211,0.45) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 55% 65%,  rgba(244,235,211,0.35) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 80%  5%,  rgba(244,235,211,0.55) 0%, transparent 100%),
+    radial-gradient(1px   1px   at 15% 85%,  rgba(244,235,211,0.40) 0%, transparent 100%);
+  animation: starDrift 40s linear infinite;
+}
+.starfield::after {
+  animation-duration: 65s;
+  animation-direction: reverse;
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 1: HOME
+   ═══════════════════════════════════════════════════════════ */
+.home-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.home-header {
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 80px;
+}
+.home-inner {
+  max-width: 720px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Oracle Eye */
+/* Tailwind preflight 把 svg 設為 display:block，text-align:center 失效
+   改用 flex + justify-content:center 明確置中 */
+.home-eye {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.home-eye svg {
+  width: 72px;
+  height: 72px;
+  color: var(--color-gold);
+  filter: drop-shadow(0 0 20px rgba(227,191,106,0.4));
+  animation: eyePulse 4s ease-in-out infinite;
+}
+
+/* 主標題 */
+.home-title { font-size: clamp(52px, 8vw, 104px); margin: 0 0 32px; font-style: normal; }
+.home-title .em { font-style: normal; color: var(--color-gold-bright); }
+
+/* 副標 */
+.home-sub {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-smoke);
+  max-width: 540px;
+  margin: 0 auto 44px;
+  font-style: italic;
+  font-weight: 400;
+}
+.home-sub .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.3em;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* ─── 倒數計時 ─── */
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 0 auto 52px;
+  padding: 28px 0;
+  border-top: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  max-width: 580px;
+}
+.countdown .unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+  position: relative;
+}
+/* 單位間的分隔點 */
+.countdown .unit + .unit::before {
+  content: "·";
+  position: absolute;
+  left: -14px;
+  top: 8px;
+  color: var(--color-gold);
+  font-size: 20px;
+}
+.countdown .num {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-vellum);      /* vellum，不是金色 */
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.countdown .lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-gold);         /* 金色，不是 smoke */
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+.countdown-caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--color-smoke);
+  text-transform: uppercase;
+  margin-top: -36px;
+  margin-bottom: 52px;
+  text-align: center;
+}
+
+/* ─── 名字輸入 ─── */
+.name-field {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto 28px;
+}
+.name-field label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--color-gold);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  text-align: center;
+}
+/* 只有底線，無外框 */
+.name-field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-rule);
+  padding: 14px 12px 16px;
+  color: var(--color-vellum);
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-style: normal;
+  text-align: center;
+  outline: none;
+  transition: border-color 200ms;
+}
+.name-field input::placeholder { color: var(--color-smoke-dim); font-style: normal; }
+.name-field input:focus { border-bottom-color: var(--color-gold); }
+
+/* Footer 固定在底部 */
+.footer-wisp {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--color-smoke-dim);
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* RWD（720px 對齊原版） */
+@media (max-width: 720px) {
+  .home-header     { margin-bottom: 40px; }
+  .countdown       { gap: 10px; padding: 20px 0; }
+  .countdown .unit { min-width: 52px; }
+  .countdown .num  { font-size: 32px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LUCIDE ICONS
+   ═══════════════════════════════════════════════════════════ */
+/* createIcons 替換後 SVG 帶有 .lucide class */
+.lucide {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.25em;  /* 隨父元素 font-size 縮放，加大 25% */
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+/* team-card 右上角圓形勾選：縮小 icon 適配 16×16 容器 */
+.team-card .check .lucide {
+  width: 12px;
+  height: 12px;
+  stroke-width: 3;
+}
+
+/* search 輸入框：icon 絕對定位在左側 */
+.search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.search-wrap .search-icon {
+  position: absolute;
+  left: 12px;
+  width: 15px;
+  height: 15px;
+  color: var(--color-smoke-dim);
+  pointer-events: none;
+}
+/* 輸入框左側讓出 icon 空間，改為左對齊 */
+.search-wrap .pick-search {
+  padding-left: 34px;
+  text-align: left;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 64px;
+  border-radius: 2px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 200ms ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+.btn-primary {
+  background: linear-gradient(180deg, var(--color-gold-bright), var(--color-gold));
+  color: var(--color-ink);
+  border-color: var(--color-gold-bright);
+  box-shadow:
+    0 0 0 1px rgba(227,191,106,0.3),
+    0 10px 40px -10px rgba(227,191,106,0.5);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(227,191,106,0.5),
+    0 15px 50px -10px rgba(227,191,106,0.7);
+}
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-vellum);
+  border-color: var(--color-rule);
+}
+.btn-ghost:hover { border-color: var(--color-gold); color: var(--color-gold-bright); }
+
+/* 安靜的文字按鈕（用於 back、展開等） */
+.btn-quiet {
+  background: transparent;
+  color: var(--color-smoke);
+  border: none;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: color 200ms;
+}
+.btn-quiet:hover { color: var(--color-gold); }
+
+/* Header nav 按鈕：與 brand-wisp 完全相同視覺語言，hover 只有箭頭動 */
+.btn-nav {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-nav .lucide {
+  transition: transform 200ms ease;
+}
+.btn-nav:hover .lucide { transform: translateX(-3px); }
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 2: PICK
+   ═══════════════════════════════════════════════════════════ */
+.pick-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 40px 24px 140px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.pick-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pick-title-block {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+.pick-title-block .eyebrow { margin-bottom: 24px; }
+.pick-title { font-size: clamp(36px, 5vw, 60px); margin: 0 0 32px; font-style: normal; }
+.pick-sub   { font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--color-smoke); line-height: 1.5; }
+
+/* 聯盟篩選 chips（膠囊形） */
+.pick-controls {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.chip {
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  color: var(--color-smoke);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 99px;   /* 膠囊形 */
+  cursor: pointer;
+  transition: all 150ms;
+}
+.chip:hover { border-color: var(--color-gold); color: var(--color-vellum); }
+.chip.active {
+  background: var(--color-gold);
+  color: var(--color-ink);
+  border-color: var(--color-gold);
+}
+
+/* 搜尋欄 */
+.pick-search {
+  display: block;
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 10px 16px;
+  color: var(--color-vellum);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  width: 260px;
+  outline: none;
+  text-align: center;
+  transition: border-color 200ms;
+}
+.pick-search::placeholder { color: var(--color-smoke-dim); }
+.pick-search:focus { border-color: var(--color-gold); }
+
+/* 球隊格狀卡片 */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.team-card {
+  position: relative;
+  /* 水平排列：flag 在左，文字在右 */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 18px 14px;
+  background: linear-gradient(180deg, rgba(244,235,211,0.03), rgba(244,235,211,0.01));
+  border: 1px solid rgba(244,235,211,0.08);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  color: var(--color-vellum);
+}
+.team-card:hover {
+  border-color: var(--color-gold);
+  background: linear-gradient(180deg, rgba(227,191,106,0.08), rgba(227,191,106,0.02));
+  transform: translateY(-1px);
+}
+.team-card.selected {
+  border-color: var(--color-gold-bright);
+  background: linear-gradient(180deg, rgba(227,191,106,0.18), rgba(227,191,106,0.05));
+  box-shadow: 0 0 0 1px var(--color-gold-bright), 0 0 30px -5px rgba(227,191,106,0.4);
+}
+
+/* Flag */
+.team-card .flag {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  flex-shrink: 0;
+}
+
+/* 隊名 */
+.team-card .t-name {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.team-card .t-confed {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-smoke-dim);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* 選取勾選（圓形金底） */
+.team-card.selected .check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-gold-bright);
+  color: var(--color-ink);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── 浮動確認列 ─── */
+/* 外層：全寬漸層遮罩，pointer-events none */
+.pick-confirm {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent, var(--color-ink) 40%);
+  padding: 60px 24px 28px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+/* display: flex 會蓋掉同 specificity 的 .hidden，需補一條雙 class 規則 */
+.pick-confirm.hidden { display: none; }
+
+/* 內層：浮動卡片，pointer-events auto */
+.pick-confirm-inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--color-ink-2);
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  padding: 14px 16px 14px 22px;
+  box-shadow: 0 20px 60px -10px rgba(0,0,0,0.8);
+  max-width: 560px;
+  width: 100%;
+}
+.pick-confirm-inner .picked {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pick-confirm-inner .picked .flag { font-size: 40px; }
+.pick-confirm-inner .picked .txt  { display: flex; flex-direction: column; }
+.pick-confirm-inner .picked .eyebrow { margin-bottom: 2px; }
+.pick-confirm-inner .picked .n {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 20px;
+  color: var(--color-vellum);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 3: RESULT
+   ═══════════════════════════════════════════════════════════ */
+
+/* 證書外框（含透視容器） */
+.certificate-frame {
+  position: relative;
+  margin: 0 auto 56px;
+  max-width: 720px;
+}
+
+/* 證書主體 */
+.certificate {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.15), transparent 70%),
+    linear-gradient(175deg, #f5ecd4 0%, #ebe0c0 50%, #e0d3a8 100%);
+  color: #2a1f0a;
+  padding: 56px 56px 48px;
+  border-radius: 2px;
+  /* 特色多層框線：金邊 + 深色間距 + 外發光 */
+  box-shadow:
+    0 0 0 1px rgba(200,161,74,0.5),
+    0 0 0 8px #0f0f22,
+    0 0 0 9px var(--color-gold),
+    0 40px 80px -20px rgba(0,0,0,0.6),
+    0 0 120px -20px rgba(227,191,106,0.4);
+  overflow: hidden;
+  text-align: center;
+}
+.certificate.noir {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.15), transparent 70%),
+    linear-gradient(175deg, #1a1838 0%, #0f0f22 100%);
+  color: #f4ebd3;
+}
+
+/* 雙層內邊框 */
+.certificate::before {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(138,109,45,0.4);
+  pointer-events: none;
+  z-index: 1;
+}
+.certificate::after {
+  content: '';
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(138,109,45,0.25);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 四角裝飾（對齊內框位置） */
+.cert-corner              { position: absolute; width: 40px; height: 40px; color: var(--color-gold-dim); opacity: 0.7; z-index: 2; }
+.cert-corner.tl           { top: 26px;    left: 26px; }
+.cert-corner.tr           { top: 26px;    right: 26px;   transform: scaleX(-1); }
+.cert-corner.bl           { bottom: 26px; left: 26px;    transform: scaleY(-1); }
+.cert-corner.br           { bottom: 26px; right: 26px;   transform: scale(-1); }
+
+.cert-inner { position: relative; text-align: center; z-index: 2; }
+
+.cert-seal     { display: flex; justify-content: center; margin-bottom: 20px; }
+.cert-seal svg { width: 52px; height: 52px; color: var(--color-gold-dim); }
+
+/* 標題 */
+.cert-title {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-wine);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.cert-title-main {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 40px;
+  color: #2a1f0a;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.certificate.noir .cert-title-main { color: var(--color-vellum); }
+
+/* 分隔線（漸層淡出） */
+.cert-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px auto 22px;
+  color: var(--color-gold-dim);
+  max-width: 320px;
+}
+.cert-divider::before,
+.cert-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-gold-dim), transparent);
+}
+
+/* 前言 */
+.cert-preamble {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+  color: #4a3a1a;
+  line-height: 1.5;
+  max-width: 440px;
+  margin: 0 auto 16px;
+}
+.certificate.noir .cert-preamble { color: var(--color-smoke); }
+
+/* 預言者名字（主角） */
+.cert-name {
+  font-family: var(--font-serif);
+  font-size: 52px;
+  font-style: italic;
+  color: #2a1f0a;
+  line-height: 1.1;
+  font-weight: 500;
+  margin: 8px auto 4px;
+  border-bottom: 1px solid rgba(138,109,45,0.3);
+  padding-bottom: 10px;
+  max-width: 500px;
+}
+.certificate.noir .cert-name { color: var(--color-vellum); }
+
+.cert-midtext {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-style: italic;
+  color: #4a3a1a;
+  margin: 18px 0 8px;
+}
+.certificate.noir .cert-midtext { color: var(--color-smoke); }
+
+/* 球隊名稱 */
+.cert-team {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-wine);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 4px 0 6px;
+}
+.cert-team .flag        { font-size: 44px; }
+.certificate.noir .cert-team { color: var(--color-gold-bright); }
+
+/* 底部三欄 */
+.cert-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed rgba(138,109,45,0.4);
+  gap: 24px;
+}
+.cert-foot-item              { text-align: left;   flex: 1; }
+.cert-foot-item:last-child   { text-align: right; }
+.cert-foot-item .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--color-gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cert-foot-item .v {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: #2a1f0a;
+  font-style: italic;
+}
+.certificate.noir .cert-foot-item .v { color: var(--color-vellum); }
+
+.cert-foot-sig { flex: 1; text-align: center; }
+.cert-foot-sig .sigline {
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: 24px;
+  color: var(--color-wine);
+  font-style: italic;
+  margin-bottom: 2px;
+}
+.cert-foot-sig .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--color-gold-dim);
+  text-transform: uppercase;
+}
+.certificate.noir .cert-foot-sig .sigline { color: var(--color-gold); }
+
+/* RWD（720px 對齊原版） */
+@media (max-width: 720px) {
+  .certificate { padding: 36px 24px 28px; }
+  .cert-name   { font-size: 36px; }
+  .cert-team   { font-size: 26px; }
+  .cert-team .flag { font-size: 32px; }
+  .cert-foot   { flex-direction: column; gap: 16px; text-align: center; }
+  .cert-foot-item,
+  .cert-foot-item:last-child { text-align: center; }
+}
+
+/* 預言 omen 區塊 */
+.omen {
+  border: 1px solid var(--color-rule);
+  border-radius: 3px;
+  padding: 36px 44px;
+  background: linear-gradient(180deg, rgba(244,235,211,0.03), transparent);
+  max-width: 720px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+/* L 形金色角標 */
+.omen::before,
+.omen::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--color-gold);
+}
+.omen::before { top: -1px;    left: -1px;  border-right: none; border-bottom: none; }
+.omen::after  { bottom: -1px; right: -1px; border-left:  none; border-top:    none; }
+
+.omen-lines { display: flex; flex-direction: column; gap: 16px; }
+
+.omen-line {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+}
+.omen-line .marker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-gold);
+  min-width: 48px;
+  padding-top: 6px;
+  text-transform: uppercase;
+}
+.omen-line .text {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--color-vellum);
+  font-style: italic;
+  flex: 1;
+}
+.omen-line .text .hi {
+  color: var(--color-gold-bright);
+  font-weight: 500;
+  font-style: normal;
+}
+.omen-line .text .num {
+  font-family: var(--font-mono);
+  font-style: normal;
+  color: var(--color-gold-bright);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  .omen                { padding: 24px 20px; }
+  .omen-line           { flex-direction: column; gap: 4px; }
+  .omen-line .text     { font-size: 18px; }
+  .team-grid           { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+
+/* 統計區塊（上邊框，無完整外框） */
+.section-card {
+  border-top: 1px solid var(--color-rule);
+  padding-top: 40px;
+  margin-bottom: 40px;
+}
+.section-hdr {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.section-hdr .eyebrow { margin-bottom: 10px; }
+.section-hdr h2 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 36px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: var(--color-vellum);
+}
+
+/* 分佈圖列表 */
+.dist { display: flex; flex-direction: column; gap: 2px; }
+
+.dist-row {
+  display: grid;
+  grid-template-columns: 28px 28px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 2px;
+  transition: background 150ms;
+}
+.dist-row .rk { font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke-dim); text-align: right; }
+.dist-row .fl { font-size: 20px; }
+
+/* Bar 容器 */
+.dist-row .bar-wrap {
+  position: relative;
+  height: 28px;
+  background: rgba(244,235,211,0.04);
+  border-radius: 1px;
+  overflow: hidden;
+}
+/* Bar 本體：半透明白色漸層（不是金色實色） */
+.dist-row .bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, rgba(244,235,211,0.20), rgba(244,235,211,0.35));
+  border-right: 1px solid rgba(244,235,211,0.4);
+}
+/* 隊伍名稱標籤（疊在 bar 上方） */
+.dist-row .label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--color-vellum);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dist-row .pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-smoke);
+  letter-spacing: 0.05em;
+  min-width: 56px;
+  text-align: right;
+}
+
+/* 使用者自己選的那排 */
+.dist-row.you {
+  background: linear-gradient(90deg, rgba(227,191,106,0.12), rgba(227,191,106,0.02));
+  border-left: 2px solid var(--color-gold-bright);
+  padding-left: 12px;
+}
+.dist-row.you .rk  { color: var(--color-gold-bright); }
+.dist-row.you .pct { color: var(--color-gold-bright); }
+.dist-row.you .bar {
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-bright));
+  border-right-color: var(--color-gold-bright);
+}
+/* You tag：墨色文字 on 金底（與一般 tag 相反） */
+.dist-row.you .you-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--color-ink);
+  background: var(--color-gold-bright);
+  padding: 2px 6px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  border-radius: 1px;
+}
+
+.dist-fold { text-align: center; margin-top: 14px; }
+
+/* ═══════════════════════════════════════════════════════════
+   INTERLUDE: DIVINING（Act II→III 過場 loading）
+   ═══════════════════════════════════════════════════════════ */
+/* 整頁容器：全螢幕垂直置中，兩段上下排列 */
+.divine-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 56px;
+}
+
+/* 水晶球舞台 */
+.divine-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 旋轉光環 */
+.d-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-rule);
+  border-top-color: var(--color-gold-bright);
+  animation: d-spin 2.4s linear infinite;
+}
+.d-ring.locked {
+  border-color: var(--color-gold-bright);
+  animation: none;
+  box-shadow: 0 0 24px rgba(227,191,106,0.35);
+}
+@keyframes d-spin { to { transform: rotate(360deg); } }
+
+/* 水晶球本體 */
+.d-crystal {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(244,235,211,0.25), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(20,20,50,0.9), rgba(10,10,26,0.98));
+  box-shadow:
+    inset 0 -16px 32px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(227,191,106,0.25),
+    0 0 40px rgba(227,191,106,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 400ms ease;
+}
+.d-crystal.locked {
+  box-shadow:
+    inset 0 -16px 32px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(227,191,106,0.5),
+    0 0 60px rgba(227,191,106,0.4);
+}
+
+/* 旗幟（亂跳中 / 鎖定後放大） */
+.d-flag {
+  font-size: 64px;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(227,191,106,0.5));
+  transition: font-size 400ms ease;
+}
+.d-flag.locked {
+  animation: d-lock 600ms cubic-bezier(0.2, 1.4, 0.3, 1) both;
+  font-size: 80px;
+}
+@keyframes d-lock {
+  0%   { transform: scale(0.5); opacity: 0; filter: blur(6px); }
+  60%  { transform: scale(1.12); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+/* 文字區 */
+.divine-copy {
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+.divine-copy .eyebrow { margin-bottom: 14px; }
+
+/* 主標題：「The vision sharpens…」→「It is seen.」 */
+.divine-title {
+  font-size: clamp(30px, 4vw, 42px);
+  margin: 0 0 18px;
+}
+
+/* 階段描述文字（每換 phase 重播入場動畫） */
+.divine-phase {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--color-smoke);
+  min-height: 28px;
+  margin-bottom: 28px;
+  animation: fadeInPhase 400ms ease both;
+}
+@keyframes fadeInPhase {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 進度條 */
+.divine-meter {
+  position: relative;
+  max-width: 320px;
+  margin: 0 auto;
+}
+/* 背景軌道線 */
+.divine-meter::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 1px;
+  background: rgba(244,235,211,0.1);
+}
+/* 進度條本體 */
+.divine-meter-bar {
+  height: 1px;
+  background: var(--color-gold-bright);
+  transition: width 80ms linear;
+  box-shadow: 0 0 6px rgba(227,191,106,0.6);
+}
+/* 底部標籤：百分比 + 名字・隊伍 */
+.divine-meter-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--color-smoke-dim);
+  text-transform: uppercase;
+}
+
+/* RWD */
+@media (max-width: 720px) {
+  .divine-stage  { width: 180px; height: 180px; }
+  .d-crystal     { width: 120px; height: 120px; }
+  .d-flag        { font-size: 48px; }
+  .d-flag.locked { font-size: 60px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 3: RESULT — 頁面結構（wrap / top / hero / ctas）
+   ═══════════════════════════════════════════════════════════ */
+/* 整體容器：與 React 版對齊，max-width 1080px */
+.result-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+  max-width: 1200px; /* 與 home-wrap / pick-wrap 統一 */
+  margin: 0 auto;
+}
+
+/* 頂部兩端對齊列 */
+.result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.result-top-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-smoke);
+  text-transform: uppercase;
+}
+
+/* 主標題區 */
+.result-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.result-hero .eyebrow { margin-bottom: 16px; }
+.result-hero h1 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 500;
+  margin: 0 0 14px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-vellum);
+}
+.result-hero .lede {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--color-smoke);
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* CTA 按鈕群組 */
+.result-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oracle of the Cup · 2026 Champion Prophecy</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Shippori+Mincho+B1:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind 編譯輸出 -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- 星空背景（fixed，跨 section 共用） -->
+  <div class="starfield" aria-hidden="true"></div>
+
+  <!-- 主容器 -->
+  <div id="stage" class="relative min-h-screen">
+
+    <!-- ══════════════════════════════════════
+         SECTION 1: HOME — 召喚
+         ══════════════════════════════════════ -->
+    <section id="s-home" class="hidden">
+      <div class="home-wrap">
+
+        <div class="home-header">
+          <div class="brand-wisp">◈ 金盃神諭</div>
+          <div class="brand-wisp" style="color: var(--color-smoke-dim);">MMXXVI</div>
+        </div>
+
+        <div class="home-inner">
+
+          <!-- Oracle Eye（JS 注入 SVG） -->
+          <div id="oracle-eye" class="home-eye"></div>
+
+          <div class="eyebrow" style="margin-bottom: 24px;">— 三幕預言 —</div>
+
+          <h1 class="home-title headline">
+            預言 <span class="em">冠軍</span>
+          </h1>
+
+          <p class="home-sub">
+            <span class="tag">由預言者議會創立 · 2026</span>
+            卦象已現，星象已定。在第一聲哨響之前，神諭要求一個名字與一個國家。宣告你的選擇 — 留此為證，你早已預知一切。
+          </p>
+
+          <!-- 倒數計時（JS 渲染） -->
+          <div id="countdown" class="countdown"></div>
+          <p id="countdown-caption" class="countdown-caption"></p>
+
+          <!-- 名字輸入 -->
+          <div class="name-field">
+            <label for="name-input">將你的名字刻入典籍</label>
+            <input
+              id="name-input"
+              type="text"
+              maxlength="32"
+              placeholder="例：郊區預言者"
+              autocomplete="off"
+            />
+          </div>
+
+          <button id="btn-begin" disabled class="btn btn-primary">
+            開始預言 <i data-lucide="feather"></i>
+          </button>
+
+
+        </div><!-- /.home-inner -->
+
+        <div class="footer-wisp">✦ 48 個國家 · 1 座獎盃 · 104 場賽事 · ∞ 種意見 ✦</div>
+
+      </div><!-- /.home-wrap -->
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+         SECTION 2: PICK — 選擇
+         ══════════════════════════════════════ -->
+    <section id="s-pick" class="hidden">
+      <div class="pick-wrap">
+
+        <!-- 頂部導覽列 -->
+        <div class="pick-top">
+          <button id="btn-back" class="btn-nav">返回起點 <i data-lucide="arrow-left"></i></button>
+          <div id="pick-name" class="brand-wisp" style="color: var(--color-smoke);"></div>
+        </div>
+
+        <!-- 標題區塊 -->
+        <div class="pick-title-block">
+          <div class="eyebrow">— 選擇一個國家 —</div>
+          <h1 class="pick-title headline">
+            誰將捧起 <em style="color: var(--color-gold-bright); font-style: normal;">獎盃</em>？
+          </h1>
+          <p class="pick-sub">
+            四十八面旗幟，在玄妙之風中飄揚，神諭只會記下一個。相信那個徵兆、那陣直覺的刺痛、那份突如其來的篤定 — 或者，你家長輩掛在嘴邊的那一隊。
+          </p>
+        </div>
+
+        <!-- 聯盟篩選（JS 渲染） -->
+        <div id="confed-filters" class="pick-controls"></div>
+
+
+        <!-- 球隊格狀（JS 渲染） -->
+        <div id="team-grid" class="team-grid"></div>
+
+        <!-- 無結果提示 -->
+        <div id="team-empty" class="hidden" style="text-align: center; padding: 40px; font-family: var(--font-serif); font-style: italic; color: var(--color-smoke);">
+          查無此國。神諭感到困惑。
+        </div>
+
+      </div><!-- /.pick-wrap -->
+
+      <!-- 浮動確認列（JS 控制顯示） -->
+      <div id="pick-confirm" class="pick-confirm hidden">
+        <div class="pick-confirm-inner">
+          <div class="picked">
+            <div id="pick-confirm-flag" class="flag"></div>
+            <div class="txt">
+              <div style="font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.3em; color: var(--color-gold); text-transform: uppercase;">你的預言</div>
+              <div id="pick-confirm-name" class="n"></div>
+            </div>
+          </div>
+          <button id="btn-confirm" class="btn btn-primary">
+            封印預言 <i data-lucide="feather"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+         SECTION 2b: DIVINING — 過場 loading
+         ══════════════════════════════════════ -->
+    <section id="s-divine" class="hidden">
+      <div class="divine-wrap">
+
+        <!-- 水晶球舞台 -->
+        <div class="divine-stage">
+          <div id="d-ring" class="d-ring"></div>
+          <div id="d-crystal" class="d-crystal">
+            <div id="d-flag" class="d-flag">🔮</div>
+          </div>
+        </div>
+
+        <!-- 文字 + 進度條 -->
+        <div class="divine-copy">
+          <div class="eyebrow">— The Oracle Deliberates —</div>
+          <h2 id="divine-title" class="divine-title headline">The vision sharpens…</h2>
+          <div id="divine-phase" class="divine-phase">Consulting the council…</div>
+          <div class="divine-meter">
+            <div id="divine-meter-bar" class="divine-meter-bar" style="width: 0%"></div>
+            <div class="divine-meter-label">
+              <span id="divine-pct">000%</span>
+              <span id="divine-label"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+         SECTION 3: RESULT — 封印
+         ══════════════════════════════════════ -->
+    <section id="s-result" class="hidden">
+      <div class="result-wrap">
+
+        <!-- 頂部兩端對齊列 -->
+        <div class="result-top">
+          <span class="brand-wisp">◈ Act III · The Ledger</span>
+          <span id="result-date" class="result-top-date"></span>
+        </div>
+
+        <!-- 主標題區 -->
+        <div class="result-hero">
+          <div class="eyebrow">— The Prophecy is Cast —</div>
+          <h1>It is written.</h1>
+          <div class="lede">
+            The oracle has sealed your vision in wax and parchment. Below lies your
+            certificate, your standing among the faithful, and the reading of the leaves.
+          </div>
+        </div>
+
+        <!-- 證書（JS 渲染） -->
+        <div id="certificate"></div>
+
+        <!-- 預言解讀（JS 渲染） -->
+        <div id="omens"></div>
+
+        <!-- 分佈圖（JS 渲染） -->
+        <div id="distribution"></div>
+
+        <!-- CTA 按鈕 -->
+        <div class="result-ctas">
+          <button id="btn-restart" class="btn btn-ghost"><i data-lucide="rotate-ccw"></i> Prophesy Again</button>
+          <a id="btn-event" href="#event-site" class="btn btn-primary">Enter the Event Site <i data-lucide="arrow-right"></i></a>
+        </div>
+
+        <p style="text-align: center; margin-top: 28px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3em; color: var(--color-smoke-dim); text-transform: uppercase;">
+          ✦ Share Thy Prophecy · #OracleOfTheCup ✦
+        </p>
+
+      </div><!-- /.result-wrap -->
+    </section>
+
+  </div><!-- /#stage -->
+
+  <!-- ES Module：teams.js 由 script.js import，不需另外 <script> 載入 -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
