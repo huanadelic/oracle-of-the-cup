@@ -772,7 +772,7 @@ body {
 /* 證書外框（含透視容器） */
 .certificate-frame {
   position: relative;
-  margin: 0 auto 56px;
+  margin: 0 auto 0;
   max-width: 720px;
 }
 
@@ -1359,8 +1359,9 @@ body {
 /* 主標題區（左欄，左對齊 + sticky） */
 .result-hero {
   text-align: left;
+  align-self: start;   /* 強制 grid 頂端對齊 */
   position: sticky;
-  top: 48px;
+  top: 24px;
 }
 .result-hero .eyebrow { margin-bottom: 16px; }
 .result-hero h1 {
