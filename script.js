@@ -573,29 +573,32 @@ async function downloadCertificate() {
   btn.disabled = true;
   btn.innerHTML = '生成中…';
 
+  // 暫存原始值，擷取後還原
+  const imgEls  = [...el.querySelectorAll('img[src]')];
+  const origSrc = imgEls.map(i => i.src);
+  const origBg  = el.style.backgroundImage;
+
   try {
     await document.fonts.ready;
 
-    // 預載所有圖片資源為 data URL（Safari canvas 安全政策）
-    const [parchmentDataUrl, waxDataUrl] = await Promise.all([
+    // 預載所有圖片為 data URL，直接改原始 DOM（Safari canvas 不允許外部資源）
+    const [parchmentDataUrl] = await Promise.all([
       toDataUrl('img/parchment-texture.jpg'),
-      toDataUrl('img/wax-seal.png'),
+      ...imgEls.map(async (img) => {
+        try { img.src = await toDataUrl(img.src); } catch { /* 保持原 src */ }
+      }),
     ]);
+
+    // 覆蓋背景圖（inline style 優先於 class style）
+    const computedBg = getComputedStyle(el).backgroundImage;
+    el.style.backgroundImage = computedBg.replace(
+      /url\(["']?[^"')]*parchment[^"')]*["']?\)/,
+      `url('${parchmentDataUrl}')`
+    );
 
     const dataUrl = await window.htmlToImage.toPng(el, {
       pixelRatio: 2,
       skipFonts: true,
-      // onclone：在 html-to-image 建立 clone 後直接修改，確保 Safari 拿到 data URL
-      onclone: (_, clonedEl) => {
-        // 替換背景紋理
-        const bg = getComputedStyle(clonedEl).backgroundImage;
-        clonedEl.style.backgroundImage = bg.replace(/url\(["']?[^"')]+parchment[^"')]*["']?\)/, `url('${parchmentDataUrl}')`);
-
-        // 替換 wax-seal img
-        clonedEl.querySelectorAll('img[src*="wax-seal"]').forEach(img => {
-          img.src = waxDataUrl;
-        });
-      },
     });
 
     const link    = document.createElement('a');
@@ -605,6 +608,9 @@ async function downloadCertificate() {
   } catch (err) {
     console.error('證書下載失敗', err);
   } finally {
+    // 還原原始 DOM
+    imgEls.forEach((img, i) => { img.src = origSrc[i]; });
+    el.style.backgroundImage = origBg;
     btn.disabled = false;
     btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
     applyIcons();
