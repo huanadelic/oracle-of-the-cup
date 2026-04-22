@@ -7,7 +7,6 @@
   --color-ink-2:       #0f0f22;
   --color-night:       #141432;
   --color-vellum:      #f4ebd3;
-  --color-vellum-2:    #ebe0c0;
   --color-parchment:   #e8dcb8;
   --color-gold:        #c8a14a;
   --color-gold-bright: #e3bf6a;
@@ -52,7 +51,6 @@ body {
 
 .hidden { display: none; }
 
-#stage { position: relative; min-height: 100dvh; }
 
 /* ── 點擊漣漪 ───────────────────────────────────────────── */
 .click-ripple {
@@ -160,6 +158,8 @@ body {
    STAGE & STARFIELD
    ═══════════════════════════════════════════════════════════ */
 #stage {
+  position: relative;
+  min-height: 100dvh;
   background: transparent; /* starfield 在 body 層，不能蓋住 */
 }
 
@@ -390,7 +390,6 @@ body {
 
 /* RWD（720px 對齊原版） */
 @media (max-width: 720px) {
-  .home-header     { margin-bottom: 40px; }
   .countdown       { gap: 10px; padding: 20px 0; }
   .countdown .unit { min-width: 52px; }
   .countdown .num  { font-size: 32px; }
@@ -556,7 +555,6 @@ body {
 }
 .pick-title-block .eyebrow { margin-bottom: 24px; }
 .pick-title { font-size: clamp(36px, 5vw, 60px); margin: 0 0 32px; }
-.pick-sub   {}
 
 /* 聯盟篩選 chips（膠囊形） */
 .pick-controls {
@@ -917,7 +915,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin: 16px 0 16px;
+  margin: 16px 0;
 }
 .cert-team .flag        { font-size: 44px; }
 .certificate.noir .cert-team { color: var(--color-gold-bright); }

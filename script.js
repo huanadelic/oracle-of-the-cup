@@ -59,7 +59,7 @@ const state = {
    日期常數
    ═══════════════════════════════════════════════════════════ */
 const WC_FINAL = new Date('2026-07-20T03:00:00+08:00').getTime(); // 冠軍賽（台北時間）
-const WC_OPEN  = new Date('2026-06-12T03:00:00+08:00').getTime(); // 開幕賽（台北時間）
+const WC_OPEN  = new Date('2026-06-12T03:00:00+08:00').getTime(); // 開幕賽（台北時間）— TODO: 開幕賽倒數模式保留備用，目前永遠使用 'final' 模式
 
 /* ═══════════════════════════════════════════════════════════
    DOM 工具
@@ -467,10 +467,7 @@ function initResult() {
     navigate('home');
   };
 
-  $('btn-event').onclick = (e) => {
-    e.preventDefault();
-    window.open('https://news.ebc.net.tw/event/2026fifa/', '_blank');
-  };
+  // btn-event 由 <a href target="_blank"> 原生處理，不需要額外 JS
 }
 
 /* 證書 */
