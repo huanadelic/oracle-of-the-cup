@@ -372,6 +372,8 @@ body {
 .name-field input::placeholder { color: var(--color-smoke-dim); font-style: normal; }
 .name-field input:focus { border-bottom-color: var(--color-gold); }
 
+#btn-begin { min-width: 220px; }
+
 /* Footer 固定在底部 */
 .footer-wisp {
   position: fixed;
