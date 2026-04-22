@@ -270,7 +270,6 @@ body {
   margin: 0 -0.2em;
   object-fit: contain;
   background: transparent;
-  mix-blend-mode: screen; /* 純黑背景影片：黑色透明，獎盃保留 */
   /* filter: drop-shadow(0 2px 8px rgba(200, 161, 74, 0.5)); */
 }
 
