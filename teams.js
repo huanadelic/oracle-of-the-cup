@@ -52,7 +52,7 @@ export const WC_TEAMS = [
   { code: 'NOR', name: '挪威',               flag: '🇳🇴', confed: 'UEFA' },
   { code: 'SCO', name: '蘇格蘭',             flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', confed: 'UEFA' },
   { code: 'TUR', name: '土耳其',             flag: '🇹🇷', confed: 'UEFA' },
-  { code: 'BIH', name: '波士尼亞與赫塞哥維納', flag: '🇧🇦', confed: 'UEFA' },
+  { code: 'BIH', name: '波赫', flag: '🇧🇦', confed: 'UEFA' },
   { code: 'SWE', name: '瑞典',               flag: '🇸🇪', confed: 'UEFA' },
   { code: 'CZE', name: '捷克',               flag: '🇨🇿', confed: 'UEFA' },
 ];

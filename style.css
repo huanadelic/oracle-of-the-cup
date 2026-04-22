@@ -45,6 +45,37 @@ body {
 
 .hidden { display: none; }
 
+#stage { position: relative; min-height: 100vh; }
+
+/* ── 點擊漣漪 ───────────────────────────────────────────── */
+.click-ripple {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gold-bright);
+  box-shadow: 0 0 10px var(--color-gold), inset 0 0 6px rgba(200, 161, 74, 0.3);
+  pointer-events: none;
+  z-index: 9999;
+  animation: rippleOut 600ms ease-out forwards;
+}
+
+@keyframes rippleOut {
+  0%   { opacity: 1;  transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 0;  transform: translate(-50%, -50%) scale(1); }
+}
+
+.click-ripple-2 {
+  width: 120px;
+  height: 120px;
+  border-width: 1px;
+  border-color: rgba(227, 191, 106, 0.35);
+  box-shadow: none;
+  animation-delay: 80ms;
+  animation-fill-mode: both;
+}
+
+
 /* Scrollbar */
 ::-webkit-scrollbar        { width: 4px; }
 ::-webkit-scrollbar-track  { background: var(--color-ink); }
@@ -68,11 +99,20 @@ body {
   text-transform: uppercase;
 }
 
+/* 儀式性副文（serif italic，共用於 home-sub / pick-sub / result lede） */
+.serif-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--color-smoke);
+  line-height: 1.5;
+}
+
 /* 儀式性大標（serif italic，高字重） */
 .headline {
   font-family: var(--font-serif);
   font-weight: 500;
-  font-style: italic;
   line-height: 0.95;
   letter-spacing: -0.02em;
   color: var(--color-vellum);
@@ -166,7 +206,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 }
 .home-inner {
   max-width: 720px;
@@ -191,19 +231,13 @@ body {
 }
 
 /* 主標題 */
-.home-title { font-size: clamp(52px, 8vw, 104px); margin: 0 0 32px; font-style: normal; }
+.home-title { font-size: clamp(52px, 8vw, 104px); margin: 0 0 32px; }
 .home-title .em { font-style: normal; color: var(--color-gold-bright); }
 
 /* 副標 */
 .home-sub {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--color-smoke);
   max-width: 540px;
   margin: 0 auto 44px;
-  font-style: italic;
-  font-weight: 400;
 }
 .home-sub .tag {
   font-family: var(--font-mono);
@@ -222,7 +256,7 @@ body {
   justify-content: center;
   gap: 24px;
   margin: 0 auto 52px;
-  padding: 28px 0;
+  padding: 16px 0;
   border-top: 1px solid var(--color-rule);
   border-bottom: 1px solid var(--color-rule);
   max-width: 580px;
@@ -312,10 +346,10 @@ body {
   left: 0;
   right: 0;
   text-align: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 9px;
   letter-spacing: 0.4em;
-  color: var(--color-smoke-dim);
+  color: var(--color-smoke);
   text-transform: uppercase;
   z-index: 2;
   pointer-events: none;
@@ -452,7 +486,7 @@ body {
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  padding: 40px 24px 140px;
+  padding: 40px 24px 200px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -460,7 +494,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   max-width: 1080px;
   margin-left: auto;
   margin-right: auto;
@@ -471,8 +505,8 @@ body {
   margin: 0 auto 40px;
 }
 .pick-title-block .eyebrow { margin-bottom: 24px; }
-.pick-title { font-size: clamp(36px, 5vw, 60px); margin: 0 0 32px; font-style: normal; }
-.pick-sub   { font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--color-smoke); line-height: 1.5; }
+.pick-title { font-size: clamp(36px, 5vw, 60px); margin: 0 0 32px; }
+.pick-sub   {}
 
 /* 聯盟篩選 chips（膠囊形） */
 .pick-controls {
@@ -603,15 +637,25 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(180deg, transparent, var(--color-ink) 40%);
+  background: linear-gradient(to top, var(--color-ink) 55%, rgba(10,10,26,0.85) 80%, transparent);
   padding: 60px 24px 28px;
   z-index: 10;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  /* 出現動畫 */
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 280ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0ms;
 }
-/* display: flex 會蓋掉同 specificity 的 .hidden，需補一條雙 class 規則 */
-.pick-confirm.hidden { display: none; }
+.pick-confirm.hidden {
+  opacity: 0;
+  transform: translateY(24px);
+  pointer-events: none;
+  visibility: hidden; /* 子層 pointer-events 一併失效 */
+  /* hidden 時仍保持 display:flex 讓 transition 生效，僅靠 opacity+transform 隱藏 */
+}
 
 /* 內層：浮動卡片，pointer-events auto */
 .pick-confirm-inner {
@@ -658,8 +702,9 @@ body {
 .certificate {
   position: relative;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.15), transparent 70%),
-    linear-gradient(175deg, #f5ecd4 0%, #ebe0c0 50%, #e0d3a8 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%),
+    linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55)),
+    url('img/parchment-texture.jpg') center / cover no-repeat;
   color: #2a1f0a;
   padding: 56px 56px 48px;
   border-radius: 2px;
@@ -699,11 +744,12 @@ body {
 }
 
 /* 四角裝飾（對齊內框位置） */
-.cert-corner              { position: absolute; width: 40px; height: 40px; color: var(--color-gold-dim); opacity: 0.7; z-index: 2; }
-.cert-corner.tl           { top: 26px;    left: 26px; }
-.cert-corner.tr           { top: 26px;    right: 26px;   transform: scaleX(-1); }
-.cert-corner.bl           { bottom: 26px; left: 26px;    transform: scaleY(-1); }
-.cert-corner.br           { bottom: 26px; right: 26px;   transform: scale(-1); }
+.cert-corner              { position: absolute; width: 24px; height: 24px; opacity: 0.6; z-index: 2; }
+.cert-corner img          { width: 100%; height: 100%; display: block; }
+.cert-corner.tl           { top: 26px;    left: 26px;    transform: scaleY(-1); }
+.cert-corner.tr           { top: 26px;    right: 26px;   transform: scale(-1); }
+.cert-corner.bl           { bottom: 26px; left: 26px; }
+.cert-corner.br           { bottom: 26px; right: 26px;   transform: scaleX(-1); }
 
 .cert-inner { position: relative; text-align: center; z-index: 2; }
 
@@ -722,7 +768,6 @@ body {
 }
 .cert-title-main {
   font-family: var(--font-serif);
-  font-style: italic;
   font-size: 40px;
   color: #2a1f0a;
   line-height: 1;
@@ -753,7 +798,6 @@ body {
 .cert-preamble {
   font-family: var(--font-serif);
   font-size: 15px;
-  font-style: italic;
   color: #4a3a1a;
   line-height: 1.5;
   max-width: 440px;
@@ -764,8 +808,7 @@ body {
 /* 預言者名字（主角） */
 .cert-name {
   font-family: var(--font-serif);
-  font-size: 52px;
-  font-style: italic;
+  font-size: 40px;
   color: #2a1f0a;
   line-height: 1.1;
   font-weight: 500;
@@ -779,7 +822,6 @@ body {
 .cert-midtext {
   font-family: var(--font-serif);
   font-size: 14px;
-  font-style: italic;
   color: #4a3a1a;
   margin: 18px 0 8px;
 }
@@ -806,7 +848,7 @@ body {
 .cert-foot {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   margin-top: 36px;
   padding-top: 24px;
   border-top: 1px dashed rgba(138,109,45,0.4);
@@ -826,26 +868,20 @@ body {
   font-family: var(--font-serif);
   font-size: 15px;
   color: #2a1f0a;
-  font-style: italic;
 }
 .certificate.noir .cert-foot-item .v { color: var(--color-vellum); }
 
-.cert-foot-sig { flex: 1; text-align: center; }
-.cert-foot-sig .sigline {
-  font-family: "Brush Script MT", "Segoe Script", cursive;
-  font-size: 24px;
-  color: var(--color-wine);
-  font-style: italic;
-  margin-bottom: 2px;
+.cert-foot-seal {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.cert-foot-sig .k {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: var(--color-gold-dim);
-  text-transform: uppercase;
+.cert-foot-seal img {
+  width: 80px;
+  height: auto;
+  display: block;
 }
-.certificate.noir .cert-foot-sig .sigline { color: var(--color-gold); }
 
 /* RWD（720px 對齊原版） */
 @media (max-width: 720px) {
@@ -898,20 +934,17 @@ body {
 }
 .omen-line .text {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.4;
   color: var(--color-vellum);
-  font-style: italic;
   flex: 1;
 }
 .omen-line .text .hi {
   color: var(--color-gold-bright);
   font-weight: 500;
-  font-style: normal;
 }
 .omen-line .text .num {
   font-family: var(--font-mono);
-  font-style: normal;
   color: var(--color-gold-bright);
   font-size: 20px;
   font-weight: 500;
@@ -937,7 +970,6 @@ body {
 .section-hdr .eyebrow { margin-bottom: 10px; }
 .section-hdr h2 {
   font-family: var(--font-serif);
-  font-style: italic;
   font-size: 36px;
   font-weight: 500;
   margin: 0;
@@ -957,8 +989,8 @@ body {
   border-radius: 2px;
   transition: background 150ms;
 }
-.dist-row .rk { font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke-dim); text-align: right; }
-.dist-row .fl { font-size: 20px; }
+.dist-row .rk { font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke); text-align: right; }
+.dist-row .fl { font-size: 24px; }
 
 /* Bar 容器 */
 .dist-row .bar-wrap {
@@ -972,8 +1004,28 @@ body {
 .dist-row .bar {
   position: absolute;
   inset: 0 auto 0 0;
-  background: linear-gradient(90deg, rgba(244,235,211,0.20), rgba(244,235,211,0.35));
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(244,235,211,0.06) 3px,
+      rgba(244,235,211,0.06) 4px
+    ),
+    linear-gradient(90deg, rgba(244,235,211,0.18), rgba(244,235,211,0.32));
   border-right: 1px solid rgba(244,235,211,0.4);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: barGrow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-play-state: paused;
+}
+.dist.in-view .dist-row .bar {
+  animation-play-state: running;
+}
+
+@keyframes barGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
 /* 隊伍名稱標籤（疊在 bar 上方） */
 .dist-row .label {
@@ -983,7 +1035,6 @@ body {
   transform: translateY(-50%);
   font-family: var(--font-serif);
   font-size: 15px;
-  font-style: italic;
   color: var(--color-vellum);
   z-index: 1;
   display: flex;
@@ -1128,7 +1179,7 @@ body {
 .divine-phase {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 18px;
+  font-size: 16px;
   color: var(--color-smoke);
   min-height: 28px;
   margin-bottom: 28px;
@@ -1168,7 +1219,7 @@ body {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.25em;
-  color: var(--color-smoke-dim);
+  color: var(--color-smoke);
   text-transform: uppercase;
 }
 
@@ -1198,7 +1249,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
   max-width: 1080px;
   margin-left: auto;
   margin-right: auto;
@@ -1218,23 +1269,12 @@ body {
 }
 .result-hero .eyebrow { margin-bottom: 16px; }
 .result-hero h1 {
-  font-family: var(--font-serif);
-  font-style: italic;
   font-size: clamp(40px, 5vw, 64px);
-  font-weight: 500;
   margin: 0 0 14px;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--color-vellum);
 }
 .result-hero .lede {
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-style: italic;
-  color: var(--color-smoke);
   max-width: 580px;
   margin: 0 auto;
-  line-height: 1.4;
 }
 
 /* CTA 按鈕群組 */

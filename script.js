@@ -2,7 +2,29 @@
  * script.js — Oracle of the Cup · Vanilla JS
  * 未來串 Supabase 時，在此 import supabase.js 模組
  */
+
+// ── Dev flag：console 輸入 window.__pauseDivine = true 可凍結在 divine 頁面
+const DEV_PAUSE_DIVINE = () => !!window.__pauseDivine;
 import { WC_TEAMS, WC_WEIGHTS } from './teams.js';
+
+/* ── 點擊漣漪 ────────────────────────────────────────────── */
+document.addEventListener('click', (e) => {
+  // 第一圈（主漣漪）
+  const r1 = document.createElement('div');
+  r1.className = 'click-ripple';
+  r1.style.left = `${e.clientX}px`;
+  r1.style.top  = `${e.clientY}px`;
+  document.body.appendChild(r1);
+  r1.addEventListener('animationend', () => r1.remove());
+
+  // 第二圈（細、透明、稍微延遲）
+  const r2 = document.createElement('div');
+  r2.className = 'click-ripple click-ripple-2';
+  r2.style.left = `${e.clientX}px`;
+  r2.style.top  = `${e.clientY}px`;
+  document.body.appendChild(r2);
+  r2.addEventListener('animationend', () => r2.remove());
+});
 
 /* ── Lucide icons（CDN ESM）─────────────────────────────── */
 import {
@@ -40,10 +62,12 @@ const store = {
 /* ═══════════════════════════════════════════════════════════
    應用程式狀態
    ═══════════════════════════════════════════════════════════ */
+// 只有已完成預言（result）才從 localStorage 恢復；流程中 refresh 一律重來
+const _savedStep = store.get('oracle.step');
 const state = {
-  step:         store.get('oracle.step') || 'home',
+  step:         _savedStep === 'result' ? 'result' : 'home',
   name:         store.get('oracle.name') || '',
-  team:         store.get('oracle.team') || null,
+  team:         _savedStep === 'result' ? store.get('oracle.team') : null,
   filter:       'ALL',
   distExpanded: false,
 };
@@ -74,11 +98,7 @@ const SVG = {
       <path d="M22,22 L28,28 M72,72 L78,78 M22,78 L28,72 M72,28 L78,22" stroke-width="0.8"/>
     </svg>`,
 
-  corner: `
-    <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="0.8" width="40" height="40">
-      <path d="M1,20 Q1,1 20,1 M1,12 Q1,5 12,5 M8,20 Q8,8 20,8"/>
-      <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
-    </svg>`,
+  corner: `<img src="img/corner ornament.svg" width="24" height="24" alt="" aria-hidden="true" draggable="false">`,
 
   seal: `
     <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1" width="60" height="60">
@@ -102,7 +122,10 @@ function navigate(step) {
   if (state._divineTimer) { clearInterval(state._divineTimer);         state._divineTimer = null; }
 
   // 隱藏所有 section
-  Object.values(SECTIONS).forEach(id => $( id).classList.add('hidden'));
+  Object.values(SECTIONS).forEach(id => $(id).classList.add('hidden'));
+
+  // pick-confirm 不在 section 內，離開 pick 時手動隱藏
+  if (step !== 'pick') $('pick-confirm').classList.add('hidden');
 
   // 顯示目標 section 並觸發 fade-in
   const el = $(SECTIONS[step]);
@@ -113,9 +136,15 @@ function navigate(step) {
   // 滾到頂部
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  // 更新狀態
+  // 更新狀態：只有抵達 result 才持久化，流程中 refresh 一律重來
   state.step = step;
-  store.set('oracle.step', step);
+  if (step === 'result') {
+    store.set('oracle.step', 'result');
+    store.set('oracle.team', state.team);
+  } else {
+    store.del('oracle.step');
+    store.del('oracle.team');
+  }
 
   // 初始化對應 section
   if (step === 'home')   initHome();
@@ -268,7 +297,6 @@ function renderTeamGrid() {
   grid.querySelectorAll('.team-card').forEach(card => {
     card.onclick = () => {
       state.team = card.dataset.code;
-      store.set('oracle.team', state.team);
       renderTeamGrid();
       renderPickConfirm();
     };
@@ -301,10 +329,10 @@ function initDivine() {
   const DURATION = 4200; // 毫秒
 
   const phases = [
-    'Consulting the council…',
-    'Shuffling the deck of destiny…',
-    `Reading the vibes of ${team.name}…`,
-    'Sealing the prophecy in wax…',
+    '諮詢預言議會中…',
+    '洗牌命運之牌…',
+    `解讀 ${team.name} 的氣場…`,
+    '以蠟封印預言…',
   ];
 
   // DOM 元素
@@ -321,7 +349,7 @@ function initDivine() {
   ringEl.classList.remove('locked');
   crystalEl.classList.remove('locked');
   flagEl.classList.remove('locked');
-  titleEl.textContent = 'The vision sharpens…';
+  titleEl.textContent = '景象逐漸清晰…';
   phaseEl.textContent = phases[0];
   barEl.style.width   = '0%';
   pctEl.textContent   = '000%';
@@ -371,11 +399,11 @@ function initDivine() {
       flagEl.classList.add('locked');
       ringEl.classList.add('locked');
       crystalEl.classList.add('locked');
-      titleEl.textContent = 'It is seen.';
-      phaseEl.textContent = 'Inscribing your certificate…';
+      titleEl.textContent = '已然洞見。';
+      phaseEl.textContent = '刻寫你的預言證書…';
 
-      // 700ms 後跳轉到 result
-      setTimeout(() => navigate('result'), 700);
+      // 700ms 後跳轉到 result（DEV_PAUSE_DIVINE = true 時暫停，方便檢視）
+      if (!DEV_PAUSE_DIVINE()) setTimeout(() => navigate('result'), 700);
     }
   };
 
@@ -394,7 +422,7 @@ function initResult() {
 
   // 日期標籤
   $('result-date').textContent =
-    `SEALED · ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}`;
+    `封印於 · ${now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}`;
 
   // 穩定偽隨機序號（由隊伍權重 + 名字 hash 決定，不會每次刷新都變）
   const base    = WC_WEIGHTS[state.team] || 100;
@@ -409,12 +437,14 @@ function initResult() {
   const rank   = sorted.findIndex(t => t.code === state.team) + 1;
 
   const flavor =
-    rank <= 3  ? 'A safe harbor, chosen by many. Your vision aligns with the multitudes — comforting, or suspicious, depending on temperament.' :
-    rank <= 8  ? 'A respectable augury. The tea leaves bend toward possibility; the bookmakers cautiously nod.' :
-    rank <= 20 ? 'A bold reading. Should this come to pass, songs will be written and uncles will grumble.' :
-                 'A prophecy of the highest order — the kind whispered in back rooms by those who refuse to be ordinary. History rewards the audacious.';
+    rank <= 3  ? '安全的選擇，眾人所向。你的預言與大多數人一致 — 令人安心，或許也令人起疑，端看性情而定。' :
+    rank <= 8  ? '值得尊重的預感。茶葉彎向可能，賠率師謹慎地點頭。' :
+    rank <= 20 ? '大膽的解讀。若成真，歌謠將傳頌千里，長輩們則會碎念不休。' :
+                 '預言之最高境界 — 那種在密室中低語、唯有不甘平庸者方敢說出口的話。歷史獎勵勇者。';
 
-  const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+    .replace(/(\d)(年|月|日)/g, '$1 $2')   // 數字後加空格
+    .replace(/(年|月)(\d)/g, '$1 $2');     // 年/月後加空格
 
   // 渲染各子區塊
   renderCertificate({ team, dateStr, ordinal });
@@ -425,19 +455,14 @@ function initResult() {
   $('btn-restart').onclick = () => {
     state.team         = null;
     state.distExpanded = false;
+    store.del('oracle.step');
     store.del('oracle.team');
     navigate('home');
   };
 
   $('btn-event').onclick = (e) => {
     e.preventDefault();
-    const ok = confirm(
-      'About to depart the oracle\'s chamber for the Event Site.\n\n' +
-      '[This is a prototype — the real redirect would take you to the World Cup event page.]\n\n' +
-      'Continue?'
-    );
-    // 串接真實 URL 時取消註解：
-    // if (ok) window.location.href = 'https://your-event-site.com';
+    window.open('https://news.ebc.net.tw/event/2026fifa/', '_blank');
   };
 }
 
@@ -454,42 +479,40 @@ function renderCertificate({ team, dateStr, ordinal }) {
         <div class="cert-inner">
           <div class="cert-seal">${SVG.seal}</div>
 
-          <div class="cert-title">The Oracle Bears Witness</div>
-          <div class="cert-title-main">Prophecy of a Champion</div>
+          <div class="cert-title">神諭見證</div>
+          <div class="cert-title-main">冠軍預言書</div>
 
           <div class="cert-divider">
             <span style="font-family: var(--font-serif); font-size: 12px;">✦ ANNO MMXXVI ✦</span>
           </div>
 
           <p class="cert-preamble">
-            Let it be known, on this day and henceforth forevermore, that the following seer
-            did in solemn ceremony declare —
+            茲聲明，自今日起，永久為憑，以下預言者已於莊嚴儀式中宣告——
           </p>
 
           <div class="cert-name">${state.name || 'An Anonymous Seer'}</div>
 
-          <div class="cert-midtext">— doth foretell that the World Cup shall be lifted by —</div>
+          <div class="cert-midtext">— 預言世界盃冠軍將由以下國家奪得 —</div>
 
           <div class="cert-team">
             <span class="flag">${team.flag}</span>
             <span>${team.name}</span>
           </div>
 
-          <div style="font-family: var(--font-serif); font-style: italic; font-size: 13px; color: #4a3a1a; margin-top: 6px; margin-bottom: 0;">
-            on the fields of North America, summer of 2026.
+          <div style="font-family: var(--font-serif); font-size: 13px; color: #4a3a1a; margin-top: 6px; margin-bottom: 0;">
+            在北美賽場，2026 年夏。
           </div>
 
           <div class="cert-foot">
             <div class="cert-foot-item">
-              <div class="k">Inscribed</div>
+              <div class="k">刻印日期</div>
               <div class="v">${dateStr}</div>
             </div>
-            <div class="cert-foot-sig">
-              <div class="sigline">~ Oracle of the Cup ~</div>
-              <div class="k">Countersigned</div>
+            <div class="cert-foot-seal">
+              <img src="img/wax-seal.png" alt="蠟印" draggable="false">
             </div>
             <div class="cert-foot-item">
-              <div class="k">Ledger №</div>
+              <div class="k">典籍編號</div>
               <div class="v">${String(ordinal).padStart(6, '0')}</div>
             </div>
           </div>
@@ -507,25 +530,24 @@ function renderOmens({ team, ordinal, daysToFinal, flavor }) {
         <div class="omen-line">
           <div class="marker">I.</div>
           <div class="text">
-            Thou art the <span class="num">${ordinal.toLocaleString()}ᵗʰ</span> seer
-            to foretell a <span class="hi">${team.name}</span> triumph in the Year of the Cup.
+            你是第 <span class="num">${ordinal.toLocaleString()}</span> 位預言
+            <span class="hi">${team.name}</span> 奪冠的見證者。
           </div>
         </div>
         <div class="omen-line">
           <div class="marker">II.</div>
           <div class="text">
-            Thy prophecy was inscribed <span class="num">${daysToFinal}</span> days
-            before the final whistle at the Estadio Azteca.
+            你的預言在決賽終哨前 <span class="num">${daysToFinal}</span> 天刻入典籍，地點：阿茲特克球場。
           </div>
         </div>
         <div class="omen-line">
           <div class="marker">III.</div>
-          <div class="text" style="color: var(--color-smoke);">${flavor}</div>
+          <div class="text" style="color: var(--color-smoke); font-style: italic;">${flavor}</div>
         </div>
         <div class="omen-line">
           <div class="marker">◈</div>
           <div class="text" style="color: var(--color-gold-bright); font-style: normal; font-size: 18px; letter-spacing: 0.05em;">
-            Should it come to pass, remember: you saw it first.
+            若預言成真，請記住：你早已洞見一切。
           </div>
         </div>
       </div>
@@ -550,22 +572,23 @@ function renderDistribution() {
   $('distribution').innerHTML = `
     <div class="section-card">
       <div class="section-hdr">
-        <div class="eyebrow">— The Collective Augury —</div>
-        <h2>How the council has cast its lots</h2>
+        <div class="eyebrow">— 集體神諭 —</div>
+        <h2>議會的集體預言</h2>
       </div>
 
       <div class="dist">
-        ${rows.map(t => {
+        ${rows.map((t, i) => {
           const realIdx = sorted.findIndex(x => x.code === t.code);
           const pct     = (t.count / total * 100).toFixed(1);
           const barPct  = (t.count / max * 100).toFixed(1);
           const isYou   = t.code === state.team;
+          const delay   = `${i * 50}ms`;
           return `
             <div class="dist-row ${isYou ? 'you' : ''}">
               <div class="rk">${realIdx + 1}</div>
               <div class="fl">${t.flag}</div>
               <div class="bar-wrap">
-                <div class="bar" style="width: ${barPct}%"></div>
+                <div class="bar" style="width: ${barPct}%; animation-delay: ${delay}"></div>
                 <div class="label">
                   ${t.name}
                   ${isYou ? '<span class="you-tag">You</span>' : ''}
@@ -580,8 +603,8 @@ function renderDistribution() {
       <div class="dist-fold">
         <button id="dist-toggle" class="btn-quiet">
           ${state.distExpanded
-            ? '<i data-lucide="chevron-up"></i> Fold the scroll'
-            : '<i data-lucide="chevron-down"></i> Reveal all 48 nations'}
+            ? '<i data-lucide="chevron-up"></i> 收起卷軸'
+            : '<i data-lucide="chevron-down"></i> 展開全部 48 國'}
         </button>
       </div>
     </div>
@@ -593,6 +616,18 @@ function renderDistribution() {
     renderDistribution();
     applyIcons(); // 重新渲染後轉換新的 chevron icon
   };
+
+  // 捲到畫面內才觸發 bar 動畫
+  const distEl = document.querySelector('.dist');
+  if (distEl) {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        distEl.classList.add('in-view');
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(distEl);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
