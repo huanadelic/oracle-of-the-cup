@@ -242,7 +242,7 @@ body {
 .home-eye {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 .home-eye svg {
   width: 88px;
@@ -259,11 +259,13 @@ body {
 /* 標題內嵌獎盃圖 */
 .title-trophy {
   display: inline-block;
-  height: 1em;          /* 跟著字級等比縮放 */
+  height: 1.5em;        /* 跟著字級等比縮放 */
   width: auto;
   vertical-align: middle;
   transform: translateY(-0.15em); /* 中文字身偏高，視覺補正 */
-  margin: 0 -0.05em;
+  margin: 0 -0.2em;
+  object-fit: contain;
+  background: transparent;
   /* filter: drop-shadow(0 2px 8px rgba(200, 161, 74, 0.5)); */
 }
 
