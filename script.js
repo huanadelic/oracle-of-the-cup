@@ -634,6 +634,14 @@ async function downloadCertificate() {
     // 等一個 frame 讓背景確實渲染
     await new Promise(r => requestAnimationFrame(r));
 
+    // Safari 已知問題：第一次 toPng 的 WebKit canvas 初始化不完全，結果會壞掉
+    // 先做一次低解析度 warm-up，確保 canvas pipeline ready
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      await window.htmlToImage.toPng(el, { pixelRatio: 1, skipFonts: true });
+      await new Promise(r => requestAnimationFrame(r));
+    }
+
     const dataUrl = await window.htmlToImage.toPng(el, {
       pixelRatio: 2,
       skipFonts: true,
