@@ -430,7 +430,7 @@ function initResult() {
 
   // 日期標籤
   $('result-date').textContent =
-    `封印於 · ${now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+    `預言於 · ${now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}`;
 
   // 穩定偽隨機序號（由隊伍權重 + 名字 hash 決定，不會每次刷新都變）
   const base    = WC_WEIGHTS[state.team] || 100;
@@ -604,7 +604,7 @@ async function downloadCertificate() {
     });
 
     const link    = document.createElement('a');
-    link.download = `oracle-${(state.name || 'prophecy').replace(/\s+/g, '-')}-${state.team || 'unknown'}.png`;
+    link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
     link.href     = dataUrl;
     link.click();
   } catch (err) {
