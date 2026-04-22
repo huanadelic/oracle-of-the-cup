@@ -634,18 +634,15 @@ async function downloadCertificate() {
     // 等一個 frame 讓背景確實渲染
     await new Promise(r => requestAnimationFrame(r));
 
-    // Safari 已知問題：第一次 toPng 的 WebKit canvas 初始化不完全，結果會壞掉
-    // 先做一次低解析度 warm-up，確保 canvas pipeline ready
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    if (isSafari) {
-      await window.htmlToImage.toPng(el, { pixelRatio: 1, skipFonts: true });
-      await new Promise(r => requestAnimationFrame(r));
+    // 截圖 + 自動 retry（Safari 第一次 toPng 結果可能是空白/壞圖）
+    // 正常證書 @2x 應超過 200KB，太小代表截到壞結果
+    const toPngOpts = { pixelRatio: 2, skipFonts: true };
+    let dataUrl = '';
+    for (let attempt = 0; attempt < 3; attempt++) {
+      dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
+      if (dataUrl.length > 50000) break; // 有效圖片
+      await new Promise(r => setTimeout(r, 150)); // 等一下再 retry
     }
-
-    const dataUrl = await window.htmlToImage.toPng(el, {
-      pixelRatio: 2,
-      skipFonts: true,
-    });
 
     // 還原寬度
     el.style.width    = '';
