@@ -573,34 +573,29 @@ async function downloadCertificate() {
   btn.disabled = true;
   btn.innerHTML = '生成中…';
 
-  // 暫存需要還原的值
-  const origBg  = el.style.backgroundImage;
-  const imgEls  = [...el.querySelectorAll('img[src]')];
-  const origSrc = imgEls.map(i => i.src);
-
   try {
     await document.fonts.ready;
 
-    // Safari：預載 <img> 和背景圖為 data URL，繞過 canvas 安全限制
-    await Promise.all([
-      // <img> 元素（wax-seal 等）
-      ...imgEls.map(async (img) => {
-        try { img.src = await toDataUrl(img.src); } catch { /* 保持原 src */ }
-      }),
-      // CSS 背景圖（parchment-texture）：讀 computed style，替換 url() 後寫成 inline
-      (async () => {
-        try {
-          const bgDataUrl = await toDataUrl('img/parchment-texture.jpg');
-          const computed  = getComputedStyle(el).backgroundImage;
-          el.style.backgroundImage = computed.replace(/url\(["']?[^"')]+["']?\)/, `url('${bgDataUrl}')`);
-        } catch { /* 保持原樣 */ }
-      })(),
+    // 預載所有圖片資源為 data URL（Safari canvas 安全政策）
+    const [parchmentDataUrl, waxDataUrl] = await Promise.all([
+      toDataUrl('img/parchment-texture.jpg'),
+      toDataUrl('img/wax-seal.png'),
     ]);
 
     const dataUrl = await window.htmlToImage.toPng(el, {
       pixelRatio: 2,
-      cacheBust: true,
       skipFonts: true,
+      // onclone：在 html-to-image 建立 clone 後直接修改，確保 Safari 拿到 data URL
+      onclone: (_, clonedEl) => {
+        // 替換背景紋理
+        const bg = getComputedStyle(clonedEl).backgroundImage;
+        clonedEl.style.backgroundImage = bg.replace(/url\(["']?[^"')]+parchment[^"')]*["']?\)/, `url('${parchmentDataUrl}')`);
+
+        // 替換 wax-seal img
+        clonedEl.querySelectorAll('img[src*="wax-seal"]').forEach(img => {
+          img.src = waxDataUrl;
+        });
+      },
     });
 
     const link    = document.createElement('a');
@@ -610,9 +605,6 @@ async function downloadCertificate() {
   } catch (err) {
     console.error('證書下載失敗', err);
   } finally {
-    // 還原原始 src 和背景
-    imgEls.forEach((img, i) => { img.src = origSrc[i]; });
-    el.style.backgroundImage = origBg;
     btn.disabled = false;
     btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
     applyIcons();
