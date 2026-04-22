@@ -65,7 +65,7 @@
 
           <!-- 名字輸入 -->
           <div class="name-field">
-            <label for="name-input">將你的名字刻入典籍</label>
+            <label for="name-input">輸入預言者的姓名：</label>
             <input
               id="name-input"
               type="text"
@@ -182,6 +182,14 @@
             <div class="lede serif-lede">
               神諭已將你的所見以蠟封印於羊皮卷上。以下是你的預言證書、你在眾預言家之中的排名，以及卦象所示。
             </div>
+            <div class="hero-actions">
+              <button id="btn-download" class="btn btn-ghost">
+                <i data-lucide="download"></i> 下載證書
+              </button>
+              <button id="btn-share" class="btn btn-ghost hero-action-icon">
+                <i data-lucide="share-2"></i>
+              </button>
+            </div>
           </div>
 
           <!-- 右：證書（JS 渲染） -->
@@ -226,6 +234,8 @@
     </div>
   </div>
 
+  <!-- html-to-image：證書截圖下載 -->
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
   <!-- Lucide icons（UMD，blocking 確保 module 執行前已載入） -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
   <!-- ES Module：teams.js 由 script.js import，不需另外 <script> 載入 -->

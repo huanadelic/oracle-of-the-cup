@@ -347,7 +347,7 @@ body {
 .name-field label {
   display: block;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.35em;
   color: var(--color-gold);
   margin-bottom: 14px;
@@ -442,7 +442,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 16px 64px;
+  padding: 16px 24px;
   border-radius: 2px;
   font-family: var(--font-sans);
   font-weight: 500;
@@ -1354,6 +1354,21 @@ body {
   margin-right: auto;
 }
 
+/* Hero 內操作列 */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+.hero-actions .btn { height: 52px; }
+#btn-download { flex: 1; max-width: 220px; }
+.hero-action-icon {
+  flex-shrink: 0;
+  width: 52px;
+  padding: 0;
+}
+
 /* 主標題區（左欄，左對齊 + sticky） */
 .result-hero {
   text-align: left;
@@ -1377,4 +1392,8 @@ body {
   gap: 14px;
   flex-wrap: wrap;
   margin-top: 24px;
+}
+.result-ctas .btn {
+  flex: 1;
+  max-width: 240px;
 }

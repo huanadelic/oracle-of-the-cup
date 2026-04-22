@@ -468,6 +468,54 @@ function initResult() {
   };
 
   // btn-event 由 <a href target="_blank"> 原生處理，不需要額外 JS
+
+  // 下載證書按鈕
+  $('btn-download').onclick = downloadCertificate;
+
+  // 分享按鈕
+  $('btn-share').onclick = async () => {
+    const team = WC_TEAMS.find(t => t.code === state.team);
+    const text = `我預言 ${team?.flag ?? ''} ${team?.name ?? ''} 奪得 2026 世界盃冠軍！#OracleOfTheCup`;
+    if (navigator.share) {
+      await navigator.share({ title: '金盃神諭', text, url: location.href });
+    } else {
+      await navigator.clipboard.writeText(`${text}\n${location.href}`);
+      const btn = $('btn-share');
+      btn.innerHTML = '<i data-lucide="check"></i>';
+      applyIcons();
+      setTimeout(() => { btn.innerHTML = '<i data-lucide="share-2"></i>'; applyIcons(); }, 2000);
+    }
+  };
+}
+
+/* 證書下載 */
+async function downloadCertificate() {
+  const el  = document.querySelector('.certificate');
+  const btn = $('btn-download');
+  if (!el || !window.htmlToImage) return;
+
+  // 生成中狀態
+  btn.disabled = true;
+  btn.innerHTML = '生成中…';
+
+  try {
+    await document.fonts.ready; // 確保字型載入完成
+    const dataUrl = await window.htmlToImage.toPng(el, {
+      pixelRatio: 2,       // 視網膜品質
+      cacheBust: true,     // 避免 CORS 快取問題
+      skipFonts: true,     // 跳過跨域 Google Fonts CSS 讀取，避免 SecurityError
+    });
+    const link      = document.createElement('a');
+    link.download   = `oracle-${(state.name || 'prophecy').replace(/\s+/g, '-')}-${state.team || 'unknown'}.png`;
+    link.href       = dataUrl;
+    link.click();
+  } catch (err) {
+    console.error('證書下載失敗', err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
+    applyIcons();
+  }
 }
 
 /* 證書 */
