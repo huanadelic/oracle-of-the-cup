@@ -472,20 +472,70 @@ function initResult() {
   // 下載證書按鈕
   $('btn-download').onclick = downloadCertificate;
 
-  // 分享按鈕
-  $('btn-share').onclick = async () => {
+  // 分享按鈕：手機走 native share sheet，桌機開 popover
+  const shareBtn     = $('btn-share');
+  const sharePopover = $('share-popover');
+
+  function closePopover() {
+    sharePopover.classList.add('closing');
+    setTimeout(() => {
+      sharePopover.classList.add('hidden');
+      sharePopover.classList.remove('closing');
+    }, 180);
+  }
+
+  shareBtn.onclick = async (e) => {
+    e.stopPropagation();
     const team = WC_TEAMS.find(t => t.code === state.team);
     const text = `我預言 ${team?.flag ?? ''} ${team?.name ?? ''} 奪得 2026 世界盃冠軍！#OracleOfTheCup`;
-    if (navigator.share) {
+
+    // 手機優先走原生 share sheet
+    if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
       await navigator.share({ title: '金盃神諭', text, url: location.href });
-    } else {
-      await navigator.clipboard.writeText(`${text}\n${location.href}`);
-      const btn = $('btn-share');
-      btn.innerHTML = '<i data-lucide="check"></i>';
-      applyIcons();
-      setTimeout(() => { btn.innerHTML = '<i data-lucide="share-2"></i>'; applyIcons(); }, 2000);
+      return;
     }
+    // 桌機：toggle popover
+    if (!sharePopover.classList.contains('hidden')) { closePopover(); return; }
+    sharePopover.classList.remove('hidden');
+    applyIcons();
   };
+
+  // popover 各項目點擊
+  sharePopover.querySelectorAll('.share-item').forEach(item => {
+    item.onclick = async (e) => {
+      e.stopPropagation();
+      const team = WC_TEAMS.find(t => t.code === state.team);
+      const text = encodeURIComponent(`我預言 ${team?.flag ?? ''} ${team?.name ?? ''} 奪得 2026 世界盃冠軍！#OracleOfTheCup`);
+      const url  = encodeURIComponent(location.href);
+
+      switch (item.dataset.platform) {
+        case 'facebook':
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+          break;
+        case 'line':
+          window.open(`https://line.me/R/msg/text/?${text}%0A${url}`, '_blank');
+          break;
+        case 'copy':
+          await navigator.clipboard.writeText(`${decodeURIComponent(text)}\n${location.href}`);
+          item.querySelector('span').textContent = '已複製！';
+          setTimeout(() => {
+            item.querySelector('span').textContent = '複製連結';
+            closePopover();
+          }, 2000);
+          return; // 不往下走 closePopover
+      }
+      closePopover();
+    };
+  });
+
+  // 點外面關閉 popover（點 popover 或 shareBtn 內部不關閉）
+  document.addEventListener('click', (e) => {
+    if (!sharePopover.classList.contains('hidden') &&
+        !sharePopover.contains(e.target) &&
+        !shareBtn.contains(e.target)) {
+      closePopover();
+    }
+  }, { capture: true });
 }
 
 /* 證書下載 */

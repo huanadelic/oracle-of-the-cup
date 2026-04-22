@@ -186,9 +186,25 @@
               <button id="btn-download" class="btn btn-ghost">
                 <i data-lucide="download"></i> 下載證書
               </button>
-              <button id="btn-share" class="btn btn-ghost hero-action-icon">
-                <i data-lucide="share-2"></i>
-              </button>
+              <div class="share-wrap">
+                <button id="btn-share" class="btn btn-ghost hero-action-icon">
+                  <i data-lucide="share-2"></i>
+                </button>
+                <div id="share-popover" class="share-popover hidden">
+                  <button class="share-item" data-platform="facebook">
+                    <img src="img/Facebook.svg" width="16" height="16" alt="Facebook">
+                    <span>Facebook</span>
+                  </button>
+                  <button class="share-item" data-platform="line">
+                    <img src="img/LINE.svg" width="16" height="16" alt="LINE">
+                    <span>LINE</span>
+                  </button>
+                  <button class="share-item" data-platform="copy">
+                    <i data-lucide="link"></i>
+                    <span>複製連結</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
