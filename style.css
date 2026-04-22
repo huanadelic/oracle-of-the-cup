@@ -449,6 +449,12 @@ body {
   height: 1.25em;
   flex-shrink: 0;
 }
+.lucide.spin {
+  animation: lucide-spin 0.8s linear infinite;
+}
+@keyframes lucide-spin {
+  to { transform: rotate(360deg); }
+}
 
 /* team-card 右上角圓形勾選：縮小 icon 適配 16×16 容器 */
 .team-card .check .lucide {

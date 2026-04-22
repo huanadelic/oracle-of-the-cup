@@ -597,7 +597,8 @@ async function downloadCertificate() {
   if (!el || !window.htmlToImage) return;
 
   btn.disabled = true;
-  btn.innerHTML = '生成中…';
+  btn.innerHTML = '<i data-lucide="loader-circle" class="spin"></i>';
+  applyIcons();
 
   // 暫存原始值，擷取後還原
   const imgEls  = [...el.querySelectorAll('img[src]')];
