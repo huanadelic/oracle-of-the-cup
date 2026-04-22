@@ -421,9 +421,26 @@ function initDivine() {
 /* ═══════════════════════════════════════════════════════════
    SECTION 3: RESULT
    ═══════════════════════════════════════════════════════════ */
+// 證書圖片預載 Promise（result 頁初始化時啟動，download 時 await）
+let _certImagesPromise = null;
+
+function precacheCertImages() {
+  if (!_certImagesPromise) {
+    _certImagesPromise = Promise.all([
+      toDataUrl('img/parchment-texture.jpg'),
+      toDataUrl('img/wax-seal.png'),
+    ]).then(([parchment, wax]) => ({ parchment, wax }))
+      .catch(() => null); // 失敗不卡住，讓 download 自己處理
+  }
+  return _certImagesPromise;
+}
+
 function initResult() {
   // 防呆：沒有選隊就回 home
   if (!state.team) { navigate('home'); return; }
+
+  // 立刻開始預載證書圖片，存成 Promise 讓 download 可以 await
+  precacheCertImages();
 
   const team = WC_TEAMS.find(t => t.code === state.team);
   const now  = new Date();
@@ -588,20 +605,18 @@ async function downloadCertificate() {
   const origBg  = el.style.backgroundImage;
 
   try {
+    // 等待預載完成（initResult 已啟動，通常早就 ready；若使用者點很快才等）
+    const cached = await precacheCertImages();
     await document.fonts.ready;
 
-    // 預載所有圖片為 data URL（Safari canvas 不允許外部資源）
-    const [parchmentDataUrl, ...imgDataUrls] = await Promise.all([
-      toDataUrl('img/parchment-texture.jpg'),
-      ...imgEls.map(img => toDataUrl(img.src).catch(() => null)),
-    ]);
+    const parchmentDataUrl = cached?.parchment ?? await toDataUrl('img/parchment-texture.jpg');
+    const waxDataUrl       = cached?.wax       ?? await toDataUrl('img/wax-seal.png');
 
     // 替換 <img> src 並等待瀏覽器解碼完成
-    await Promise.all(imgEls.map(async (img, i) => {
-      if (imgDataUrls[i]) {
-        img.src = imgDataUrls[i];
-        await waitForImage(img);
-      }
+    await Promise.all(imgEls.map(async (img) => {
+      const du = img.src.includes('wax-seal') ? waxDataUrl
+               : await toDataUrl(img.src).catch(() => null);
+      if (du) { img.src = du; await waitForImage(img); }
     }));
 
     // 覆蓋背景紋理（inline style 優先於 class style）
