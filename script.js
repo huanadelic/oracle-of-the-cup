@@ -561,7 +561,7 @@ function renderOmens({ team, ordinal, daysToFinal, flavor }) {
         <div class="omen-line">
           <div class="marker">II.</div>
           <div class="text">
-            你的預言在決賽終哨前 <span class="num">${daysToFinal}</span> 天刻入典籍，地點：阿茲特克球場。
+            你在決賽開始前 <span class="num">${daysToFinal}</span> 天做出了預言。
           </div>
         </div>
         <div class="omen-line">

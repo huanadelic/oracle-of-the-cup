@@ -242,11 +242,11 @@ body {
 .home-eye {
   display: flex;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 .home-eye svg {
-  width: 72px;
-  height: 72px;
+  width: 88px;
+  height: 88px;
   color: var(--color-gold);
   filter: drop-shadow(0 0 20px rgba(227,191,106,0.4));
   animation: eyePulse 4s ease-in-out infinite;
