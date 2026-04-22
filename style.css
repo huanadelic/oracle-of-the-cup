@@ -213,7 +213,10 @@ body {
 .home-wrap {
   position: relative;
   z-index: 1;
-  background: var(--color-ink); /* blend mode 合成基準色，防止 stacking context 變黑 */
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
+    var(--color-ink); /* blend mode 合成基準色，需與 body 背景一致 */
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
