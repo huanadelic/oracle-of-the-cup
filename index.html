@@ -162,17 +162,22 @@
           <span id="result-date" class="result-top-date"></span>
         </div>
 
-        <!-- 主標題區 -->
-        <div class="result-hero">
-          <div class="eyebrow">— 預言已降臨 —</div>
-          <h1 class="headline">已然銘記。</h1>
-          <div class="lede serif-lede">
-            神諭已將你的所見以蠟封印於羊皮卷上。以下是你的預言證書、你在眾預言家之中的排名，以及卦象所示。
-          </div>
-        </div>
+        <!-- 左右分欄：hero 文字 + 證書 -->
+        <div class="result-split">
 
-        <!-- 證書（JS 渲染） -->
-        <div id="certificate"></div>
+          <!-- 左：主標題區 -->
+          <div class="result-hero">
+            <div class="eyebrow">— 預言已降臨 —</div>
+            <h1 class="headline">已然銘記。</h1>
+            <div class="lede serif-lede">
+              神諭已將你的所見以蠟封印於羊皮卷上。以下是你的預言證書、你在眾預言家之中的排名，以及卦象所示。
+            </div>
+          </div>
+
+          <!-- 右：證書（JS 渲染） -->
+          <div id="certificate"></div>
+
+        </div><!-- /.result-split -->
 
         <!-- 預言解讀（JS 渲染） -->
         <div id="omens"></div>

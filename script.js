@@ -267,11 +267,17 @@ function renderConfedChips() {
   });
 }
 
+// ALL 模式下的聯盟顯示順序（UEFA、CONMEBOL 優先）
+const CONFED_ORDER = { UEFA: 0, CONMEBOL: 1, CONCACAF: 2, AFC: 3, CAF: 4, OFC: 5 };
+
 function renderTeamGrid() {
-  const filtered = WC_TEAMS.filter(t => {
-    if (state.filter !== 'ALL' && t.confed !== state.filter) return false;
-    return true;
-  });
+  const filtered = WC_TEAMS
+    .filter(t => state.filter === 'ALL' || t.confed === state.filter)
+    .sort((a, b) => {
+      // 只在 ALL 模式下依聯盟排序，單一聯盟篩選時保持原始順序
+      if (state.filter !== 'ALL') return 0;
+      return (CONFED_ORDER[a.confed] ?? 9) - (CONFED_ORDER[b.confed] ?? 9);
+    });
 
   const grid  = $('team-grid');
   const empty = $('team-empty');
@@ -283,16 +289,19 @@ function renderTeamGrid() {
   }
   empty.classList.add('hidden');
 
-  grid.innerHTML = filtered.map(t => `
-    <button class="team-card ${state.team === t.code ? 'selected' : ''}" data-code="${t.code}">
+  grid.innerHTML = filtered.map(t => {
+    const w    = WC_WEIGHTS[t.code] || 0;
+    const tier = w >= 5000 ? 'tier-hot' : w >= 1000 ? 'tier-fav' : 'tier-low';
+    return `
+    <button class="team-card ${tier} ${state.team === t.code ? 'selected' : ''}" data-code="${t.code}">
       ${state.team === t.code ? '<div class="check"><i data-lucide="check"></i></div>' : ''}
       <div class="flag">${t.flag}</div>
       <div>
         <div class="t-name">${t.name}</div>
         <div class="t-confed">${CONFED_LABELS[t.confed]}</div>
       </div>
-    </button>
-  `).join('');
+    </button>`;
+  }).join('');
 
   grid.querySelectorAll('.team-card').forEach(card => {
     card.onclick = () => {
@@ -439,7 +448,7 @@ function initResult() {
   const flavor =
     rank <= 3  ? '安全的選擇，眾人所向。你的預言與大多數人一致 — 令人安心，或許也令人起疑，端看性情而定。' :
     rank <= 8  ? '值得尊重的預感。茶葉彎向可能，賠率師謹慎地點頭。' :
-    rank <= 20 ? '大膽的解讀。若成真，歌謠將傳頌千里，長輩們則會碎念不休。' :
+    rank <= 20 ? '大膽的解讀。若成真，歌謠將傳頌千里，旁人們則會碎念不休。' :
                  '預言之最高境界 — 那種在密室中低語、唯有不甘平庸者方敢說出口的話。歷史獎勵勇者。';
 
   const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -450,6 +459,21 @@ function initResult() {
   renderCertificate({ team, dateStr, ordinal });
   renderOmens({ team, ordinal, daysToFinal, flavor });
   renderDistribution();
+
+  // 捲動 reveal：certificate + omen
+  const revealOpts = { threshold: 0.12 };
+  ['.certificate-frame', '.omen'].forEach((sel, i) => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    el.style.transitionDelay = `${i * 120}ms`; // 證書先、omen 稍後
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        el.classList.add('in-view');
+        obs.disconnect();
+      }
+    }, revealOpts);
+    obs.observe(el);
+  });
 
   // CTA
   $('btn-restart').onclick = () => {
@@ -469,7 +493,7 @@ function initResult() {
 /* 證書 */
 function renderCertificate({ team, dateStr, ordinal }) {
   $('certificate').innerHTML = `
-    <div class="certificate-frame fade-in">
+    <div class="certificate-frame reveal">
       <div class="certificate">
         <div class="cert-corner tl">${SVG.corner}</div>
         <div class="cert-corner tr">${SVG.corner}</div>
@@ -499,7 +523,7 @@ function renderCertificate({ team, dateStr, ordinal }) {
             <span>${team.name}</span>
           </div>
 
-          <div style="font-family: var(--font-serif); font-size: 13px; color: #4a3a1a; margin-top: 6px; margin-bottom: 0;">
+          <div style="font-family: var(--font-serif); font-size: 13px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
             在北美賽場，2026 年夏。
           </div>
 
@@ -525,7 +549,7 @@ function renderCertificate({ team, dateStr, ordinal }) {
 /* 預言解讀三條 */
 function renderOmens({ team, ordinal, daysToFinal, flavor }) {
   $('omens').innerHTML = `
-    <div class="omen">
+    <div class="omen reveal">
       <div class="omen-lines">
         <div class="omen-line">
           <div class="marker">I.</div>

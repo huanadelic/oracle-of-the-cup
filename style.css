@@ -13,6 +13,9 @@
   --color-gold-bright: #e3bf6a;
   --color-gold-dim:    #8a6d2d;
   --color-wine:        #5a1f2e;
+  /* 證書墨色（羊皮紙背景專用） */
+  --color-cert-ink:    #2a1f0a;
+  --color-cert-ink-2:  #4a3a1a;
   /* 半透明色 */
   --color-smoke:       rgba(244, 235, 211, 0.55);
   --color-smoke-dim:   rgba(244, 235, 211, 0.28);
@@ -37,7 +40,10 @@ body {
   padding: 0;
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--color-ink);
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
+    var(--color-ink);
   color: var(--color-vellum);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -113,7 +119,7 @@ body {
 .headline {
   font-family: var(--font-serif);
   font-weight: 500;
-  line-height: 0.95;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--color-vellum);
 }
@@ -136,14 +142,23 @@ body {
 
 .fade-in { animation: fadeIn 0.6s ease both; }
 
+/* Scroll reveal：初始隱藏，IntersectionObserver 加 .in-view 後才顯現 */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ═══════════════════════════════════════════════════════════
    STAGE & STARFIELD
    ═══════════════════════════════════════════════════════════ */
 #stage {
-  background:
-    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
-    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
-    radial-gradient(ellipse at 50% 50%, rgba(20,20,50,0.6),    var(--color-ink) 75%);
+  background: transparent; /* starfield 在 body 層，不能蓋住 */
 }
 
 .starfield {
@@ -152,7 +167,7 @@ body {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  opacity: 0.65;
+  opacity: 1;
 }
 /* 兩層星點，速度不同產生視差感 */
 .starfield::before,
@@ -162,27 +177,32 @@ body {
   width: 100%;
   height: 200%;
   background-image:
-    radial-gradient(1px   1px   at 10% 15%,  rgba(244,235,211,0.70) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 25% 70%,  rgba(244,235,211,0.50) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 40%  8%,  rgba(200,161,74, 0.60) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 60% 45%,  rgba(244,235,211,0.40) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 75% 80%,  rgba(244,235,211,0.60) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 88% 20%,  rgba(244,235,211,0.35) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at  3% 55%,  rgba(200,161,74, 0.40) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 50% 90%,  rgba(244,235,211,0.50) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 18% 38%,  rgba(244,235,211,0.40) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 92% 60%,  rgba(244,235,211,0.30) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 35% 50%,  rgba(200,161,74, 0.30) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 70% 25%,  rgba(244,235,211,0.45) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 55% 65%,  rgba(244,235,211,0.35) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 80%  5%,  rgba(244,235,211,0.55) 0%, transparent 100%),
-    radial-gradient(1px   1px   at 15% 85%,  rgba(244,235,211,0.40) 0%, transparent 100%);
+    radial-gradient(2.5px 2.5px at 10% 15%,  rgba(244,235,211,1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 25% 70%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 40%  8%,  rgba(200,161,74, 1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 60% 45%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 75% 80%,  rgba(244,235,211,1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 88% 20%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at  3% 55%,  rgba(200,161,74, 0.90) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 50% 90%,  rgba(244,235,211,0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 18% 38%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 92% 60%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 35% 50%,  rgba(200,161,74, 0.80) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 70% 25%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 55% 65%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 80%  5%,  rgba(244,235,211,1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 15% 85%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 47% 32%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 63% 12%,  rgba(200,161,74, 0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 82% 48%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at  7% 28%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 33% 78%,  rgba(244,235,211,0.95) 0%, transparent 100%);
   animation: starDrift 40s linear infinite;
 }
 .starfield::after {
   animation-duration: 65s;
   animation-direction: reverse;
-  opacity: 0.4;
+  opacity: 0.75;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -613,6 +633,34 @@ body {
   margin-top: 3px;
 }
 
+/* 熱門層次（依 WC_WEIGHTS 分 tier） */
+/* tier-hot（前7強）：預設淡金邊 + 旗幟全亮 */
+.team-card.tier-hot {
+  border-color: rgba(200, 161, 74, 0.32);
+}
+.team-card.tier-hot .t-name {
+  color: var(--color-vellum);
+}
+/* tier-hot 小金點指示符 */
+.team-card.tier-hot:not(.selected)::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  opacity: 0.75;
+}
+
+/* tier-fav / tier-low：維持正常亮度，不壓暗 */
+
+/* 選中時確保完整亮度 */
+.team-card.selected .t-name {
+  color: var(--color-vellum);
+}
+
 /* 選取勾選（圓形金底） */
 .team-card.selected .check {
   position: absolute;
@@ -705,7 +753,7 @@ body {
     radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%),
     linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55)),
     url('img/parchment-texture.jpg') center / cover no-repeat;
-  color: #2a1f0a;
+  color: var(--color-cert-ink);
   padding: 56px 56px 48px;
   border-radius: 2px;
   /* 特色多層框線：金邊 + 深色間距 + 外發光 */
@@ -769,7 +817,7 @@ body {
 .cert-title-main {
   font-family: var(--font-serif);
   font-size: 40px;
-  color: #2a1f0a;
+  color: var(--color-cert-ink);
   line-height: 1;
   margin-bottom: 4px;
   font-weight: 500;
@@ -798,7 +846,7 @@ body {
 .cert-preamble {
   font-family: var(--font-serif);
   font-size: 15px;
-  color: #4a3a1a;
+  color: var(--color-cert-ink-2);
   line-height: 1.5;
   max-width: 440px;
   margin: 0 auto 16px;
@@ -809,7 +857,7 @@ body {
 .cert-name {
   font-family: var(--font-serif);
   font-size: 40px;
-  color: #2a1f0a;
+  color: var(--color-cert-ink);
   line-height: 1.1;
   font-weight: 500;
   margin: 8px auto 4px;
@@ -822,7 +870,7 @@ body {
 .cert-midtext {
   font-family: var(--font-serif);
   font-size: 14px;
-  color: #4a3a1a;
+  color: var(--color-cert-ink-2);
   margin: 18px 0 8px;
 }
 .certificate.noir .cert-midtext { color: var(--color-smoke); }
@@ -867,7 +915,7 @@ body {
 .cert-foot-item .v {
   font-family: var(--font-serif);
   font-size: 15px;
-  color: #2a1f0a;
+  color: var(--color-cert-ink);
 }
 .certificate.noir .cert-foot-item .v { color: var(--color-vellum); }
 
@@ -955,6 +1003,10 @@ body {
   .omen-line           { flex-direction: column; gap: 4px; }
   .omen-line .text     { font-size: 18px; }
   .team-grid           { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  /* Result 分欄在手機改單欄 */
+  .result-split        { grid-template-columns: 1fr; gap: 32px; }
+  .result-hero         { position: static; text-align: center; }
+  .result-hero .lede   { max-width: 100%; }
 }
 
 /* 統計區塊（上邊框，無完整外框） */
@@ -1262,19 +1314,31 @@ body {
   text-transform: uppercase;
 }
 
-/* 主標題區 */
+/* 左右分欄容器：hero 左、certificate 右 */
+.result-split {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 56px;
+  align-items: start;
+  margin-bottom: 56px;
+  max-width: 1080px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 主標題區（左欄，左對齊 + sticky） */
 .result-hero {
-  text-align: center;
-  margin-bottom: 48px;
+  text-align: left;
+  position: sticky;
+  top: 48px;
 }
 .result-hero .eyebrow { margin-bottom: 16px; }
 .result-hero h1 {
-  font-size: clamp(40px, 5vw, 64px);
-  margin: 0 0 14px;
+  font-size: clamp(36px, 4vw, 56px);
+  margin: 0 0 20px;
 }
 .result-hero .lede {
-  max-width: 580px;
-  margin: 0 auto;
+  max-width: 420px;
 }
 
 /* CTA 按鈕群組 */
