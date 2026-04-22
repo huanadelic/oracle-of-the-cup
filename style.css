@@ -372,7 +372,7 @@ body {
 .name-field input::placeholder { color: var(--color-smoke-dim); font-style: normal; }
 .name-field input:focus { border-bottom-color: var(--color-gold); }
 
-#btn-begin { min-width: 220px; }
+#btn-begin { padding-left: 64px; padding-right: 64px; }
 
 /* Footer 固定在底部 */
 .footer-wisp {
@@ -395,6 +395,7 @@ body {
   .countdown       { gap: 10px; padding: 20px 0; }
   .countdown .unit { min-width: 52px; }
   .countdown .num  { font-size: 32px; }
+  #btn-begin       { width: 100%; padding-left: 24px; padding-right: 24px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
