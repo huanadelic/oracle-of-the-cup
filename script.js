@@ -333,6 +333,9 @@ function initDivine() {
   // 防呆：沒選隊就回 pick
   if (!state.team) { navigate('pick'); return; }
 
+  // 趁 4200ms 動畫期間預載證書圖片，到 result 頁時已 ready
+  precacheCertImages();
+
   const team    = WC_TEAMS.find(t => t.code === state.team);
   const DURATION = 4200; // 毫秒
 
@@ -439,8 +442,7 @@ function initResult() {
   // 防呆：沒有選隊就回 home
   if (!state.team) { navigate('home'); return; }
 
-  // 立刻開始預載證書圖片，存成 Promise 讓 download 可以 await
-  precacheCertImages();
+  // 圖片預載已在 initDivine 啟動（precacheCertImages），此處不重複呼叫
 
   const team = WC_TEAMS.find(t => t.code === state.team);
   const now  = new Date();
