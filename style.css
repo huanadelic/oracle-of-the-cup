@@ -212,11 +212,8 @@ body {
    ═══════════════════════════════════════════════════════════ */
 .home-wrap {
   position: relative;
-  z-index: 1;
-  background:
-    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
-    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
-    var(--color-ink); /* blend mode 合成基準色，需與 body 背景一致 */
+  /* z-index 移除：避免建立 stacking context，讓 mix-blend-mode:screen 能與 starfield 合成 */
+  background: transparent;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -257,7 +254,10 @@ body {
 }
 
 /* 主標題 */
-.home-title { font-size: 104px; margin: 0 0 32px; }
+.home-title {
+  font-size: 104px;
+  margin: 0 0 32px;
+}
 .home-title .em { font-style: normal; color: var(--color-gold-bright); }
 
 /* 標題內嵌獎盃圖 */

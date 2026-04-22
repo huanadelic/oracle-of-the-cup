@@ -689,7 +689,7 @@ function renderCertificate({ team, dateStr, ordinal }) {
           </div>
 
           <p class="cert-preamble">
-            茲聲明，自今日起，永久為憑，以下預言者已於莊嚴儀式中宣告——
+            預言者，在此立言
           </p>
 
           <div class="cert-name">${state.name || 'An Anonymous Seer'}</div>
