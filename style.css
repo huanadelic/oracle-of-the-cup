@@ -23,7 +23,7 @@
 
   /* 字型 */
   --font-serif: "Shippori Mincho B1", "Noto Serif TC", "Cormorant Garamond", Georgia, serif;
-  --font-sans:  "Noto Sans TC", "Inter", -apple-system, sans-serif;
+  --font-sans:  "Noto Sans TC", -apple-system, sans-serif;
   --font-mono:  "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
 }
 
@@ -34,11 +34,12 @@
 
 html {
   background: var(--color-ink);
+  scroll-behavior: smooth;
 }
 body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   background:
     radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
@@ -51,7 +52,7 @@ body {
 
 .hidden { display: none; }
 
-#stage { position: relative; min-height: 100vh; }
+#stage { position: relative; min-height: 100dvh; }
 
 /* ── 點擊漣漪 ───────────────────────────────────────────── */
 .click-ripple {
@@ -122,6 +123,7 @@ body {
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--color-vellum);
+  text-wrap: balance;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -211,7 +213,7 @@ body {
 .home-wrap {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -253,6 +255,17 @@ body {
 /* 主標題 */
 .home-title { font-size: clamp(52px, 8vw, 104px); margin: 0 0 32px; }
 .home-title .em { font-style: normal; color: var(--color-gold-bright); }
+
+/* 標題內嵌獎盃圖 */
+.title-trophy {
+  display: inline-block;
+  height: 1em;          /* 跟著字級等比縮放 */
+  width: auto;
+  vertical-align: middle;
+  transform: translateY(-0.15em); /* 中文字身偏高，視覺補正 */
+  margin: 0 -0.05em;
+  /* filter: drop-shadow(0 2px 8px rgba(200, 161, 74, 0.5)); */
+}
 
 /* 副標 */
 .home-sub {
@@ -456,6 +469,12 @@ body {
     0 0 0 1px rgba(227,191,106,0.5),
     0 15px 50px -10px rgba(227,191,106,0.7);
 }
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow:
+    0 0 0 1px rgba(227,191,106,0.3),
+    0 4px 16px -4px rgba(227,191,106,0.4);
+}
 .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .btn-ghost {
@@ -463,7 +482,18 @@ body {
   color: var(--color-vellum);
   border-color: var(--color-rule);
 }
-.btn-ghost:hover { border-color: var(--color-gold); color: var(--color-gold-bright); }
+.btn-ghost:hover  { border-color: var(--color-gold); color: var(--color-gold-bright); }
+.btn-ghost:active { transform: scale(0.98); opacity: 0.8; }
+
+/* Focus ring（鍵盤無障礙） */
+.btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+.team-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
 
 /* 安靜的文字按鈕（用於 back、展開等） */
 .btn-quiet {
@@ -505,7 +535,7 @@ body {
 .pick-wrap {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 40px 24px 200px;
   max-width: 1200px;
   margin: 0 auto;
@@ -887,7 +917,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin: 4px 0 6px;
+  margin: 16px 0 16px;
 }
 .cert-team .flag        { font-size: 44px; }
 .certificate.noir .cert-team { color: var(--color-gold-bright); }
@@ -897,7 +927,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 36px;
+  margin-top: 20px;
   padding-top: 24px;
   border-top: 1px dashed rgba(138,109,45,0.4);
   gap: 24px;
@@ -1136,7 +1166,7 @@ body {
 .divine-wrap {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1290,7 +1320,7 @@ body {
 .result-wrap {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 40px 24px 80px;
   max-width: 1200px; /* 與 home-wrap / pick-wrap 統一 */
   margin: 0 auto;
