@@ -642,8 +642,10 @@ async function downloadCertificate() {
     const toPngOpts = { pixelRatio: 2, skipFonts: true };
     let dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
     if (isSafari) {
-      await new Promise(r => setTimeout(r, 200));
-      dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
+      for (let i = 0; i < 2; i++) {
+        await new Promise(r => setTimeout(r, 200));
+        dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
+      }
     }
 
     // 還原寬度
