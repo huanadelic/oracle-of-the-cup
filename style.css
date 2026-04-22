@@ -89,7 +89,7 @@ body {
 /* 頁首品牌標記 */
 .brand-wisp {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.32em;
   color: var(--color-gold);
   text-transform: uppercase;
@@ -98,7 +98,7 @@ body {
 /* Eyebrow 小標（全域共用） */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.4em;
   color: var(--color-gold);
   text-transform: uppercase;
@@ -276,7 +276,7 @@ body {
 }
 .home-sub .tag {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-style: normal;
   letter-spacing: 0.3em;
   color: var(--color-gold);
@@ -323,7 +323,7 @@ body {
 }
 .countdown .lbl {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.3em;
   color: var(--color-gold);         /* 金色，不是 smoke */
   margin-top: 8px;
@@ -331,7 +331,7 @@ body {
 }
 .countdown-caption {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.25em;
   color: var(--color-smoke);
   text-transform: uppercase;
@@ -349,7 +349,7 @@ body {
 .name-field label {
   display: block;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.35em;
   color: var(--color-gold);
   margin-bottom: 14px;
@@ -422,7 +422,7 @@ body {
   width: 100%;
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.4em;
   color: var(--color-smoke);
   text-transform: uppercase;
@@ -550,7 +550,7 @@ body {
   border: none;
   padding: 8px 12px;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   cursor: pointer;
   transition: color 200ms;
@@ -564,7 +564,7 @@ body {
   padding: 0;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.32em;
   color: var(--color-gold);
   text-transform: uppercase;
@@ -618,7 +618,7 @@ body {
   border: 1px solid var(--color-rule);
   color: var(--color-smoke);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   padding: 8px 14px;
@@ -703,7 +703,7 @@ body {
 }
 .team-card .t-confed {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--color-smoke-dim);
   text-transform: uppercase;
@@ -983,7 +983,7 @@ body {
 .cert-foot-item:last-child   { text-align: right; }
 .cert-foot-item .k {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.3em;
   color: var(--color-gold-dim);
   text-transform: uppercase;
@@ -1118,7 +1118,7 @@ body {
   border-radius: 2px;
   transition: background 150ms;
 }
-.dist-row .rk { font-family: var(--font-mono); font-size: 11px; color: var(--color-smoke); text-align: right; }
+.dist-row .rk { font-family: var(--font-mono); font-size: 12px; color: var(--color-smoke); text-align: right; }
 .dist-row .fl { font-size: 24px; }
 
 /* Bar 容器 */
@@ -1172,7 +1172,7 @@ body {
 }
 .dist-row .pct {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--color-smoke);
   letter-spacing: 0.05em;
   min-width: 56px;
@@ -1385,7 +1385,7 @@ body {
 }
 .result-top-date {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.3em;
   color: var(--color-smoke);
   text-transform: uppercase;
