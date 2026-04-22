@@ -66,13 +66,18 @@
           <!-- 名字輸入 -->
           <div class="name-field">
             <label for="name-input">輸入預言者的姓名：</label>
-            <input
-              id="name-input"
-              type="text"
-              maxlength="32"
-              placeholder="例：郊區預言者"
-              autocomplete="off"
-            />
+            <div class="name-input-wrap">
+              <input
+                id="name-input"
+                type="text"
+                maxlength="32"
+                placeholder="例：郊區預言者"
+                autocomplete="off"
+              />
+              <button id="btn-clear-name" class="btn-clear-name hidden" aria-label="清除名字">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
           </div>
 
           <button id="btn-begin" disabled class="btn btn-primary">

@@ -186,19 +186,35 @@ function initHome() {
   $('oracle-eye').innerHTML = SVG.eye;
 
   // 名字輸入
-  const input = $('name-input');
-  const btn   = $('btn-begin');
-  input.value  = state.name;
-  btn.disabled = !state.name.trim();
+  const input     = $('name-input');
+  const btn       = $('btn-begin');
+  const clearBtn  = $('btn-clear-name');
+
+  function syncNameState() {
+    const hasValue = !!input.value.trim();
+    btn.disabled = !hasValue;
+    clearBtn.classList.toggle('hidden', !hasValue);
+  }
+
+  input.value = state.name;
+  syncNameState();
 
   input.oninput = () => {
     state.name = input.value;
     store.set('oracle.name', state.name);
-    btn.disabled = !state.name.trim();
+    syncNameState();
   };
 
   input.onkeydown = (e) => {
     if (e.key === 'Enter' && state.name.trim()) navigate('pick');
+  };
+
+  clearBtn.onclick = () => {
+    input.value = '';
+    state.name  = '';
+    store.set('oracle.name', '');
+    syncNameState();
+    input.focus();
   };
 
   btn.onclick = () => navigate('pick');

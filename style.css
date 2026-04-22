@@ -354,13 +354,17 @@ body {
   text-transform: uppercase;
   text-align: center;
 }
+/* 輸入框 + 清除按鈕的容器 */
+.name-input-wrap {
+  position: relative;
+}
 /* 只有底線，無外框 */
 .name-field input {
   width: 100%;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--color-rule);
-  padding: 14px 12px 16px;
+  padding: 14px 40px 16px 12px; /* 右側留空給 x btn */
   color: var(--color-vellum);
   font-family: var(--font-serif);
   font-size: 26px;
@@ -371,6 +375,32 @@ body {
 }
 .name-field input::placeholder { color: var(--color-smoke-dim); font-style: normal; }
 .name-field input:focus { border-bottom-color: var(--color-gold); }
+
+/* X 清除按鈕 */
+.btn-clear-name {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-smoke);
+  border-radius: 50%;
+  transition: color 150ms ease, background 150ms ease;
+  padding: 0;
+}
+.btn-clear-name:hover {
+  color: var(--color-vellum);
+  background: rgba(244,235,211,0.08);
+}
+.btn-clear-name .lucide { width: 14px; height: 14px; }
+.btn-clear-name.hidden { display: none; }
 
 #btn-begin { padding-left: 64px; padding-right: 64px; }
 
