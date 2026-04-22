@@ -554,30 +554,65 @@ function initResult() {
   }, { capture: true });
 }
 
+/* 將 URL 轉成 base64 data URL（繞過 Safari canvas 跨域限制） */
+async function toDataUrl(url) {
+  const blob = await fetch(url).then(r => r.blob());
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
 /* 證書下載 */
 async function downloadCertificate() {
   const el  = document.querySelector('.certificate');
   const btn = $('btn-download');
   if (!el || !window.htmlToImage) return;
 
-  // 生成中狀態
   btn.disabled = true;
   btn.innerHTML = '生成中…';
 
+  // 暫存需要還原的值
+  const origBg  = el.style.backgroundImage;
+  const imgEls  = [...el.querySelectorAll('img[src]')];
+  const origSrc = imgEls.map(i => i.src);
+
   try {
-    await document.fonts.ready; // 確保字型載入完成
+    await document.fonts.ready;
+
+    // Safari：預載 <img> 和背景圖為 data URL，繞過 canvas 安全限制
+    await Promise.all([
+      // <img> 元素（wax-seal 等）
+      ...imgEls.map(async (img) => {
+        try { img.src = await toDataUrl(img.src); } catch { /* 保持原 src */ }
+      }),
+      // CSS 背景圖（parchment-texture）：讀 computed style，替換 url() 後寫成 inline
+      (async () => {
+        try {
+          const bgDataUrl = await toDataUrl('img/parchment-texture.jpg');
+          const computed  = getComputedStyle(el).backgroundImage;
+          el.style.backgroundImage = computed.replace(/url\(["']?[^"')]+["']?\)/, `url('${bgDataUrl}')`);
+        } catch { /* 保持原樣 */ }
+      })(),
+    ]);
+
     const dataUrl = await window.htmlToImage.toPng(el, {
-      pixelRatio: 2,       // 視網膜品質
-      cacheBust: true,     // 避免 CORS 快取問題
-      skipFonts: true,     // 跳過跨域 Google Fonts CSS 讀取，避免 SecurityError
+      pixelRatio: 2,
+      cacheBust: true,
+      skipFonts: true,
     });
-    const link      = document.createElement('a');
-    link.download   = `oracle-${(state.name || 'prophecy').replace(/\s+/g, '-')}-${state.team || 'unknown'}.png`;
-    link.href       = dataUrl;
+
+    const link    = document.createElement('a');
+    link.download = `oracle-${(state.name || 'prophecy').replace(/\s+/g, '-')}-${state.team || 'unknown'}.png`;
+    link.href     = dataUrl;
     link.click();
   } catch (err) {
     console.error('證書下載失敗', err);
   } finally {
+    // 還原原始 src 和背景
+    imgEls.forEach((img, i) => { img.src = origSrc[i]; });
+    el.style.backgroundImage = origBg;
     btn.disabled = false;
     btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
     applyIcons();
