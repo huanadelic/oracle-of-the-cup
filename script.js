@@ -611,6 +611,10 @@ async function downloadCertificate() {
       `url('${parchmentDataUrl}')`
     );
 
+    // 強制固定寬度，確保截圖不受 browser 視窗寬度影響
+    el.style.width    = '600px';
+    el.style.maxWidth = '600px';
+
     // 等一個 frame 讓背景確實渲染
     await new Promise(r => requestAnimationFrame(r));
 
@@ -618,6 +622,10 @@ async function downloadCertificate() {
       pixelRatio: 2,
       skipFonts: true,
     });
+
+    // 還原寬度
+    el.style.width    = '';
+    el.style.maxWidth = '';
 
     const link    = document.createElement('a');
     link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
