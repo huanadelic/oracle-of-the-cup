@@ -636,14 +636,14 @@ async function downloadCertificate() {
     // 等一個 frame 讓背景確實渲染
     await new Promise(r => requestAnimationFrame(r));
 
-    // 截圖 + 自動 retry（Safari 第一次 toPng 結果可能是空白/壞圖）
-    // 正常證書 @2x 應超過 200KB，太小代表截到壞結果
+    // Safari 已知問題：第一次 toPng 結果不可靠（資源未完全渲染）
+    // 固定跑 2 次，用第二次結果；非 Safari 只跑 1 次
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     const toPngOpts = { pixelRatio: 2, skipFonts: true };
-    let dataUrl = '';
-    for (let attempt = 0; attempt < 3; attempt++) {
+    let dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
+    if (isSafari) {
+      await new Promise(r => setTimeout(r, 200));
       dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
-      if (dataUrl.length > 50000) break; // 有效圖片
-      await new Promise(r => setTimeout(r, 150)); // 等一下再 retry
     }
 
     // 還原寬度
