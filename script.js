@@ -564,6 +564,15 @@ async function toDataUrl(url) {
   });
 }
 
+/* 等待 img 元素解碼完成 */
+function waitForImage(img) {
+  return new Promise(resolve => {
+    if (img.complete && img.naturalWidth > 0) { resolve(); return; }
+    img.onload  = resolve;
+    img.onerror = resolve; // 失敗也繼續，不卡住
+  });
+}
+
 /* 證書下載 */
 async function downloadCertificate() {
   const el  = document.querySelector('.certificate');
@@ -581,20 +590,29 @@ async function downloadCertificate() {
   try {
     await document.fonts.ready;
 
-    // 預載所有圖片為 data URL，直接改原始 DOM（Safari canvas 不允許外部資源）
-    const [parchmentDataUrl] = await Promise.all([
+    // 預載所有圖片為 data URL（Safari canvas 不允許外部資源）
+    const [parchmentDataUrl, ...imgDataUrls] = await Promise.all([
       toDataUrl('img/parchment-texture.jpg'),
-      ...imgEls.map(async (img) => {
-        try { img.src = await toDataUrl(img.src); } catch { /* 保持原 src */ }
-      }),
+      ...imgEls.map(img => toDataUrl(img.src).catch(() => null)),
     ]);
 
-    // 覆蓋背景圖（inline style 優先於 class style）
+    // 替換 <img> src 並等待瀏覽器解碼完成
+    await Promise.all(imgEls.map(async (img, i) => {
+      if (imgDataUrls[i]) {
+        img.src = imgDataUrls[i];
+        await waitForImage(img);
+      }
+    }));
+
+    // 覆蓋背景紋理（inline style 優先於 class style）
     const computedBg = getComputedStyle(el).backgroundImage;
     el.style.backgroundImage = computedBg.replace(
       /url\(["']?[^"')]*parchment[^"')]*["']?\)/,
       `url('${parchmentDataUrl}')`
     );
+
+    // 等一個 frame 讓背景確實渲染
+    await new Promise(r => requestAnimationFrame(r));
 
     const dataUrl = await window.htmlToImage.toPng(el, {
       pixelRatio: 2,
