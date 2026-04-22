@@ -26,28 +26,11 @@ document.addEventListener('click', (e) => {
   r2.addEventListener('animationend', () => r2.remove());
 });
 
-/* ── Lucide icons（CDN ESM）─────────────────────────────── */
-import {
-  createIcons,
-  ArrowLeft,    // btn-back
-  RotateCcw,    // btn-restart
-  ArrowRight,   // btn-event
-  Feather,      // btn-begin / btn-confirm
-  Check,        // team-card 選取勾
-  ChevronDown,  // dist-toggle 展開
-  ChevronUp,    // dist-toggle 收合
-} from 'https://cdn.jsdelivr.net/npm/lucide@latest/dist/esm/lucide.js';
-
-/* 需要用到哪個 icon 就在這裡加，保持精簡 */
-const LUCIDE_ICONS = {
-  ArrowLeft, RotateCcw, ArrowRight,
-  Feather, Check,
-  ChevronDown, ChevronUp,
-};
+/* ── Lucide icons（UMD，由 index.html <script> 載入，window.lucide） ── */
 
 /** 將頁面上所有 <i data-lucide="..."> 替換成 SVG */
 function applyIcons() {
-  createIcons({ icons: LUCIDE_ICONS, attrs: { 'stroke-width': '2' } });
+  window.lucide?.createIcons({ attrs: { 'stroke-width': '2' } });
 }
 
 /* ═══════════════════════════════════════════════════════════
