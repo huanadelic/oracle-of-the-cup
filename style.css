@@ -358,9 +358,10 @@ body {
 }
 /* 單位間的分隔點 */
 .countdown .unit + .unit::before {
-  content: "·";
+  content: "\00B7";
   position: absolute;
-  left: -14px;
+  left: -12px;               /* gap 24px 的中心點 */
+  transform: translateX(-50%); /* 再往左移半個字元寬，確保視覺置中 */
   top: 8px;
   color: var(--color-gold);
   font-size: 20px;
@@ -739,9 +740,19 @@ body {
   box-shadow: 0 0 0 1px var(--color-gold-bright), 0 0 30px -5px rgba(227,191,106,0.4);
 }
 
+/* 國旗圖片（flagcdn.com SVG，取代系統 emoji 確保 Windows/Mac 一致） */
+.flag-img {
+  display: inline-block;
+  height: 1em;        /* 自動跟隨父層 font-size 縮放 */
+  width: auto;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
 /* Flag */
 .team-card .flag {
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
   flex-shrink: 0;

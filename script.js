@@ -33,6 +33,14 @@ function applyIcons() {
   window.lucide?.createIcons({ attrs: { 'stroke-width': '2' } });
 }
 
+/* ── 國旗圖片 helper ─────────────────────────────────────────
+   使用 flagcdn.com SVG，取代系統 emoji（Windows 不支援國旗 emoji）
+   iso2：ISO 3166-1 alpha-2，英格蘭/蘇格蘭用 gb-eng / gb-sct
+   ──────────────────────────────────────────────────────────── */
+function flagImg(iso2) {
+  return `<img src="https://flagcdn.com/${iso2}.svg" class="flag-img" alt="" aria-hidden="true" draggable="false">`;
+}
+
 /* ═══════════════════════════════════════════════════════════
    LocalStorage helpers
    ═══════════════════════════════════════════════════════════ */
@@ -304,7 +312,7 @@ function renderTeamGrid(fadeTransition = false) {
       return `
       <button class="team-card ${tier} ${state.team === t.code ? 'selected' : ''}" data-code="${t.code}">
         ${state.team === t.code ? '<div class="check"><i data-lucide="check"></i></div>' : ''}
-        <div class="flag">${t.flag}</div>
+        <div class="flag">${flagImg(t.iso2)}</div>
         <div>
           <div class="t-name">${t.name}</div>
           <div class="t-confed">${CONFED_LABELS[t.confed]}</div>
@@ -357,7 +365,7 @@ function renderPickConfirm() {
   }
   bar.classList.remove('hidden');
   const team = WC_TEAMS.find(t => t.code === state.team);
-  $('pick-confirm-flag').textContent = team.flag;
+  $('pick-confirm-flag').innerHTML = flagImg(team.iso2);
   $('pick-confirm-name').textContent = `${team.name} 將捧起獎盃`;
 }
 
@@ -408,7 +416,7 @@ function initDivine() {
   const pool = WC_TEAMS.filter(t => t.code !== state.team);
   state._divineTimer = setInterval(() => {
     if (done) return;
-    flagEl.textContent = pool[Math.floor(Math.random() * pool.length)].flag;
+    flagEl.innerHTML = flagImg(pool[Math.floor(Math.random() * pool.length)].iso2);
   }, 140);
 
   // 進度條 RAF 動畫
@@ -441,7 +449,7 @@ function initDivine() {
       state._divineTimer = null;
       state._divineRaf   = null;
 
-      flagEl.textContent = team.flag;
+      flagEl.innerHTML = flagImg(team.iso2);
       flagEl.classList.add('locked');
       ringEl.classList.add('locked');
       crystalEl.classList.add('locked');
@@ -743,7 +751,7 @@ function renderCertificate({ team, dateStr, ordinal }) {
           <div class="cert-midtext">— 預言世界盃冠軍將由以下國家奪得 —</div>
 
           <div class="cert-team">
-            <span class="flag">${team.flag}</span>
+            <span class="flag">${flagImg(team.iso2)}</span>
             <span>${team.name}</span>
           </div>
 
@@ -834,7 +842,7 @@ function renderDistribution() {
           return `
             <div class="dist-row ${isYou ? 'you' : ''}">
               <div class="rk">${realIdx + 1}</div>
-              <div class="fl">${t.flag}</div>
+              <div class="fl">${flagImg(t.iso2)}</div>
               <div class="bar-wrap">
                 <div class="bar" style="width: ${barPct}%; animation-delay: ${delay}"></div>
                 <div class="label">
