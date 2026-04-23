@@ -1318,7 +1318,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: box-shadow 400ms ease;
+  transition: box-shadow 300ms ease-out;
 }
 .d-crystal.locked {
   box-shadow:
@@ -1329,14 +1329,13 @@ body {
 
 /* 旗幟（亂跳中 / 鎖定後放大） */
 .d-flag {
-  font-size: 64px;
+  font-size: 72px; /* 固定字級，大小變化改由 d-lock scale 處理 */
   line-height: 1;
   filter: drop-shadow(0 0 10px rgba(227,191,106,0.5));
-  transition: font-size 400ms ease;
+  /* 移除 font-size transition：避免 layout reflow，scale 已處理視覺放大 */
 }
 .d-flag.locked {
   animation: d-lock 600ms cubic-bezier(0.2, 1.4, 0.3, 1) both;
-  font-size: 80px;
 }
 @keyframes d-lock {
   0%   { transform: scale(0.5); opacity: 0; filter: blur(6px); }
@@ -1356,6 +1355,9 @@ body {
 .divine-title {
   font-size: clamp(30px, 4vw, 42px);
   margin: 0 0 18px;
+}
+.divine-title.title-change {
+  animation: fadeInPhase 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* 階段描述文字（每換 phase 重播入場動畫） */

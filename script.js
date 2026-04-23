@@ -444,7 +444,13 @@ function initDivine() {
       flagEl.classList.add('locked');
       ringEl.classList.add('locked');
       crystalEl.classList.add('locked');
+
+      // title 換字加淡入
+      titleEl.classList.remove('title-change');
+      void titleEl.offsetWidth;
       titleEl.textContent = '已然洞見。';
+      titleEl.classList.add('title-change');
+
       phaseEl.textContent = '刻寫你的預言證書…';
 
       // 700ms 後跳轉到 result（DEV_PAUSE_DIVINE = true 時暫停，方便檢視）
