@@ -219,6 +219,16 @@
           <!-- 右：證書（JS 渲染） -->
           <div id="certificate"></div>
 
+          <!-- Mobile 專用：證書下方按鈕（desktop 隱藏，點擊 delegate 給原始按鈕） -->
+          <div class="hero-actions hero-actions-mobile">
+            <button class="btn btn-ghost" onclick="document.getElementById('btn-download').click()">
+              <i data-lucide="download"></i> 下載證書
+            </button>
+            <button class="btn btn-ghost" onclick="document.getElementById('btn-share').click()">
+              <i data-lucide="share-2"></i> 分享
+            </button>
+          </div>
+
         </div><!-- /.result-split -->
 
         <!-- 預言解讀（JS 渲染） -->

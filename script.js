@@ -522,6 +522,7 @@ function initResult() {
   // render 完成後確保頁面從頂部開始
   window.scrollTo({ top: 0, behavior: 'instant' });
 
+
   // 捲動 reveal：certificate + omen
   const revealOpts = { threshold: 0.12 };
   ['.certificate-frame', '.omen'].forEach((sel, i) => {

@@ -1132,14 +1132,13 @@ body {
 }
 
 @media (max-width: 720px) {
-  .omen                { padding: 24px 20px; }
-  .omen-line           { flex-direction: column; gap: 4px; }
-  .omen-line .text     { font-size: 18px; }
+  .omen                { padding: 24px 20px; text-align: center; }
+  .omen-line           { flex-direction: column; align-items: center; gap: 4px; }
+  .omen-line .text     { font-size: 18px; flex: unset; }
   .team-grid           { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  /* Result 分欄在手機改單欄 */
-  .result-split        { grid-template-columns: 1fr; gap: 32px; }
-  .result-hero         { position: static; text-align: center; }
-  .result-hero .lede   { max-width: 100%; }
+  /* Pick confirm 手機改上下排列 */
+  .pick-confirm-inner  { flex-direction: column; align-items: stretch; gap: 12px; }
+  .pick-confirm-inner #btn-confirm { width: 100%; justify-content: center; }
 }
 
 /* 統計區塊（上邊框，無完整外框） */
@@ -1460,7 +1459,6 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
-
 /* Hero 內操作列 */
 .hero-actions {
   display: flex;
@@ -1586,6 +1584,21 @@ body {
   max-width: 240px;
 }
 
+
+/* Result / Distribution RWD（放在所有 CSS 之後，避免被覆蓋） */
+.hero-actions-mobile { display: none; } /* desktop: 隱藏 mobile 複製版 */
+
+@media (max-width: 720px) {
+  .result-split              { grid-template-columns: 1fr; gap: 32px; }
+  .result-hero               { position: static; text-align: center; }
+  .result-hero .lede         { max-width: 100%; }
+  .result-hero .hero-actions { display: none; }   /* mobile: 隱藏 desktop 版 */
+  .hero-actions-mobile       { display: flex; justify-content: center; width: 100%; margin-top: 0; }
+  .hero-actions-mobile .btn  { flex: 1; justify-content: center; }
+  .dist-row                  { padding: 10px 0; }
+  .dist-row.you              { padding-left: 0; }
+  .result-ctas .btn          { max-width: 100%; }
+}
 
 /* ═══════════════════════════════════════════════════════════
    REDUCED MOTION
