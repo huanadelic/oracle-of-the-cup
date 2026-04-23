@@ -880,6 +880,8 @@ body {
 /* 證書主體 */
 .certificate {
   position: relative;
+  max-width: 600px;
+  margin: 0 auto;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%),
     linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55)),
@@ -1582,6 +1584,32 @@ body {
 .result-ctas .btn {
   flex: 1;
   max-width: 240px;
+}
+
+/* Scroll hint：提示使用者往下滾動 */
+@keyframes hintBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+.scroll-hint {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-smoke);
+  /* 初始隱藏，由 JS 延遲顯示 */
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.scroll-hint svg {
+  width: 26px;
+  height: 26px;
+  animation: hintBounce 1.4s ease-in-out infinite;
 }
 
 /* ═══════════════════════════════════════════════════════════
