@@ -413,10 +413,13 @@ function initDivine() {
   let currentPhaseIdx = 0;
 
   // 旗幟亂跳：每 140ms 換一面隨機旗
+  // 建一次 img 元素，之後只改 src，避免 innerHTML 重建造成的短暫黑框閃爍
   const pool = WC_TEAMS.filter(t => t.code !== state.team);
+  flagEl.innerHTML = flagImg(pool[0].iso2);
+  const flagImgEl = flagEl.querySelector('.flag-img');
   state._divineTimer = setInterval(() => {
     if (done) return;
-    flagEl.innerHTML = flagImg(pool[Math.floor(Math.random() * pool.length)].iso2);
+    flagImgEl.src = `https://flagcdn.com/${pool[Math.floor(Math.random() * pool.length)].iso2}.svg`;
   }, 140);
 
   // 進度條 RAF 動畫
@@ -449,7 +452,7 @@ function initDivine() {
       state._divineTimer = null;
       state._divineRaf   = null;
 
-      flagEl.innerHTML = flagImg(team.iso2);
+      flagImgEl.src = `https://flagcdn.com/${team.iso2}.svg`;
       flagEl.classList.add('locked');
       ringEl.classList.add('locked');
       crystalEl.classList.add('locked');
