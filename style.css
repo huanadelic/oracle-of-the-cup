@@ -185,8 +185,8 @@ body {
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.in-view {
   opacity: 1;
@@ -585,7 +585,7 @@ body {
   border-color: var(--color-rule);
 }
 .btn-ghost:hover  { border-color: var(--color-gold); color: var(--color-gold-bright); }
-.btn-ghost:active { transform: scale(0.98); opacity: 0.8; }
+.btn-ghost:active { transform: scale(0.98); }
 
 /* Focus ring（鍵盤無障礙） */
 .btn:focus-visible {
