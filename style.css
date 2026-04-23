@@ -254,6 +254,23 @@ body {
   animation-duration: 65s;
   animation-direction: reverse;
   opacity: 0.90;
+  /* 第二層只保留 15 顆（半層），整體視覺密度約 1.5 層 */
+  background-image:
+    radial-gradient(2px   2px   at 25% 70%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 75% 80%,  rgba(244,235,211,1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 88% 20%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at  3% 55%,  rgba(200,161,74, 0.90) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 50% 90%,  rgba(244,235,211,0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 92% 60%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 70% 25%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 80%  5%,  rgba(244,235,211,1.00) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 47% 32%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 63% 12%,  rgba(200,161,74, 0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 82% 48%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 33% 78%,  rgba(244,235,211,0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 67% 88%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 52% 18%,  rgba(200,161,74, 0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 86% 75%,  rgba(244,235,211,0.80) 0%, transparent 100%);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -358,13 +375,7 @@ body {
 }
 /* 單位間的分隔點 */
 .countdown .unit + .unit::before {
-  content: "\00B7";
-  position: absolute;
-  left: -12px;               /* gap 24px 的中心點 */
-  transform: translateX(-50%); /* 再往左移半個字元寬，確保視覺置中 */
-  top: 8px;
-  color: var(--color-gold);
-  font-size: 20px;
+  content: none;
 }
 .countdown .num {
   font-family: var(--font-serif);
