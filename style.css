@@ -66,7 +66,7 @@ body {
 }
 
 @keyframes rippleOut {
-  0%   { opacity: 1;  transform: translate(-50%, -50%) scale(0); }
+  0%   { opacity: 1;  transform: translate(-50%, -50%) scale(0.4); }
   100% { opacity: 0;  transform: translate(-50%, -50%) scale(1); }
 }
 
@@ -140,7 +140,7 @@ body {
   to   { transform: translateY(-50%); }
 }
 
-.fade-in { animation: fadeIn 0.6s ease both; }
+.fade-in { animation: fadeIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
 /* Scroll reveal：初始隱藏，IntersectionObserver 加 .in-view 後才顯現 */
 .reveal {
@@ -514,7 +514,7 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: transform 120ms ease-out, box-shadow 200ms ease, background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease;
   border: 1px solid transparent;
   text-decoration: none;
 }
@@ -639,7 +639,7 @@ body {
   padding: 8px 14px;
   border-radius: 99px;   /* 膠囊形 */
   cursor: pointer;
-  transition: all 150ms;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
 }
 .chip:hover { border-color: var(--color-gold); color: var(--color-vellum); }
 .chip.active {
@@ -686,7 +686,7 @@ body {
   border: 1px solid rgba(244,235,211,0.08);
   border-radius: 3px;
   cursor: pointer;
-  transition: all 180ms ease;
+  transition: transform 180ms ease-out, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   color: var(--color-vellum);
 }
 .team-card:hover {
@@ -1541,4 +1541,42 @@ body {
 .result-ctas .btn {
   flex: 1;
   max-width: 240px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  /* 保留 opacity 淡入，移除位移動畫 */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes fadeInPhase {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  /* 停用裝飾性動畫 */
+  .starfield::before,
+  .starfield::after {
+    animation: none;
+  }
+  #oracle-eye {
+    animation: none;
+    opacity: 1;
+  }
+  /* scroll-reveal 直接顯示，不做位移 */
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  /* section 切換只淡入 */
+  .fade-in {
+    animation: fadeIn 300ms ease both;
+  }
+  /* divining 旋轉保留但改慢 */
+  #d-ring {
+    animation-duration: 4s;
+  }
 }
