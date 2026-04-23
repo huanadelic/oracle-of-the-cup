@@ -191,9 +191,17 @@ function initHome() {
   const clearBtn  = $('btn-clear-name');
 
   function syncNameState() {
-    const hasValue = !!input.value.trim();
+    const hasValue   = !!input.value.trim();
+    const wasDisabled = btn.disabled;
     btn.disabled = !hasValue;
     clearBtn.classList.toggle('hidden', !hasValue);
+
+    // 從 disabled → enabled 時觸發彈入動畫
+    if (wasDisabled && hasValue) {
+      btn.classList.remove('btn-activate');
+      void btn.offsetWidth; // 強制 reflow 重新觸發動畫
+      btn.classList.add('btn-activate');
+    }
   }
 
   input.value = state.name;

@@ -40,7 +40,7 @@
     <section id="s-home" class="hidden">
       <div class="home-wrap">
 
-        <div class="home-header">
+        <div class="home-header home-enter" style="--d:0ms">
           <div class="brand-wisp">◈ 金盃神諭</div>
           <div class="brand-wisp" style="color: var(--color-smoke-dim);">MMXXVI</div>
         </div>
@@ -48,23 +48,23 @@
         <div class="home-inner">
 
           <!-- Oracle Eye（JS 注入 SVG） -->
-          <div id="oracle-eye" class="home-eye"></div>
+          <div id="oracle-eye" class="home-eye home-enter" style="--d:80ms"></div>
 
-          <h1 class="home-title headline">
+          <h1 class="home-title headline home-enter" style="--d:160ms">
             預言 <video class="title-trophy" autoplay loop muted playsinline preload="metadata" poster="img/trophy.png" aria-label="大力神盃"><source src="img/Trophy_spins.mov" type="video/mp4; codecs=hvc1"><source src="img/Trophy_spins.webm" type="video/webm"></video> <span class="em">冠軍</span>
           </h1>
 
-          <p class="home-sub serif-lede">
+          <p class="home-sub serif-lede home-enter" style="--d:240ms">
             <span class="tag">由神諭議會創立 · 2026</span>
             世界盃還沒開踢，你已經知道誰會贏了嗎？留下名字、選一支冠軍 — 等冠軍揭曉那天，你就能跟大家說：我早看出來了。
           </p>
 
           <!-- 倒數計時（JS 渲染） -->
-          <div id="countdown" class="countdown"></div>
-          <p id="countdown-caption" class="countdown-caption"></p>
+          <div id="countdown" class="countdown home-enter" style="--d:320ms"></div>
+          <p id="countdown-caption" class="countdown-caption home-enter" style="--d:360ms"></p>
 
           <!-- 名字輸入 -->
-          <div class="name-field">
+          <div class="name-field home-enter" style="--d:430ms">
             <label for="name-input">輸入預言者的姓名：</label>
             <div class="name-input-wrap">
               <input
@@ -80,11 +80,11 @@
             </div>
           </div>
 
-          <button id="btn-begin" disabled class="btn btn-primary">
+          <button id="btn-begin" disabled class="btn btn-primary home-enter" style="--d:510ms">
             開始預言 <i data-lucide="feather"></i>
           </button>
 
-          <img src="img/世足看東森_標準字.png" class="ebc-wordmark" alt="世足看東森" draggable="false">
+          <img src="img/世足看東森_標準字.png" class="ebc-wordmark home-enter" style="--d:580ms" alt="世足看東森" draggable="false">
 
 
         </div><!-- /.home-inner -->
