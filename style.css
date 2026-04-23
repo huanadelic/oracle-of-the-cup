@@ -887,7 +887,7 @@ body {
     linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55)),
     url('img/parchment-texture.jpg') center / cover no-repeat;
   color: var(--color-cert-ink);
-  padding: 56px 56px 48px;
+  padding: 40px 40px 48px;
   border-radius: 2px;
   /* 特色多層框線：金邊 + 深色間距 + 外發光 */
   box-shadow:
@@ -1586,31 +1586,6 @@ body {
   max-width: 240px;
 }
 
-/* Scroll hint：提示使用者往下滾動 */
-@keyframes hintBounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(6px); }
-}
-.scroll-hint {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-smoke);
-  /* 初始隱藏，由 JS 延遲顯示 */
-  opacity: 0;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-}
-.scroll-hint svg {
-  width: 26px;
-  height: 26px;
-  animation: hintBounce 1.4s ease-in-out infinite;
-}
 
 /* ═══════════════════════════════════════════════════════════
    REDUCED MOTION

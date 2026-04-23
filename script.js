@@ -110,11 +110,6 @@ function navigate(step) {
   // pick-confirm 不在 section 內，離開 pick 時手動隱藏
   if (step !== 'pick') $('pick-confirm').classList.add('hidden');
 
-  // scroll-hint：離開任何頁面時清理 timer/listener 並隱藏
-  if (state._scrollHintTimer)    { clearTimeout(state._scrollHintTimer);                         state._scrollHintTimer = null; }
-  if (state._scrollHintListener) { window.removeEventListener('scroll', state._scrollHintListener); state._scrollHintListener = null; }
-  const hint = $('scroll-hint');
-  if (hint) hint.style.opacity = '0';
 
   // 顯示目標 section 並觸發 fade-in
   const el = $(SECTIONS[step]);
@@ -542,32 +537,6 @@ function initResult() {
     obs.observe(el);
   });
 
-  // Scroll hint：render 完後延遲顯示，用 scroll event 偵測是否已捲到 omens
-  const hintEl = $('scroll-hint');
-  if (hintEl) {
-    hintEl.style.opacity = '0';
-
-    const showHintTimer = setTimeout(() => {
-      hintEl.style.opacity = '1';
-
-      // 監聽 scroll，捲到 omens 附近時隱藏
-      const onScroll = () => {
-        const omensEl = $('omens');
-        if (!omensEl) return;
-        const rect = omensEl.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.85) {
-          hintEl.style.opacity = '0';
-          window.removeEventListener('scroll', onScroll);
-        }
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-
-      // 存到 state 供 navigate 離開時清理
-      state._scrollHintListener = onScroll;
-    }, 900);
-
-    state._scrollHintTimer = showHintTimer;
-  }
 
   // CTA
   $('btn-restart').onclick = () => {
