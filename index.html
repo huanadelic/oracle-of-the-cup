@@ -80,9 +80,11 @@
             </div>
           </div>
 
-          <button id="btn-begin" disabled class="btn btn-primary home-enter" style="--d:510ms">
-            開始預言 <i data-lucide="feather"></i>
-          </button>
+          <div class="home-enter" style="--d:510ms">
+            <button id="btn-begin" disabled class="btn btn-primary">
+              開始預言 <i data-lucide="feather"></i>
+            </button>
+          </div>
 
           <img src="img/世足看東森_標準字.png" class="ebc-wordmark home-enter" style="--d:580ms" alt="世足看東森" draggable="false">
 
@@ -102,13 +104,13 @@
       <div class="pick-wrap">
 
         <!-- 頂部導覽列 -->
-        <div class="pick-top">
+        <div class="pick-top home-enter" style="--d:0ms">
           <button id="btn-back" class="btn-nav">返回起點 <i data-lucide="arrow-left"></i></button>
           <div id="pick-name" class="brand-wisp" style="color: var(--color-smoke);"></div>
         </div>
 
         <!-- 標題區塊 -->
-        <div class="pick-title-block">
+        <div class="pick-title-block home-enter" style="--d:80ms">
           <div class="eyebrow">— 選擇一個國家 —</div>
           <h1 class="pick-title headline">
             誰將捧起 <em style="color: var(--color-gold-bright); font-style: normal;">大力神盃</em>？
@@ -119,11 +121,11 @@
         </div>
 
         <!-- 聯盟篩選（JS 渲染） -->
-        <div id="confed-filters" class="pick-controls"></div>
+        <div id="confed-filters" class="pick-controls home-enter" style="--d:160ms"></div>
 
 
         <!-- 球隊格狀（JS 渲染） -->
-        <div id="team-grid" class="team-grid"></div>
+        <div id="team-grid" class="team-grid home-enter" style="--d:240ms"></div>
 
         <!-- 無結果提示 -->
         <div id="team-empty" class="hidden" style="text-align: center; padding: 40px; font-family: var(--font-serif); font-style: italic; color: var(--color-smoke);">

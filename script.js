@@ -269,7 +269,7 @@ function renderConfedChips() {
     btn.onclick = () => {
       state.filter = btn.dataset.confed;
       renderConfedChips();
-      renderTeamGrid();
+      renderTeamGrid(true); // 切換 filter 時淡換
     };
   });
 }
@@ -277,49 +277,75 @@ function renderConfedChips() {
 // ALL 模式下的聯盟顯示順序（UEFA、CONMEBOL 優先）
 const CONFED_ORDER = { UEFA: 0, CONMEBOL: 1, CONCACAF: 2, AFC: 3, CAF: 4, OFC: 5 };
 
-function renderTeamGrid() {
-  const filtered = WC_TEAMS
-    .filter(t => state.filter === 'ALL' || t.confed === state.filter)
-    .sort((a, b) => {
-      // 只在 ALL 模式下依聯盟排序，單一聯盟篩選時保持原始順序
-      if (state.filter !== 'ALL') return 0;
-      return (CONFED_ORDER[a.confed] ?? 9) - (CONFED_ORDER[b.confed] ?? 9);
-    });
-
+function renderTeamGrid(fadeTransition = false) {
   const grid  = $('team-grid');
   const empty = $('team-empty');
 
-  if (filtered.length === 0) {
-    grid.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
+  const doRender = () => {
+    const filtered = WC_TEAMS
+      .filter(t => state.filter === 'ALL' || t.confed === state.filter)
+      .sort((a, b) => {
+        // 只在 ALL 模式下依聯盟排序，單一聯盟篩選時保持原始順序
+        if (state.filter !== 'ALL') return 0;
+        return (CONFED_ORDER[a.confed] ?? 9) - (CONFED_ORDER[b.confed] ?? 9);
+      });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    grid.innerHTML = filtered.map(t => {
+      const w    = WC_WEIGHTS[t.code] || 0;
+      const tier = w >= 5000 ? 'tier-hot' : w >= 1000 ? 'tier-fav' : 'tier-low';
+      return `
+      <button class="team-card ${tier} ${state.team === t.code ? 'selected' : ''}" data-code="${t.code}">
+        ${state.team === t.code ? '<div class="check"><i data-lucide="check"></i></div>' : ''}
+        <div class="flag">${t.flag}</div>
+        <div>
+          <div class="t-name">${t.name}</div>
+          <div class="t-confed">${CONFED_LABELS[t.confed]}</div>
+        </div>
+      </button>`;
+    }).join('');
+
+    grid.querySelectorAll('.team-card').forEach(card => {
+      card.onclick = () => {
+        state.team = card.dataset.code;
+        renderTeamGrid();
+        renderPickConfirm();
+
+        // 選隊彈入 micro-animation
+        const selected = grid.querySelector('.team-card.selected');
+        if (selected) {
+          selected.classList.remove('card-select-anim');
+          void selected.offsetWidth;
+          selected.classList.add('card-select-anim');
+        }
+      };
+    });
+
+    // 每次重新渲染後轉換新注入的 <i data-lucide="...">
+    applyIcons();
+  };
+
+  if (fadeTransition) {
+    // 切換 filter 時：淡出 → 重繪 → 淡入
+    grid.style.opacity = '0';
+    grid.style.transition = 'opacity 80ms ease';
+    setTimeout(() => {
+      doRender();
+      grid.style.opacity = '';
+      grid.style.transition = '';
+      grid.classList.remove('grid-fade-in');
+      void grid.offsetWidth;
+      grid.classList.add('grid-fade-in');
+    }, 80);
+  } else {
+    doRender();
   }
-  empty.classList.add('hidden');
-
-  grid.innerHTML = filtered.map(t => {
-    const w    = WC_WEIGHTS[t.code] || 0;
-    const tier = w >= 5000 ? 'tier-hot' : w >= 1000 ? 'tier-fav' : 'tier-low';
-    return `
-    <button class="team-card ${tier} ${state.team === t.code ? 'selected' : ''}" data-code="${t.code}">
-      ${state.team === t.code ? '<div class="check"><i data-lucide="check"></i></div>' : ''}
-      <div class="flag">${t.flag}</div>
-      <div>
-        <div class="t-name">${t.name}</div>
-        <div class="t-confed">${CONFED_LABELS[t.confed]}</div>
-      </div>
-    </button>`;
-  }).join('');
-
-  grid.querySelectorAll('.team-card').forEach(card => {
-    card.onclick = () => {
-      state.team = card.dataset.code;
-      renderTeamGrid();
-      renderPickConfirm();
-    };
-  });
-
-  // 每次重新渲染後轉換新注入的 <i data-lucide="...">
-  applyIcons();
 }
 
 function renderPickConfirm() {

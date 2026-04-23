@@ -159,6 +159,26 @@ body {
   animation: btnActivate 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Pick — team-grid 篩選淡換 */
+@keyframes gridFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.team-grid.grid-fade-in {
+  animation: gridFadeIn 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Pick — 選隊伍 micro-animation */
+@keyframes cardSelect {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(0.96); }
+  70%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.team-card.card-select-anim {
+  animation: cardSelect 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .fade-in { animation: fadeIn 400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
 /* Scroll reveal：初始隱藏，IntersectionObserver 加 .in-view 後才顯現 */
@@ -406,13 +426,10 @@ body {
   font-style: normal;
   text-align: center;
   outline: none;
-  transition: border-color 200ms, box-shadow 200ms;
+  transition: border-color 200ms;
 }
 .name-field input::placeholder { color: var(--color-smoke-dim); font-style: normal; }
-.name-field input:focus {
-  border-bottom-color: var(--color-gold);
-  box-shadow: 0 4px 16px -4px rgba(200, 161, 74, 0.4);
-}
+.name-field input:focus { border-bottom-color: var(--color-gold); }
 
 /* X 清除按鈕 */
 .btn-clear-name {
@@ -1583,6 +1600,14 @@ body {
     to   { opacity: 1; }
   }
   @keyframes btnActivate {
+    from { transform: scale(1); }
+    to   { transform: scale(1); }
+  }
+  @keyframes gridFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes cardSelect {
     from { transform: scale(1); }
     to   { transform: scale(1); }
   }
