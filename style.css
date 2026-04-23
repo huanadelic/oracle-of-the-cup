@@ -41,8 +41,8 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   background:
-    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.08), transparent 55%),
-    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.25),   transparent 60%),
+    radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.11), transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.42),   transparent 60%),
     var(--color-ink);
   color: var(--color-vellum);
   font-family: var(--font-sans);
@@ -198,13 +198,23 @@ body {
     radial-gradient(3px   3px   at 63% 12%,  rgba(200,161,74, 0.95) 0%, transparent 100%),
     radial-gradient(2px   2px   at 82% 48%,  rgba(244,235,211,0.85) 0%, transparent 100%),
     radial-gradient(2px   2px   at  7% 28%,  rgba(244,235,211,0.90) 0%, transparent 100%),
-    radial-gradient(2.5px 2.5px at 33% 78%,  rgba(244,235,211,0.95) 0%, transparent 100%);
+    radial-gradient(2.5px 2.5px at 33% 78%,  rgba(244,235,211,0.95) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 44% 55%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 67% 88%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 22% 62%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 95% 40%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(3px   3px   at 52% 18%,  rgba(200,161,74, 0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 38% 92%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 78% 62%,  rgba(244,235,211,0.80) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 13% 45%,  rgba(244,235,211,0.90) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 57% 35%,  rgba(244,235,211,0.85) 0%, transparent 100%),
+    radial-gradient(2px   2px   at 86% 75%,  rgba(244,235,211,0.80) 0%, transparent 100%);
   animation: starDrift 40s linear infinite;
 }
 .starfield::after {
   animation-duration: 65s;
   animation-direction: reverse;
-  opacity: 0.75;
+  opacity: 0.90;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -353,7 +363,7 @@ body {
 .name-field label {
   display: block;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.35em;
   color: var(--color-gold);
   margin-bottom: 14px;
@@ -672,7 +682,7 @@ body {
   gap: 12px;
   text-align: left;
   padding: 18px 14px;
-  background: linear-gradient(180deg, rgba(244,235,211,0.03), rgba(244,235,211,0.01));
+  background: linear-gradient(180deg, rgba(244,235,211,0.07), rgba(244,235,211,0.03));
   border: 1px solid rgba(244,235,211,0.08);
   border-radius: 3px;
   cursor: pointer;

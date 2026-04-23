@@ -228,7 +228,7 @@ function initHome() {
    ═══════════════════════════════════════════════════════════ */
 const CONFEDS = ['ALL', 'UEFA', 'CONMEBOL', 'CONCACAF', 'AFC', 'CAF', 'OFC'];
 const CONFED_LABELS = {
-  ALL: '全部 · 48', UEFA: '歐洲', CONMEBOL: '南美洲',
+  ALL: '全部 48', UEFA: '歐洲', CONMEBOL: '南美洲',
   CONCACAF: '中北美洲', AFC: '亞洲', CAF: '非洲', OFC: '大洋洲',
 };
 
