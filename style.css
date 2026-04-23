@@ -752,10 +752,19 @@ body {
 
 /* Flag */
 .team-card .flag {
-  font-size: 24px;
-  line-height: 1;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  width: 30px;             /* 固定寬度，確保右側文字位置一致 */
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+/* 旗幟圖片在固定框內等比縮放，比例特殊的旗幟（如瑞士）不會撐開 */
+.team-card .flag .flag-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* 隊名 */
@@ -867,7 +876,12 @@ body {
   align-items: center;
   gap: 14px;
 }
-.pick-confirm-inner .picked .flag { font-size: 40px; }
+.pick-confirm-inner .picked .flag {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .pick-confirm-inner .picked .txt  { display: flex; flex-direction: column; }
 .pick-confirm-inner .picked .eyebrow { margin-bottom: 2px; }
 .pick-confirm-inner .picked .n {
@@ -1033,7 +1047,12 @@ body {
   gap: 16px;
   margin: 16px 0;
 }
-.cert-team .flag        { font-size: 44px; }
+.cert-team .flag {
+  font-size: 32px;
+  display: flex;       /* 讓 img 在 span 內也走 flex 對齊，避免 vertical-align 造成靠底 */
+  align-items: center;
+  margin-top: 3px;
+}
 .certificate.noir .cert-team { color: var(--color-gold-bright); }
 
 /* 底部三欄 */
@@ -1080,7 +1099,7 @@ body {
   .certificate { padding: 36px 24px 28px; }
   .cert-name   { font-size: 36px; }
   .cert-team   { font-size: 26px; }
-  .cert-team .flag { font-size: 32px; }
+  .cert-team .flag { font-size: 24px; }
   .cert-foot   { flex-direction: column; gap: 16px; text-align: center; }
   .cert-foot-item,
   .cert-foot-item:last-child { text-align: center; }
@@ -1185,7 +1204,18 @@ body {
   transition: background 150ms;
 }
 .dist-row .rk { font-family: var(--font-mono); font-size: 12px; color: var(--color-smoke); text-align: right; }
-.dist-row .fl { font-size: 24px; }
+.dist-row .fl {
+  width: 100%;          /* 跟隨 grid column（28px）不寫死 */
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dist-row .fl .flag-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 /* Bar 容器 */
 .dist-row .bar-wrap {
@@ -1341,7 +1371,7 @@ body {
 
 /* 旗幟（亂跳中 / 鎖定後放大） */
 .d-flag {
-  font-size: 72px; /* 固定字級，大小變化改由 d-lock scale 處理 */
+  font-size: 48px; /* 固定字級，大小變化改由 d-lock scale 處理 */
   line-height: 1;
   filter: drop-shadow(0 0 10px rgba(227,191,106,0.5));
   /* 移除 font-size transition：避免 layout reflow，scale 已處理視覺放大 */
@@ -1465,6 +1495,8 @@ body {
   grid-template-columns: 1fr 1.5fr;
   gap: 56px;
   align-items: start;
+  position: relative;
+  z-index: 2;          /* 讓 share-popover 浮在後面的 omens / distribution 之上 */
   margin-bottom: 56px;
   max-width: 1080px;
   margin-left: auto;
