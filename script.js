@@ -714,7 +714,7 @@ function buildCertHTML(team, dateStr, ordinal) {
           <div class="cert-title-main">冠軍預言書</div>
 
           <div class="cert-divider">
-            <span style="font-family: var(--font-serif); font-size: 12px;">✦ ANNO MMXXVI ✦</span>
+            <span style="font-family: var(--font-serif); font-size: 14px;">✦ ANNO MMXXVI ✦</span>
           </div>
 
           <p class="cert-preamble">
@@ -730,7 +730,7 @@ function buildCertHTML(team, dateStr, ordinal) {
             <span>${team.name}</span>
           </div>
 
-          <div style="font-family: var(--font-serif); font-size: 13px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
+          <div style="font-family: var(--font-serif); font-size: 15px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
             在北美賽場，2026 年夏。
           </div>
 
@@ -756,9 +756,8 @@ function buildCertHTML(team, dateStr, ordinal) {
 /* 證書截圖主流程：獨立容器渲染 → toPng → 替換 #certificate 為 <img> */
 async function captureCertificate(team, dateStr, ordinal) {
   if (!window.htmlToImage) {
-    // 降級：直接顯示 HTML 版本
-    $('certificate').innerHTML = buildCertHTML(team, dateStr, ordinal);
-    applyIcons();
+    // html-to-image 未載入，顯示錯誤提示
+    $('certificate').innerHTML = `<div class="cert-loading">載入失敗，請重新整理</div>`;
     return;
   }
 
@@ -766,7 +765,7 @@ async function captureCertificate(team, dateStr, ordinal) {
   // cert 本身 visible（opacity:1, 在 viewport）讓 Safari 正常 paint
   const renderEl = document.createElement('div');
   renderEl.id = 'cert-render';
-  renderEl.style.cssText = 'position:fixed;top:0;left:100vw;width:600px;overflow:hidden;z-index:0;pointer-events:none;';
+  renderEl.style.cssText = 'position:fixed;top:0;left:100vw;width:480px;overflow:hidden;z-index:0;pointer-events:none;';
   renderEl.innerHTML = buildCertHTML(team, dateStr, ordinal);
   document.body.insertBefore(renderEl, document.body.firstChild);
 
@@ -857,10 +856,9 @@ async function captureCertificate(team, dateStr, ordinal) {
       </div>
     `;
   } catch (err) {
-    console.error('證書截圖失敗，降級顯示 HTML 版本', err);
+    console.error('證書截圖失敗', err);
     _certDataUrl = null;
-    $('certificate').innerHTML = buildCertHTML(team, dateStr, ordinal);
-    applyIcons();
+    $('certificate').innerHTML = `<div class="cert-loading">載入失敗，請重新整理</div>`;
   } finally {
     renderEl.remove();
   }

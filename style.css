@@ -909,7 +909,7 @@ body {
 /* 截圖完成後顯示的證書圖片 */
 .cert-img {
   display: block;
-  width: 600px;
+  width: 480px;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
@@ -936,7 +936,7 @@ body {
 /* 證書主體 */
 .certificate {
   position: relative;
-  max-width: 600px;
+  max-width: 480px;
   margin: 0 auto;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%),
@@ -990,13 +990,13 @@ body {
 
 .cert-inner { position: relative; text-align: center; z-index: 2; }
 
-.cert-seal     { display: flex; justify-content: center; margin-bottom: 20px; }
+.cert-seal     { display: flex; justify-content: center; margin-bottom: 8px; }
 .cert-seal svg { width: 52px; height: 52px; color: var(--color-gold-dim); }
 
 /* 標題 */
 .cert-title {
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.45em;
   text-transform: uppercase;
   color: var(--color-wine);
@@ -1005,7 +1005,7 @@ body {
 }
 .cert-title-main {
   font-family: var(--font-serif);
-  font-size: 40px;
+  font-size: 42px;
   color: var(--color-cert-ink);
   line-height: 1;
   margin-bottom: 4px;
@@ -1034,7 +1034,7 @@ body {
 /* 前言 */
 .cert-preamble {
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 17px;
   color: var(--color-cert-ink-2);
   line-height: 1.5;
   max-width: 440px;
@@ -1058,7 +1058,7 @@ body {
 
 .cert-midtext {
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--color-cert-ink-2);
   margin: 18px 0 8px;
 }
@@ -1067,7 +1067,7 @@ body {
 /* 球隊名稱 */
 .cert-team {
   font-family: var(--font-serif);
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 600;
   color: var(--color-wine);
   line-height: 1.1;
@@ -1079,7 +1079,7 @@ body {
   margin: 16px 0;
 }
 .cert-team .flag {
-  font-size: 32px;
+  font-size: 34px;
   display: flex;       /* 讓 img 在 span 內也走 flex 對齊，避免 vertical-align 造成靠底 */
   align-items: center;
   margin-top: 3px;
@@ -1100,7 +1100,7 @@ body {
 .cert-foot-item:last-child   { text-align: right; }
 .cert-foot-item .k {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.3em;
   color: var(--color-gold-dim);
   text-transform: uppercase;
@@ -1108,8 +1108,9 @@ body {
 }
 .cert-foot-item .v {
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 17px;
   color: var(--color-cert-ink);
+  white-space: nowrap;
 }
 .certificate.noir .cert-foot-item .v { color: var(--color-vellum); }
 
@@ -1125,16 +1126,7 @@ body {
   display: block;
 }
 
-/* RWD（720px 對齊原版） */
-@media (max-width: 720px) {
-  .certificate { padding: 36px 24px 28px; }
-  .cert-name   { font-size: 36px; }
-  .cert-team   { font-size: 26px; }
-  .cert-team .flag { font-size: 24px; }
-  .cert-foot   { flex-direction: column; gap: 16px; text-align: center; }
-  .cert-foot-item,
-  .cert-foot-item:last-child { text-align: center; }
-}
+/* 證書截圖永遠走桌機版樣式，不隨 viewport 縮放 */
 
 /* 預言 omen 區塊 */
 .omen {

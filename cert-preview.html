@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>證書預覽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&family=Shippori+Mincho+B1:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --color-ink:         #0a0a1a;
+      --color-ink-2:       #0f0f22;
+      --color-vellum:      #f4ebd3;
+      --color-gold:        #c8a14a;
+      --color-gold-bright: #e3bf6a;
+      --color-gold-dim:    #8a6d2d;
+      --color-wine:        #5a1f2e;
+      --color-cert-ink:    #2a1f0a;
+      --color-cert-ink-2:  #4a3a1a;
+      --color-smoke:       rgba(244, 235, 211, 0.55);
+      --color-smoke-dim:   rgba(244, 235, 211, 0.28);
+      --color-rule:        rgba(200, 161, 74, 0.35);
+      --font-serif: "Shippori Mincho B1", "Noto Serif TC", Georgia, serif;
+      --font-sans:  "Noto Sans TC", -apple-system, sans-serif;
+      --font-mono:  "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 60px 24px;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(200,161,74,0.11), transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(90,31,46,0.42),   transparent 60%),
+        var(--color-ink);
+      color: var(--color-vellum);
+      font-family: var(--font-sans);
+      font-size: 16px;
+    }
+
+    /* ── 證書外框 ── */
+    .certificate-frame {
+      position: relative;
+      margin: 0 auto;
+      max-width: 720px;
+    }
+
+    /* ── 證書主體 ── */
+    .certificate {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%),
+        linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55)),
+        url('img/parchment-texture.jpg') center / cover no-repeat;
+      color: var(--color-cert-ink);
+      padding: 40px 48px 48px;
+      border-radius: 2px;
+      box-shadow:
+        0 0 0 1px rgba(200,161,74,0.5),
+        0 0 0 8px #0f0f22,
+        0 0 0 9px var(--color-gold),
+        0 40px 80px -20px rgba(0,0,0,0.6),
+        0 0 120px -20px rgba(227,191,106,0.4);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* 雙層內邊框 */
+    .certificate::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(138,109,45,0.4);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .certificate::after {
+      content: '';
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(138,109,45,0.25);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 四角裝飾 */
+    .cert-corner            { position: absolute; width: 24px; height: 24px; opacity: 0.6; z-index: 2; }
+    .cert-corner img        { width: 100%; height: 100%; display: block; }
+    .cert-corner.tl         { top: 26px;    left: 26px;    transform: scaleY(-1); }
+    .cert-corner.tr         { top: 26px;    right: 26px;   transform: scale(-1); }
+    .cert-corner.bl         { bottom: 26px; left: 26px; }
+    .cert-corner.br         { bottom: 26px; right: 26px;   transform: scaleX(-1); }
+
+    .cert-inner { position: relative; text-align: center; z-index: 2; }
+
+    .cert-seal     { display: flex; justify-content: center; margin-bottom: 20px; }
+    .cert-seal svg { width: 52px; height: 52px; color: var(--color-gold-dim); }
+
+    /* 標題 */
+    .cert-title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--color-wine);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .cert-title-main {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      color: var(--color-cert-ink);
+      line-height: 1;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    /* 分隔線 */
+    .cert-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px auto 22px;
+      color: var(--color-gold-dim);
+      max-width: 320px;
+    }
+    .cert-divider::before,
+    .cert-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--color-gold-dim), transparent);
+    }
+
+    /* 前言 */
+    .cert-preamble {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--color-cert-ink-2);
+      line-height: 1.5;
+      max-width: 440px;
+      margin: 0 auto 16px;
+    }
+
+    /* 預言者名字 */
+    .cert-name {
+      font-family: 'Songti TC', 'Songti SC', 'STSong', Georgia, serif;
+      font-size: 40px;
+      color: var(--color-cert-ink);
+      line-height: 1.1;
+      font-weight: 500;
+      margin: 8px auto 4px;
+      border-bottom: 1px solid rgba(138,109,45,0.3);
+      padding-bottom: 10px;
+      max-width: 500px;
+    }
+
+    .cert-midtext {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--color-cert-ink-2);
+      margin: 18px 0 8px;
+    }
+
+    /* 球隊名稱 */
+    .cert-team {
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--color-wine);
+      line-height: 1.1;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .cert-team .flag {
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      margin-top: 3px;
+    }
+
+    /* 底部三欄 */
+    .cert-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 24px;
+      border-top: 1px dashed rgba(138,109,45,0.4);
+      gap: 12px;
+    }
+    .cert-foot-item            { text-align: left; flex: 1; }
+    .cert-foot-item:last-child { text-align: right; }
+    .cert-foot-item .k {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      color: var(--color-gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .cert-foot-item .v {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--color-cert-ink);
+    }
+    .cert-foot-seal {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .cert-foot-seal img {
+      width: 80px;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="certificate-frame">
+    <div class="certificate">
+
+      <!-- 四角裝飾 -->
+      <div class="cert-corner tl">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-gold-dim);">
+          <path d="M3 3 L3 10 M3 3 L10 3"/>
+        </svg>
+      </div>
+      <div class="cert-corner tr">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-gold-dim);">
+          <path d="M3 3 L3 10 M3 3 L10 3"/>
+        </svg>
+      </div>
+      <div class="cert-corner bl">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-gold-dim);">
+          <path d="M3 3 L3 10 M3 3 L10 3"/>
+        </svg>
+      </div>
+      <div class="cert-corner br">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-gold-dim);">
+          <path d="M3 3 L3 10 M3 3 L10 3"/>
+        </svg>
+      </div>
+
+      <div class="cert-inner">
+
+        <!-- 印章 SVG -->
+        <div class="cert-seal">
+          <svg viewBox="0 0 52 52" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="26" cy="26" r="22" stroke-dasharray="3 4"/>
+            <circle cx="26" cy="26" r="17"/>
+            <text x="26" y="30" text-anchor="middle" font-size="11" fill="currentColor" stroke="none" font-family="serif" letter-spacing="1">神諭</text>
+          </svg>
+        </div>
+
+        <div class="cert-title">神諭見證</div>
+        <div class="cert-title-main">冠軍預言書</div>
+
+        <div class="cert-divider">
+          <span style="font-family: var(--font-serif); font-size: 12px;">✦ ANNO MMXXVI ✦</span>
+        </div>
+
+        <p class="cert-preamble">預言者，在此立言</p>
+
+        <!-- 使用者名字（改這裡） -->
+        <div class="cert-name">預言者姓名</div>
+
+        <div class="cert-midtext">— 預言世界盃冠軍將由以下國家奪得 —</div>
+
+        <!-- 隊伍（改這裡） -->
+        <div class="cert-team">
+          <span class="flag">🇧🇷</span>
+          <span>巴西</span>
+        </div>
+
+        <div style="font-family: var(--font-serif); font-size: 13px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
+          在北美賽場，2026 年夏。
+        </div>
+
+        <!-- 底部三欄 -->
+        <div class="cert-foot">
+          <div class="cert-foot-item">
+            <div class="k">刻印日期</div>
+            <div class="v">2026.04.24</div>
+          </div>
+          <div class="cert-foot-seal">
+            <img src="img/wax-seal.png" alt="蠟印">
+          </div>
+          <div class="cert-foot-item">
+            <div class="k">典籍編號</div>
+            <div class="v">018493</div>
+          </div>
+        </div>
+
+      </div><!-- /.cert-inner -->
+    </div><!-- /.certificate -->
+  </div><!-- /.certificate-frame -->
+
+</body>
+</html>
