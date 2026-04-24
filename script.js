@@ -563,20 +563,18 @@ function initResult() {
   window.scrollTo({ top: 0, behavior: 'instant' });
 
 
-  // 捲動 reveal：certificate + omen
-  const revealOpts = { threshold: 0.12 };
-  ['.certificate-frame', '.omen'].forEach((sel, i) => {
-    const el = document.querySelector(sel);
-    if (!el) return;
-    el.style.transitionDelay = `${i * 120}ms`; // 證書先、omen 稍後
+  // 捲動 reveal：omen（certificate 的 in-view 由 captureCertificate 直接注入）
+  const omenEl = document.querySelector('.omen');
+  if (omenEl) {
+    omenEl.style.transitionDelay = '120ms';
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        el.classList.add('in-view');
+        omenEl.classList.add('in-view');
         obs.disconnect();
       }
-    }, revealOpts);
-    obs.observe(el);
-  });
+    }, { threshold: 0.12 });
+    obs.observe(omenEl);
+  }
 
 
   // CTA
@@ -795,7 +793,7 @@ async function captureCertificate(team, dateStr, ordinal) {
       new Promise(resolve => {
         const im = new Image(); im.onload = im.onerror = resolve;
         im.src = parchmentDataUrl;
-        im.decode ? im.decode().catch(resolve).then(resolve) : undefined;
+        im.decode?.().then(resolve, resolve);
       }),
       // <img> 元素（wax-seal + flag）
       ...imgEls.map((img, i) => {
@@ -804,7 +802,7 @@ async function captureCertificate(team, dateStr, ordinal) {
         return new Promise(resolve => {
           const im = new Image(); im.onload = im.onerror = resolve;
           im.src = du;
-          im.decode ? im.decode().catch(resolve).then(resolve) : undefined;
+          im.decode?.().then(resolve, resolve);
         });
       }),
     ]);
