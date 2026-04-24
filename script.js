@@ -112,12 +112,15 @@ function navigate(step) {
   if (state._divineRaf)   { cancelAnimationFrame(state._divineRaf);   state._divineRaf   = null; }
   if (state._divineTimer) { clearInterval(state._divineTimer);         state._divineTimer = null; }
 
+  // 清除 #s-result 在 divine 階段的 ghost 樣式（若從 divine 離開）
+  const resultEl = $('s-result');
+  resultEl.style.cssText = '';
+
   // 隱藏所有 section
   Object.values(SECTIONS).forEach(id => $(id).classList.add('hidden'));
 
   // pick-confirm 不在 section 內，離開 pick 時手動隱藏
   if (step !== 'pick') $('pick-confirm').classList.add('hidden');
-
 
   // 顯示目標 section 並觸發 fade-in
   const el = $(SECTIONS[step]);
@@ -376,8 +379,32 @@ function initDivine() {
   // 防呆：沒選隊就回 pick
   if (!state.team) { navigate('pick'); return; }
 
-  // 趁 4200ms 動畫期間預載證書圖片，到 result 頁時已 ready
+  // ── Ghost paint：讓 #s-result 在 divine 期間進入 paint tree ──────────────
+  // display:none 會讓 Safari 跳過 paint（字型無法 rasterize）
+  // 改用 position:fixed + opacity:0.001 強制建立 compositing layer
+  // z-index:-1 壓在 divine 畫面下方，使用者完全看不到
+  _certData = buildCertData();
+  _certImagePromise = null;
+
+  const resultEl = $('s-result');
+  resultEl.classList.remove('hidden');
+  resultEl.style.cssText = [
+    'position:fixed', 'top:0', 'left:0', 'width:100%', 'height:100%',
+    'z-index:-1', 'opacity:0.001', 'pointer-events:none', 'overflow:hidden',
+  ].join(';');
+
+  // 注入 cert HTML（600px 強制寬度，overflow 被 resultEl 的 hidden 遮住）
+  $('certificate').innerHTML = `
+    <div class="certificate-frame" style="overflow:hidden;">
+      <div id="cert-el" style="width:600px;">
+        ${buildCertificateHTML(_certData)}
+      </div>
+    </div>
+  `;
+
+  // 趁 4200ms 動畫期間：預載圖片 + 截圖（Safari warm-up 也在此完成）
   precacheCertImages();
+  _certImagePromise = _captureAndShowCert();
 
   const team    = WC_TEAMS.find(t => t.code === state.team);
   const DURATION = 4200; // 毫秒
@@ -465,7 +492,7 @@ function initDivine() {
 
       phaseEl.textContent = '刻寫你的預言證書…';
 
-      // 700ms 後跳轉到 result（DEV_PAUSE_DIVINE = true 時暫停，方便檢視）
+      // 700ms 動畫收尾緩衝後跳轉
       if (!DEV_PAUSE_DIVINE()) setTimeout(() => navigate('result'), 700);
     }
   };
@@ -476,8 +503,13 @@ function initDivine() {
 /* ═══════════════════════════════════════════════════════════
    SECTION 3: RESULT
    ═══════════════════════════════════════════════════════════ */
-// 證書圖片預載 Promise（result 頁初始化時啟動，download 時 await）
+// 素材預載 Promise（parchment + wax-seal dataUrl，供 _captureAndShowCert 使用）
 let _certImagesPromise = null;
+
+// 證書截圖 Promise（initResult 啟動，downloadCertificate 直接 await 取 dataUrl）
+let _certImagePromise = null;
+// 儲存證書所需資料（供 initResult 與 downloadCertificate 共用）
+let _certData = null;
 
 function precacheCertImages() {
   if (!_certImagesPromise) {
@@ -485,16 +517,157 @@ function precacheCertImages() {
       toDataUrl('img/parchment-texture.jpg'),
       toDataUrl('img/wax-seal.png'),
     ]).then(([parchment, wax]) => ({ parchment, wax }))
-      .catch(() => null); // 失敗不卡住，讓 download 自己處理
+      .catch(() => null);
   }
   return _certImagesPromise;
+}
+
+/* 計算證書所需資料（initResult 與 downloadCertificate 共用） */
+function buildCertData() {
+  const team    = WC_TEAMS.find(t => t.code === state.team);
+  const now     = new Date();
+  const base    = WC_WEIGHTS[state.team] || 100;
+  const hash    = (state.name || '').split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7);
+  const ordinal = base + (Math.abs(hash) % 73) + 1;
+  const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
+    .replace(/(\d)(年|月|日)/g, '$1 $2')
+    .replace(/(年|月)(\d)/g, '$1 $2');
+  return { team, ordinal, dateStr };
+}
+
+/* 產生證書 HTML 字串（注入 result 頁隱藏容器供截圖使用） */
+function buildCertificateHTML({ team, dateStr, ordinal }) {
+  return `
+    <div class="certificate">
+      <div class="cert-corner tl">${SVG.corner}</div>
+      <div class="cert-corner tr">${SVG.corner}</div>
+      <div class="cert-corner bl">${SVG.corner}</div>
+      <div class="cert-corner br">${SVG.corner}</div>
+
+      <div class="cert-inner">
+        <div class="cert-seal">${SVG.seal}</div>
+
+        <div class="cert-title">神諭見證</div>
+        <div class="cert-title-main">冠軍預言書</div>
+
+        <div class="cert-divider">
+          <span style="font-family: var(--font-serif); font-size: 12px;">✦ ANNO MMXXVI ✦</span>
+        </div>
+
+        <p class="cert-preamble">
+          預言者，在此立言
+        </p>
+
+        <div class="cert-name">${state.name || 'An Anonymous Seer'}</div>
+
+        <div class="cert-midtext">— 預言世界盃冠軍將由以下國家奪得 —</div>
+
+        <div class="cert-team">
+          <span class="flag">${flagImg(team.iso2)}</span>
+          <span>${team.name}</span>
+        </div>
+
+        <div style="font-family: var(--font-serif); font-size: 13px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
+          在北美賽場，2026 年夏。
+        </div>
+
+        <div class="cert-foot">
+          <div class="cert-foot-item">
+            <div class="k">刻印日期</div>
+            <div class="v">${dateStr}</div>
+          </div>
+          <div class="cert-foot-seal">
+            <img src="img/wax-seal.png" alt="蠟印" draggable="false">
+          </div>
+          <div class="cert-foot-item">
+            <div class="k">典籍編號</div>
+            <div class="v">${String(ordinal).padStart(6, '0')}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * 截圖 #cert-el 並將結果寫回 #certificate，回傳 dataUrl（Promise<string|null>）
+ *
+ * 呼叫時機：
+ *  A. initDivine() — #s-result 以 ghost（opacity:0.001）存在，WebKit 正常 paint
+ *  B. initResult() — localStorage 還原，跳過 divine，即時截圖（overlay 覆蓋 cert）
+ *
+ * Safari warm-up：已知 WebKit bug — 第一次 toPng 結果不可靠，跑 3 次取最後一次
+ */
+async function _captureAndShowCert() {
+  const certContainer = document.getElementById('certificate');
+  const certEl        = document.getElementById('cert-el');
+  if (!certEl || !certContainer) return null;
+
+  try {
+    // 等字型 ready、讓 WebKit 完成第一次 paint
+    await document.fonts.ready;
+    await new Promise(r => requestAnimationFrame(r));
+
+    // 預載圖片 dataUrl（繞過 canvas 跨域限制）
+    const cached           = await precacheCertImages();
+    const parchmentDataUrl = cached?.parchment ?? await toDataUrl('img/parchment-texture.jpg');
+    const waxDataUrl       = cached?.wax       ?? await toDataUrl('img/wax-seal.png');
+
+    const certDom = certEl.querySelector('.certificate');
+
+    // 明確覆寫 background（inline style 優先，確保 Safari canvas 讀到已解析的值）
+    // background-color 作為羊皮紙底色 fallback（防 canvas 透明層出現暗色）
+    certDom.style.backgroundColor = '#f0e8ce';
+    certDom.style.backgroundImage = [
+      'radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%)',
+      'linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55))',
+      `url('${parchmentDataUrl}') center / cover no-repeat`,
+    ].join(', ');
+
+    // 替換所有 <img> src → dataUrl，並等待每張圖解碼完成
+    const imgEls = [...certDom.querySelectorAll('img[src]')];
+    await Promise.all(imgEls.map(async (img) => {
+      const du = img.src.includes('wax-seal') ? waxDataUrl
+               : await toDataUrl(img.src).catch(() => null);
+      if (du) { img.src = du; await waitForImage(img); }
+    }));
+
+    // 等一個 frame，確保背景圖 + img 重繪完成
+    await new Promise(r => requestAnimationFrame(r));
+
+    // 截圖（skipFonts:true：依賴 WebKit 已 paint 的字型，不另行 fetch CDN）
+    // Safari 已知 bug：第一次 toPng 結果不可靠（canvas pipeline 未完全初始化）
+    // → 跑 3 次，每次間隔 200ms，取最後一次結果
+    const isSafari  = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const toPngOpts = { pixelRatio: 2, skipFonts: true };
+    let dataUrl = await window.htmlToImage.toPng(certDom, toPngOpts);
+    if (isSafari) {
+      for (let i = 0; i < 2; i++) {
+        await new Promise(r => setTimeout(r, 200));
+        dataUrl = await window.htmlToImage.toPng(certDom, toPngOpts);
+      }
+    }
+
+    // 成功：整個 #certificate 換成 <img>（reveal + in-view 直接觸發動畫）
+    certContainer.innerHTML = `<div class="certificate-frame reveal in-view"><img src="${dataUrl}" class="cert-img" alt="預言證書"></div>`;
+    return dataUrl;
+
+  } catch (err) {
+    console.error('證書截圖失敗，顯示 HTML 版本', err);
+    // fallback：移除 overlay，直接顯示 HTML cert
+    const overlay = document.getElementById('cert-overlay');
+    if (overlay) overlay.remove();
+    return null;
+  }
 }
 
 function initResult() {
   // 防呆：沒有選隊就回 home
   if (!state.team) { navigate('home'); return; }
 
-  // 圖片預載已在 initDivine 啟動（precacheCertImages），此處不重複呼叫
+  // _certData / _certImagePromise 由 initDivine() 設定
+  // localStorage 直接恢復（跳過 divine）時才在此補初始化
+  if (!_certData) _certData = buildCertData();
 
   const team = WC_TEAMS.find(t => t.code === state.team);
   const now  = new Date();
@@ -503,10 +676,8 @@ function initResult() {
   $('result-date').textContent =
     `預言於 · ${now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}`;
 
-  // 穩定偽隨機序號（由隊伍權重 + 名字 hash 決定，不會每次刷新都變）
-  const base    = WC_WEIGHTS[state.team] || 100;
-  const hash    = (state.name || '').split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7);
-  const ordinal = base + (Math.abs(hash) % 73) + 1;
+  // ordinal 取自 _certData（與證書圖片中的數字一致）
+  const { ordinal } = _certData;
 
   // 距決賽天數
   const daysToFinal = Math.max(0, Math.ceil((WC_FINAL - Date.now()) / 86400000));
@@ -521,33 +692,40 @@ function initResult() {
     rank <= 20 ? '大膽的解讀。若成真，歌謠將傳頌千里，旁人們則會碎念不休。' :
                  '預言之最高境界 — 那種在密室中低語、唯有不甘平庸者方敢說出口的話。歷史獎勵勇者。';
 
-  const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
-    .replace(/(\d)(年|月|日)/g, '$1 $2')   // 數字後加空格
-    .replace(/(年|月)(\d)/g, '$1 $2');     // 年/月後加空格
+  if (_certImagePromise) {
+    // divine 期間已截圖完成（或仍在進行中）
+    // #certificate 的 innerHTML 由 _captureAndShowCert() 自行更新，此處不重複注入
+    // 若截圖仍未完成（罕見：divine 提早結束），等它 resolve 即可
+  } else {
+    // localStorage 直接恢復到 result（跳過 divine）：即時截圖
+    if (!_certImagesPromise) precacheCertImages();
+    $('certificate').innerHTML = `
+      <div class="certificate-frame reveal" style="overflow:hidden;">
+        <div id="cert-overlay" style="position:absolute;inset:0;z-index:10;background:var(--color-ink);display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <p class="cert-loading">封印中…</p>
+        </div>
+        <div id="cert-el" style="width:600px;">
+          ${buildCertificateHTML(_certData)}
+        </div>
+      </div>
+    `;
+    _certImagePromise = _captureAndShowCert();
+  }
 
-  // 渲染各子區塊
-  renderCertificate({ team, dateStr, ordinal });
   renderOmens({ team, ordinal, daysToFinal, flavor });
   renderDistribution();
 
   // render 完成後確保頁面從頂部開始
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-
-  // 捲動 reveal：certificate + omen
-  const revealOpts = { threshold: 0.12 };
-  ['.certificate-frame', '.omen'].forEach((sel, i) => {
-    const el = document.querySelector(sel);
-    if (!el) return;
-    el.style.transitionDelay = `${i * 120}ms`; // 證書先、omen 稍後
+  // 捲動 reveal：omen（證書由 _captureAndShowCert 完成後直接加 in-view，不需 observer）
+  const omenEl = document.querySelector('.omen');
+  if (omenEl) {
     const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        el.classList.add('in-view');
-        obs.disconnect();
-      }
-    }, revealOpts);
-    obs.observe(el);
-  });
+      if (entry.isIntersecting) { omenEl.classList.add('in-view'); obs.disconnect(); }
+    }, { threshold: 0.12 });
+    obs.observe(omenEl);
+  }
 
 
   // CTA
@@ -651,134 +829,33 @@ function waitForImage(img) {
 
 /* 證書下載 */
 async function downloadCertificate() {
-  const el  = document.querySelector('.certificate');
   const btn = $('btn-download');
-  if (!el || !window.htmlToImage) return;
-
   btn.disabled = true;
   btn.innerHTML = '<i data-lucide="loader-circle" class="spin"></i>';
   applyIcons();
 
-  // 暫存原始值，擷取後還原
-  const imgEls  = [...el.querySelectorAll('img[src]')];
-  const origSrc = imgEls.map(i => i.src);
-  const origBg  = el.style.backgroundImage;
-
   try {
-    // 等待預載完成（initResult 已啟動，通常早就 ready；若使用者點很快才等）
-    const cached = await precacheCertImages();
-    await document.fonts.ready;
+    // 直接使用已預渲染的 dataUrl，無需操作 DOM，畫面不閃爍
+    const dataUrl = await _certImagePromise;
+    if (!dataUrl) throw new Error('cert image not available');
 
-    const parchmentDataUrl = cached?.parchment ?? await toDataUrl('img/parchment-texture.jpg');
-    const waxDataUrl       = cached?.wax       ?? await toDataUrl('img/wax-seal.png');
-
-    // 替換 <img> src 並等待瀏覽器解碼完成
-    await Promise.all(imgEls.map(async (img) => {
-      const du = img.src.includes('wax-seal') ? waxDataUrl
-               : await toDataUrl(img.src).catch(() => null);
-      if (du) { img.src = du; await waitForImage(img); }
-    }));
-
-    // 覆蓋背景紋理（inline style 優先於 class style）
-    const computedBg = getComputedStyle(el).backgroundImage;
-    el.style.backgroundImage = computedBg.replace(
-      /url\(["']?[^"')]*parchment[^"')]*["']?\)/,
-      `url('${parchmentDataUrl}')`
-    );
-
-    // 強制固定寬度，確保截圖不受 browser 視窗寬度影響
-    el.style.width    = '600px';
-    el.style.maxWidth = '600px';
-
-    // 等一個 frame 讓背景確實渲染
-    await new Promise(r => requestAnimationFrame(r));
-
-    // Safari 已知問題：第一次 toPng 結果不可靠（資源未完全渲染）
-    // 固定跑 2 次，用第二次結果；非 Safari 只跑 1 次
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const toPngOpts = { pixelRatio: 2, skipFonts: true };
-    let dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
-    if (isSafari) {
-      for (let i = 0; i < 2; i++) {
-        await new Promise(r => setTimeout(r, 200));
-        dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
-      }
+    // iOS Safari 不支援 <a download> data URL，改為開新分頁讓使用者長按儲存
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      window.open(dataUrl, '_blank');
+    } else {
+      const link    = document.createElement('a');
+      link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
+      link.href     = dataUrl;
+      link.click();
     }
-
-    // 還原寬度
-    el.style.width    = '';
-    el.style.maxWidth = '';
-
-    const link    = document.createElement('a');
-    link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
-    link.href     = dataUrl;
-    link.click();
   } catch (err) {
     console.error('證書下載失敗', err);
   } finally {
-    // 還原原始 DOM
-    imgEls.forEach((img, i) => { img.src = origSrc[i]; });
-    el.style.backgroundImage = origBg;
     btn.disabled = false;
     btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
     applyIcons();
   }
-}
-
-/* 證書 */
-function renderCertificate({ team, dateStr, ordinal }) {
-  $('certificate').innerHTML = `
-    <div class="certificate-frame reveal">
-      <div class="certificate">
-        <div class="cert-corner tl">${SVG.corner}</div>
-        <div class="cert-corner tr">${SVG.corner}</div>
-        <div class="cert-corner bl">${SVG.corner}</div>
-        <div class="cert-corner br">${SVG.corner}</div>
-
-        <div class="cert-inner">
-          <div class="cert-seal">${SVG.seal}</div>
-
-          <div class="cert-title">神諭見證</div>
-          <div class="cert-title-main">冠軍預言書</div>
-
-          <div class="cert-divider">
-            <span style="font-family: var(--font-serif); font-size: 12px;">✦ ANNO MMXXVI ✦</span>
-          </div>
-
-          <p class="cert-preamble">
-            預言者，在此立言
-          </p>
-
-          <div class="cert-name">${state.name || 'An Anonymous Seer'}</div>
-
-          <div class="cert-midtext">— 預言世界盃冠軍將由以下國家奪得 —</div>
-
-          <div class="cert-team">
-            <span class="flag">${flagImg(team.iso2)}</span>
-            <span>${team.name}</span>
-          </div>
-
-          <div style="font-family: var(--font-serif); font-size: 13px; color: var(--color-cert-ink-2); margin-top: 6px; margin-bottom: 0;">
-            在北美賽場，2026 年夏。
-          </div>
-
-          <div class="cert-foot">
-            <div class="cert-foot-item">
-              <div class="k">刻印日期</div>
-              <div class="v">${dateStr}</div>
-            </div>
-            <div class="cert-foot-seal">
-              <img src="img/wax-seal.png" alt="蠟印" draggable="false">
-            </div>
-            <div class="cert-foot-item">
-              <div class="k">典籍編號</div>
-              <div class="v">${String(ordinal).padStart(6, '0')}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
 }
 
 /* 預言解讀三條 */
