@@ -373,10 +373,7 @@ body {
   min-width: 72px;
   position: relative;
 }
-/* 單位間的分隔點 */
-.countdown .unit + .unit::before {
-  content: none;
-}
+
 .countdown .num {
   font-family: var(--font-serif);
   font-size: 44px;
@@ -467,7 +464,6 @@ body {
   background: rgba(244,235,211,0.08);
 }
 .btn-clear-name .lucide { width: 14px; height: 14px; }
-.btn-clear-name.hidden { display: none; }
 
 #btn-begin { padding-left: 64px; padding-right: 64px; }
 
@@ -515,12 +511,6 @@ body {
   height: 1.25em;
   flex-shrink: 0;
 }
-.lucide.spin {
-  animation: lucide-spin 0.8s linear infinite;
-}
-@keyframes lucide-spin {
-  to { transform: rotate(360deg); }
-}
 
 /* team-card 右上角圓形勾選：縮小 icon 適配 16×16 容器 */
 .team-card .check .lucide {
@@ -529,25 +519,6 @@ body {
   stroke-width: 3;
 }
 
-/* search 輸入框：icon 絕對定位在左側 */
-.search-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.search-wrap .search-icon {
-  position: absolute;
-  left: 12px;
-  width: 15px;
-  height: 15px;
-  color: var(--color-smoke-dim);
-  pointer-events: none;
-}
-/* 輸入框左側讓出 icon 空間，改為左對齊 */
-.search-wrap .pick-search {
-  padding-left: 34px;
-  text-align: left;
-}
 
 /* ═══════════════════════════════════════════════════════════
    BUTTONS
@@ -955,12 +926,6 @@ body {
   overflow: hidden;
   text-align: center;
 }
-.certificate.noir {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.15), transparent 70%),
-    linear-gradient(175deg, #1a1838 0%, #0f0f22 100%);
-  color: #f4ebd3;
-}
 
 /* 雙層內邊框 */
 .certificate::before {
@@ -1011,7 +976,6 @@ body {
   margin-bottom: 4px;
   font-weight: 500;
 }
-.certificate.noir .cert-title-main { color: var(--color-vellum); }
 
 /* 分隔線（漸層淡出） */
 .cert-divider {
@@ -1040,7 +1004,6 @@ body {
   max-width: 440px;
   margin: 0 auto 16px;
 }
-.certificate.noir .cert-preamble { color: var(--color-smoke); }
 
 /* 預言者名字（主角） */
 .cert-name {
@@ -1054,7 +1017,6 @@ body {
   padding-bottom: 10px;
   max-width: 500px;
 }
-.certificate.noir .cert-name { color: var(--color-vellum); }
 
 .cert-midtext {
   font-family: var(--font-serif);
@@ -1062,7 +1024,6 @@ body {
   color: var(--color-cert-ink-2);
   margin: 18px 0 8px;
 }
-.certificate.noir .cert-midtext { color: var(--color-smoke); }
 
 /* 球隊名稱 */
 .cert-team {
@@ -1084,7 +1045,6 @@ body {
   align-items: center;
   margin-top: 3px;
 }
-.certificate.noir .cert-team { color: var(--color-gold-bright); }
 
 /* 底部三欄 */
 .cert-foot {
@@ -1112,7 +1072,6 @@ body {
   color: var(--color-cert-ink);
   white-space: nowrap;
 }
-.certificate.noir .cert-foot-item .v { color: var(--color-vellum); }
 
 .cert-foot-seal {
   flex: 1;
@@ -1477,8 +1436,6 @@ body {
 @media (max-width: 720px) {
   .divine-stage  { width: 180px; height: 180px; }
   .d-crystal     { width: 120px; height: 120px; }
-  .d-flag        { font-size: 48px; }
-  .d-flag.locked { font-size: 60px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1704,12 +1661,7 @@ body {
     animation: none;
     opacity: 1;
   }
-  /* scroll-reveal 直接顯示，不做位移 */
-  .scroll-reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+
   /* section 切換只淡入 */
   .fade-in {
     animation: fadeIn 300ms ease both;
