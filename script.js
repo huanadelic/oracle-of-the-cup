@@ -67,7 +67,7 @@ const state = {
    日期常數
    ═══════════════════════════════════════════════════════════ */
 const WC_FINAL = new Date('2026-07-20T03:00:00+08:00').getTime(); // 冠軍賽（台北時間）
-const WC_OPEN  = new Date('2026-06-12T03:00:00+08:00').getTime(); // 開幕賽（台北時間）— TODO: 開幕賽倒數模式保留備用，目前永遠使用 'final' 模式
+const WC_OPEN  = new Date('2026-06-12T03:00:00+08:00').getTime(); // 開幕賽（台北時間）— 備用，切換時改 startCountdown('open')
 
 /* ═══════════════════════════════════════════════════════════
    DOM 工具
@@ -674,14 +674,7 @@ async function toDataUrl(url) {
   });
 }
 
-/* 等待 img 元素解碼完成 */
-function waitForImage(img) {
-  return new Promise(resolve => {
-    if (img.complete && img.naturalWidth > 0) { resolve(); return; }
-    img.onload  = resolve;
-    img.onerror = resolve; // 失敗也繼續，不卡住
-  });
-}
+
 
 /* 證書下載：直接用 captureCertificate() 存好的 dataUrl，不碰 DOM */
 async function downloadCertificate() {
