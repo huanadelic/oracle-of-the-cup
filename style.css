@@ -21,7 +21,7 @@
   --color-rule:        rgba(200, 161, 74, 0.35);
 
   /* 字型 */
-  --font-serif: "Shippori Mincho B1", "Noto Serif TC", "Cormorant Garamond", Georgia, "Songti TC", "Songti SC", "STSong", serif;
+  --font-serif: "Shippori Mincho B1", "Noto Serif TC", "Cormorant Garamond", Georgia, serif;
   --font-sans:  "Noto Sans TC", -apple-system, sans-serif;
   --font-mono:  "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
 }
@@ -913,64 +913,6 @@ body {
   max-width: 720px;
 }
 
-/* 預渲染完成後顯示的證書圖片 */
-.cert-img {
-  display: block;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  border-radius: 2px;
-  box-shadow:
-    0 0 0 1px rgba(200,161,74,0.5),
-    0 0 0 8px #0f0f22,
-    0 0 0 9px var(--color-gold),
-    0 40px 80px -20px rgba(0,0,0,0.6),
-    0 0 120px -20px rgba(227,191,106,0.4);
-}
-
-/* 證書載入中佔位 */
-.cert-loading {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.3em;
-  color: var(--color-smoke-dim);
-  text-transform: uppercase;
-  padding: 80px 24px;
-  text-align: center;
-}
-
-/* 載入失敗：可重試狀態 */
-.cert-error-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 48px 24px;
-  border: 1px solid var(--color-rule);
-  border-radius: 3px;
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-}
-.cert-error-msg {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  color: var(--color-smoke);
-}
-
-/* 載入失敗：三次後最終狀態 */
-.cert-error-final {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  color: var(--color-smoke-dim);
-  padding: 80px 24px;
-  border: 1px solid var(--color-rule);
-  border-radius: 3px;
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-}
-
 /* 證書主體 */
 .certificate {
   position: relative;
@@ -1163,6 +1105,16 @@ body {
   display: block;
 }
 
+/* RWD（720px 對齊原版） */
+@media (max-width: 720px) {
+  .certificate { padding: 36px 24px 28px; }
+  .cert-name   { font-size: 36px; }
+  .cert-team   { font-size: 26px; }
+  .cert-team .flag { font-size: 24px; }
+  .cert-foot   { flex-direction: column; gap: 16px; text-align: center; }
+  .cert-foot-item,
+  .cert-foot-item:last-child { text-align: center; }
+}
 
 /* 預言 omen 區塊 */
 .omen {
