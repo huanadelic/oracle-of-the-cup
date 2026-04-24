@@ -111,6 +111,8 @@ function navigate(step) {
   // 取消 divine 過場中殘留的動畫（避免背景持續跑）
   if (state._divineRaf)   { cancelAnimationFrame(state._divineRaf);   state._divineRaf   = null; }
   if (state._divineTimer) { clearInterval(state._divineTimer);         state._divineTimer = null; }
+  // 清除倒數計時（離開 home 時停止，避免多次 navigate 累積 interval）
+  if (_countdownTimer)    { clearInterval(_countdownTimer);            _countdownTimer    = null; }
 
   // 隱藏所有 section
   Object.values(SECTIONS).forEach(id => $(id).classList.add('hidden'));
@@ -648,13 +650,18 @@ function initResult() {
   });
 
   // 點外面關閉 popover（點 popover 或 shareBtn 內部不關閉）
-  document.addEventListener('click', (e) => {
+  // 先清除上次殘留的 listener，避免多次進入 result 頁時累積
+  if (state._closePopoverListener) {
+    document.removeEventListener('click', state._closePopoverListener, { capture: true });
+  }
+  state._closePopoverListener = (e) => {
     if (!sharePopover.classList.contains('hidden') &&
         !sharePopover.contains(e.target) &&
         !shareBtn.contains(e.target)) {
       closePopover();
     }
-  }, { capture: true });
+  };
+  document.addEventListener('click', state._closePopoverListener, { capture: true });
 }
 
 /* 將 URL 轉成 base64 data URL（繞過 Safari canvas 跨域限制） */
