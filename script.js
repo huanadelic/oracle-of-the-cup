@@ -605,7 +605,6 @@ function initResult() {
 
   shareBtn.onclick = async (e) => {
     e.stopPropagation();
-    const team = WC_TEAMS.find(t => t.code === state.team);
     const text = `我預言 ${team?.flag ?? ''} ${team?.name ?? ''} 奪得 2026 世界盃冠軍！#OracleOfTheCup`;
 
     // 手機優先走原生 share sheet
@@ -623,7 +622,6 @@ function initResult() {
   sharePopover.querySelectorAll('.share-item').forEach(item => {
     item.onclick = async (e) => {
       e.stopPropagation();
-      const team = WC_TEAMS.find(t => t.code === state.team);
       const text = encodeURIComponent(`我預言 ${team?.flag ?? ''} ${team?.name ?? ''} 奪得 2026 世界盃冠軍！#OracleOfTheCup`);
       const url  = encodeURIComponent(location.href);
 
