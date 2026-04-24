@@ -1034,7 +1034,7 @@ body {
 /* 前言 */
 .cert-preamble {
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 16px;
   color: var(--color-cert-ink-2);
   line-height: 1.5;
   max-width: 440px;

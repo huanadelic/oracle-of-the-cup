@@ -541,9 +541,8 @@ function initResult() {
     rank <= 20 ? '大膽的解讀。若成真，歌謠將傳頌千里，旁人們則會碎念不休。' :
                  '預言之最高境界 — 那種在密室中低語、唯有不甘平庸者方敢說出口的話。歷史獎勵勇者。';
 
-  const dateStr = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })
-    .replace(/(\d)(年|月|日)/g, '$1 $2')   // 數字後加空格
-    .replace(/(年|月)(\d)/g, '$1 $2');     // 年/月後加空格
+  // 格式：2026/4/25（斜線格式，避免中文長字串撐開 cert-foot 欄寬）
+  const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`;
 
   // 渲染各子區塊
   // #certificate 先顯示 loading，截圖完成後換成 <img>
