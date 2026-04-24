@@ -479,6 +479,25 @@ function initDivine() {
 // 證書圖片預載 Promise（result 頁初始化時啟動，download 時 await）
 let _certImagesPromise = null;
 
+/* 字型嵌入 CSS — fetch 本地 woff2 → base64 → @font-face，結果 cache */
+let _fontEmbedCSS = null;
+async function buildFontEmbedCSS() {
+  if (_fontEmbedCSS) return _fontEmbedCSS;
+  const weights = [400, 500, 600];
+  const parts = await Promise.all(weights.map(async (w) => {
+    const res  = await fetch(`fonts/shippori-mincho-b1-${w}.woff2`);
+    const blob = await res.blob();
+    const dataUrl = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+    return `@font-face{font-family:'Shippori Mincho B1';font-style:normal;font-weight:${w};src:url('${dataUrl}') format('woff2');}`;
+  }));
+  _fontEmbedCSS = parts.join('');
+  return _fontEmbedCSS;
+}
+
 function precacheCertImages() {
   if (!_certImagesPromise) {
     _certImagesPromise = Promise.all([
@@ -696,7 +715,8 @@ async function downloadCertificate() {
     // Safari 已知問題：第一次 toPng 結果不可靠（資源未完全渲染）
     // 固定跑 2 次，用第二次結果；非 Safari 只跑 1 次
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const toPngOpts = { pixelRatio: 2, skipFonts: true };
+    const fontEmbedCSS = await buildFontEmbedCSS(); // 本地 woff2 → base64，解決 Safari SVG foreignObject 字型隔離
+    const toPngOpts = { pixelRatio: 2, fontEmbedCSS };
     let dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
     if (isSafari) {
       for (let i = 0; i < 2; i++) {
