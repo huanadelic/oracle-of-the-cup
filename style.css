@@ -906,6 +906,26 @@ body {
    SECTION 3: RESULT
    ═══════════════════════════════════════════════════════════ */
 
+/* 截圖完成後顯示的證書圖片 */
+.cert-img {
+  display: block;
+  width: 600px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* 截圖進行中的佔位文字 */
+.cert-loading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--color-smoke-dim);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 80px 24px;
+}
+
 /* 證書外框（含透視容器） */
 .certificate-frame {
   position: relative;
@@ -1024,7 +1044,7 @@ body {
 
 /* 預言者名字（主角） */
 .cert-name {
-  font-family: var(--font-serif);
+  font-family: 'Songti TC', 'Songti SC', 'STSong', Georgia, serif;
   font-size: 40px;
   color: var(--color-cert-ink);
   line-height: 1.1;

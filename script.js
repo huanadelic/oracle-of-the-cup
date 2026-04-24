@@ -478,6 +478,7 @@ function initDivine() {
    ═══════════════════════════════════════════════════════════ */
 // 證書圖片預載 Promise（result 頁初始化時啟動，download 時 await）
 let _certImagesPromise = null;
+let _certDataUrl       = null; // 截圖後存 dataUrl 供下載使用
 
 /* 字型嵌入 CSS — fetch 本地 woff2 → base64 → @font-face，結果 cache */
 let _fontEmbedCSS = null;
@@ -545,7 +546,15 @@ function initResult() {
     .replace(/(年|月)(\d)/g, '$1 $2');     // 年/月後加空格
 
   // 渲染各子區塊
-  renderCertificate({ team, dateStr, ordinal });
+  // #certificate 先顯示 loading，截圖完成後換成 <img>
+  _certDataUrl = null;
+  $('certificate').innerHTML = `
+    <div class="certificate-frame reveal in-view">
+      <div class="cert-loading">封印中…</div>
+    </div>
+  `;
+  captureCertificate(team, dateStr, ordinal); // async，不 await，讓頁面其餘部分繼續渲染
+
   renderOmens({ team, ordinal, daysToFinal, flavor });
   renderDistribution();
 
@@ -668,86 +677,29 @@ function waitForImage(img) {
   });
 }
 
-/* 證書下載 */
+/* 證書下載：直接用 captureCertificate() 存好的 dataUrl，不碰 DOM */
 async function downloadCertificate() {
-  const el  = document.querySelector('.certificate');
-  const btn = $('btn-download');
-  if (!el || !window.htmlToImage) return;
-
-  btn.disabled = true;
-  btn.innerHTML = '<i data-lucide="loader-circle" class="spin"></i>';
-  applyIcons();
-
-  // 暫存原始值，擷取後還原
-  const imgEls  = [...el.querySelectorAll('img[src]')];
-  const origSrc = imgEls.map(i => i.src);
-  const origBg  = el.style.backgroundImage;
-
-  try {
-    // 等待預載完成（initResult 已啟動，通常早就 ready；若使用者點很快才等）
-    const cached = await precacheCertImages();
-    await document.fonts.ready;
-
-    const parchmentDataUrl = cached?.parchment ?? await toDataUrl('img/parchment-texture.jpg');
-    const waxDataUrl       = cached?.wax       ?? await toDataUrl('img/wax-seal.png');
-
-    // 替換 <img> src 並等待瀏覽器解碼完成
-    await Promise.all(imgEls.map(async (img) => {
-      const du = img.src.includes('wax-seal') ? waxDataUrl
-               : await toDataUrl(img.src).catch(() => null);
-      if (du) { img.src = du; await waitForImage(img); }
-    }));
-
-    // 覆蓋背景紋理（inline style 優先於 class style）
-    const computedBg = getComputedStyle(el).backgroundImage;
-    el.style.backgroundImage = computedBg.replace(
-      /url\(["']?[^"')]*parchment[^"')]*["']?\)/,
-      `url('${parchmentDataUrl}')`
-    );
-
-    // 強制固定寬度，確保截圖不受 browser 視窗寬度影響
-    el.style.width    = '600px';
-    el.style.maxWidth = '600px';
-
-    // 等一個 frame 讓背景確實渲染
-    await new Promise(r => requestAnimationFrame(r));
-
-    // Safari 已知問題：第一次 toPng 結果不可靠（資源未完全渲染）
-    // 固定跑 2 次，用第二次結果；非 Safari 只跑 1 次
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const fontEmbedCSS = await buildFontEmbedCSS(); // 本地 woff2 → base64，解決 Safari SVG foreignObject 字型隔離
-    const toPngOpts = { pixelRatio: 2, fontEmbedCSS };
-    let dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
-    if (isSafari) {
-      for (let i = 0; i < 2; i++) {
-        await new Promise(r => setTimeout(r, 200));
-        dataUrl = await window.htmlToImage.toPng(el, toPngOpts);
-      }
-    }
-
-    // 還原寬度
-    el.style.width    = '';
-    el.style.maxWidth = '';
-
-    const link    = document.createElement('a');
-    link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
-    link.href     = dataUrl;
-    link.click();
-  } catch (err) {
-    console.error('證書下載失敗', err);
-  } finally {
-    // 還原原始 DOM
-    imgEls.forEach((img, i) => { img.src = origSrc[i]; });
-    el.style.backgroundImage = origBg;
-    btn.disabled = false;
-    btn.innerHTML = '<i data-lucide="download"></i> 下載證書';
-    applyIcons();
+  if (!_certDataUrl) {
+    // 截圖尚未完成（使用者點太快）或截圖失敗 — 靜默等候，按鈕不動作
+    console.warn('證書截圖尚未就緒');
+    return;
   }
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isIOS) {
+    // iOS Safari 不支援 <a download>，改用 window.open
+    window.open(_certDataUrl, '_blank');
+    return;
+  }
+  const link    = document.createElement('a');
+  link.download = `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`;
+  link.href     = _certDataUrl;
+  link.click();
 }
 
 /* 證書 */
-function renderCertificate({ team, dateStr, ordinal }) {
-  $('certificate').innerHTML = `
+/* 證書 HTML 字串產生器（供渲染容器和降級顯示共用） */
+function buildCertHTML(team, dateStr, ordinal) {
+  return `
     <div class="certificate-frame reveal">
       <div class="certificate">
         <div class="cert-corner tl">${SVG.corner}</div>
@@ -799,6 +751,119 @@ function renderCertificate({ team, dateStr, ordinal }) {
       </div>
     </div>
   `;
+}
+
+/* 證書截圖主流程：獨立容器渲染 → toPng → 替換 #certificate 為 <img> */
+async function captureCertificate(team, dateStr, ordinal) {
+  if (!window.htmlToImage) {
+    // 降級：直接顯示 HTML 版本
+    $('certificate').innerHTML = buildCertHTML(team, dateStr, ordinal);
+    applyIcons();
+    return;
+  }
+
+  // 建立渲染容器：position:fixed, z-index:0，低於 .result-wrap(z-index:1)
+  // cert 本身 visible（opacity:1, 在 viewport）讓 Safari 正常 paint
+  const renderEl = document.createElement('div');
+  renderEl.id = 'cert-render';
+  renderEl.style.cssText = 'position:fixed;top:0;left:100vw;width:600px;overflow:hidden;z-index:0;pointer-events:none;';
+  renderEl.innerHTML = buildCertHTML(team, dateStr, ordinal);
+  document.body.insertBefore(renderEl, document.body.firstChild);
+
+  const certEl = renderEl.querySelector('.certificate');
+
+  // B: 立即清除 CSS class 的 background shorthand，避免 html-to-image 嘗試 fetch 原始 URL
+  certEl.style.background = 'none';
+
+  try {
+    await document.fonts.ready;
+
+    // Step 1: fetch 所有外部圖片 → dataUrl
+    const cached           = await precacheCertImages();
+    const parchmentDataUrl = cached?.parchment ?? await toDataUrl('img/parchment-texture.jpg');
+    const waxDataUrl       = cached?.wax       ?? await toDataUrl('img/wax-seal.png');
+
+    // <img> 元素（wax-seal + flag）→ dataUrl
+    const imgEls = [...certEl.querySelectorAll('img[src]')];
+    const imgDataUrls = await Promise.all(imgEls.map(img =>
+      img.src.includes('wax-seal')
+        ? Promise.resolve(waxDataUrl)
+        : toDataUrl(img.src).catch(() => null)
+    ));
+
+    // Step 2: 全部 pre-decode（先解碼再套用，保證 paint 前資源就緒）
+    await Promise.all([
+      // CSS background: parchment
+      new Promise(resolve => {
+        const im = new Image(); im.onload = im.onerror = resolve;
+        im.src = parchmentDataUrl;
+        im.decode ? im.decode().catch(resolve).then(resolve) : undefined;
+      }),
+      // <img> 元素（wax-seal + flag）
+      ...imgEls.map((img, i) => {
+        const du = imgDataUrls[i];
+        if (!du) return Promise.resolve();
+        return new Promise(resolve => {
+          const im = new Image(); im.onload = im.onerror = resolve;
+          im.src = du;
+          im.decode ? im.decode().catch(resolve).then(resolve) : undefined;
+        });
+      }),
+    ]);
+
+    // Step 3: 套用到 DOM 並等待 DOM img 本身就緒（new Image() 預解碼是暖 cache，DOM img 換 src 仍需自己 load）
+    await Promise.all(imgEls.map(async (img, i) => {
+      if (!imgDataUrls[i]) return;
+      img.src = imgDataUrls[i];
+      await img.decode().catch(() => {});
+    }));
+
+    // B: 個別屬性設定背景（不用 shorthand，computed style 裡不留原始 URL）
+    certEl.style.backgroundColor    = '#f0e8ce';
+    certEl.style.backgroundImage    = [
+      'radial-gradient(ellipse at 50% 0%, rgba(227,191,106,0.12), transparent 70%)',
+      'linear-gradient(0deg, rgba(245,236,212,0.55), rgba(245,236,212,0.55))',
+      `url('${parchmentDataUrl}')`,
+    ].join(', ');
+    certEl.style.backgroundSize     = 'auto, auto, cover';
+    certEl.style.backgroundPosition = 'center';
+    certEl.style.backgroundRepeat   = 'no-repeat';
+
+    // 預載背景圖：確保 parchment dataUrl 已完整解碼到 paint 狀態
+    const bgImg = new Image();
+    bgImg.src = parchmentDataUrl;
+    await bgImg.decode().catch(() => {});
+
+    // A: 雙 RAF — 等 Safari compositing pipeline 完成
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => requestAnimationFrame(r));
+
+    const fontEmbedCSS = await buildFontEmbedCSS();
+    const toPngOpts   = { pixelRatio: 2, fontEmbedCSS };
+    const isSafari    = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    let dataUrl = await window.htmlToImage.toPng(certEl, toPngOpts);
+    if (isSafari) {
+      // Safari 冷啟動：第一次 toPng 觸發 html-to-image 內部 resource cache，第二次才完整
+      await new Promise(r => setTimeout(r, 200));
+      dataUrl = await window.htmlToImage.toPng(certEl, toPngOpts);
+    }
+
+    _certDataUrl = dataUrl;
+
+    // 替換 #certificate 為圖片
+    $('certificate').innerHTML = `
+      <div class="certificate-frame reveal in-view">
+        <img src="${dataUrl}" class="cert-img" alt="預言證書">
+      </div>
+    `;
+  } catch (err) {
+    console.error('證書截圖失敗，降級顯示 HTML 版本', err);
+    _certDataUrl = null;
+    $('certificate').innerHTML = buildCertHTML(team, dateStr, ordinal);
+    applyIcons();
+  } finally {
+    renderEl.remove();
+  }
 }
 
 /* 預言解讀三條 */
