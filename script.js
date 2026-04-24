@@ -681,7 +681,16 @@ async function downloadCertificate() {
   }
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (isIOS) {
-    // iOS Safari 不支援 <a download>，改用 window.open
+    // iOS 用 Web Share API：跳出原生分享選單，使用者可選「儲存影像」直接存相簿
+    try {
+      const blob = await fetch(_certDataUrl).then(r => r.blob());
+      const file = new File([blob], `預言冠軍-${state.name || 'prophecy'}-世足看東森.png`, { type: 'image/png' });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+    } catch {}
+    // canShare 不支援或使用者取消 → fallback：開新分頁
     window.open(_certDataUrl, '_blank');
     return;
   }
@@ -847,9 +856,14 @@ async function captureCertificate(team, dateStr, ordinal) {
     // 替換 #certificate 為圖片
     $('certificate').innerHTML = `
       <div class="certificate-frame reveal in-view">
-        <img src="${dataUrl}" class="cert-img" alt="預言證書">
+        <img src="${dataUrl}" class="cert-img" alt="預言證書" draggable="false">
       </div>
     `;
+    // 桌機鎖右鍵（避免另存 Unknown 檔）；mobile 長按儲存保留
+    if (!('ontouchstart' in window)) {
+      $('certificate').querySelector('.cert-img')
+        ?.addEventListener('contextmenu', e => e.preventDefault());
+    }
   } catch (err) {
     console.error('證書截圖失敗', err);
     _certDataUrl = null;
