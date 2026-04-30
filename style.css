@@ -1355,8 +1355,11 @@ body {
 .d-flag {
   font-size: 48px; /* 固定字級，大小變化改由 d-lock scale 處理 */
   line-height: 1;
-  filter: drop-shadow(0 0 10px rgba(227,191,106,0.5));
-  /* 移除 font-size transition：避免 layout reflow，scale 已處理視覺放大 */
+  /* 動畫期間不加 filter，避免 Safari GPU compositing layer 非同步造成光暈殘影 */
+}
+/* 定格後才出現光暈，此時 img 不再換 src，無殘影問題 */
+.d-flag.locked .flag-img {
+  filter: drop-shadow(0 0 14px rgba(227,191,106,0.7));
 }
 .d-flag.locked {
   animation: d-lock 600ms cubic-bezier(0.2, 1.4, 0.3, 1) both;

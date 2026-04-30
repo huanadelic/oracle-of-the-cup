@@ -740,14 +740,14 @@ function buildCertHTML(team, dateStr, ordinal) {
 
           <div class="cert-foot">
             <div class="cert-foot-item">
-              <div class="k">刻印日期</div>
+              <div class="k">預言日期</div>
               <div class="v">${dateStr}</div>
             </div>
             <div class="cert-foot-seal">
               <img src="img/wax-seal.png" alt="蠟印" draggable="false">
             </div>
             <div class="cert-foot-item">
-              <div class="k">典籍編號</div>
+              <div class="k">編號</div>
               <div class="v">${String(ordinal).padStart(6, '0')}</div>
             </div>
           </div>
