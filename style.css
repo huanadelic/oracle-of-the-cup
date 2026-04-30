@@ -895,6 +895,7 @@ body {
 .cert-skeleton {
   width: 480px;
   max-width: 100%;
+  min-width: 0; /* Grid 中允許縮小，避免撐開 cell（img 不需要，div 需要）*/
   aspect-ratio: 480 / 660; /* 初始估算，captureCertificate 會動態更新 */
   margin: 0 auto;
   background: transparent;
