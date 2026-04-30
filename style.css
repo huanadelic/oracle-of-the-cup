@@ -1507,6 +1507,9 @@ body {
   text-transform: uppercase;
 }
 
+/* grid item 預設 min-width: auto，div 不會縮小到格子寬度以下 */
+#certificate { min-width: 0; }
+
 /* 左右分欄容器：hero 左、certificate 右 */
 .result-split {
   display: grid;
