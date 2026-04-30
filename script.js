@@ -53,12 +53,15 @@ const store = {
 /* ═══════════════════════════════════════════════════════════
    應用程式狀態
    ═══════════════════════════════════════════════════════════ */
-// 只有已完成預言（result）才從 localStorage 恢復；流程中 refresh 一律重來
+// 只有已完成預言（result）且 30 分鐘內才從 localStorage 恢復；否則回 home
+const RESULT_TTL = 30 * 60 * 1000; // 30 分鐘
 const _savedStep = store.get('oracle.step');
+const _savedAt   = Number(store.get('oracle.savedAt') || 0);
+const _resultValid = _savedStep === 'result' && (Date.now() - _savedAt) < RESULT_TTL;
 const state = {
-  step:         _savedStep === 'result' ? 'result' : 'home',
+  step:         _resultValid ? 'result' : 'home',
   name:         store.get('oracle.name') || '',
-  team:         _savedStep === 'result' ? store.get('oracle.team') : null,
+  team:         _resultValid ? store.get('oracle.team') : null,
   filter:       'ALL',
   distExpanded: false,
 };
@@ -135,9 +138,11 @@ function navigate(step) {
   if (step === 'result') {
     store.set('oracle.step', 'result');
     store.set('oracle.team', state.team);
+    store.set('oracle.savedAt', Date.now());
   } else {
     store.del('oracle.step');
     store.del('oracle.team');
+    store.del('oracle.savedAt');
   }
 
   // 初始化對應 section
