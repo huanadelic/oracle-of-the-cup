@@ -551,7 +551,7 @@ function initResult() {
   _certDataUrl = null;
   $('certificate').innerHTML = `
     <div class="certificate-frame reveal in-view">
-      <div class="cert-loading">封印中…</div>
+      <div class="cert-skeleton" id="cert-skeleton"></div>
     </div>
   `;
   captureCertificate(team, dateStr, ordinal); // async，不 await，讓頁面其餘部分繼續渲染
@@ -780,6 +780,13 @@ async function captureCertificate(team, dateStr, ordinal) {
 
   try {
     await document.fonts.ready;
+
+    // 字型載入後讀取精確高度，更新 skeleton aspect-ratio 避免截圖完成時版面跳動
+    const certHeight = certEl.getBoundingClientRect().height;
+    const skelEl = $('cert-skeleton');
+    if (skelEl && certHeight > 0) {
+      skelEl.style.aspectRatio = `480 / ${Math.round(certHeight)}`;
+    }
 
     // Step 1: fetch 所有外部圖片 → dataUrl
     const cached           = await precacheCertImages();

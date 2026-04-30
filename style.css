@@ -884,9 +884,43 @@ body {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
+  animation: certFadeIn 400ms ease both;
+}
+@keyframes certFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* 截圖進行中的佔位文字 */
+/* 截圖進行中 skeleton */
+.cert-skeleton {
+  width: 480px;
+  max-width: 100%;
+  aspect-ratio: 480 / 660; /* 初始估算，captureCertificate 會動態更新 */
+  margin: 0 auto;
+  background: transparent;
+  border: 1px solid rgba(200, 161, 74, 0.4);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.cert-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 161, 74, 0.22) 50%,
+    transparent 100%
+  );
+  animation: cert-shimmer 1.8s ease-in-out infinite;
+}
+@keyframes cert-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 截圖失敗文字 */
 .cert-loading {
   font-family: var(--font-mono);
   font-size: 12px;
